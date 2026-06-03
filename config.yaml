@@ -25,3 +25,65 @@ subscriptions:
     stage: A
     diff_threshold_pct: 15
   keyword_recall_mode: or
+  intent_profiles:
+    - tag: dr
+      description: 查找三维重建相关的论文
+      enabled: true
+      paper_sources:
+        - arxiv
+      keywords:
+        - keyword: 3d reconstruction
+          keyword_cn: 三维重建
+          query: 3D reconstruction
+        - keyword: depth estimation
+          keyword_cn: 深度估计
+          query: depth estimation from images
+        - keyword: multi-view stereo
+          keyword_cn: 多视图立体
+          query: multi-view stereo reconstruction
+        - keyword: neural radiance field
+          keyword_cn: 神经辐射场
+          query: NeRF neural radiance field
+        - keyword: surface reconstruction
+          keyword_cn: 表面重建
+          query: surface reconstruction from point clouds
+        - keyword: volumetric representation
+          keyword_cn: 体积表示
+          query: volumetric 3D representation
+      intent_queries:
+        - query: state of the art 3D reconstruction methods
+          query_cn: 最先进的三维重建方法
+          enabled: true
+          source: manual
+          note: ''
+        - query: learning based 3D reconstruction
+          query_cn: 基于学习的三维重建
+          enabled: true
+          source: manual
+          note: ''
+        - query: 3D reconstruction from single image
+          query_cn: 单张图像的三维重建
+          enabled: true
+          source: manual
+          note: ''
+        - query: real time 3D reconstruction
+          query_cn: 实时三维重建
+          enabled: true
+          source: manual
+          note: ''
+      updated_at: '2026-06-03T13:05:57.290Z'
+source_backends:
+  arxiv:
+    papers_table: arxiv_papers
+    use_vector_rpc: true
+    vector_rpc: match_arxiv_papers
+    vector_rpc_exact: match_arxiv_papers_exact
+    use_bm25_rpc: true
+    bm25_rpc: match_arxiv_papers_bm25
+    sync_table: arxiv_sync_status
+    sync_success_value: success
+    schema: public
+    kind: supabase
+    enabled: true
+    url: https://lyucdwgefyfbmaiopjbk.supabase.co
+    anon_key: sb_publishable_lX-oi64Uxyd7SIVv3_w2Uw_MTOojeKq
