@@ -1,0 +1,843 @@
+Title: GeRaF: Neural Geometry Reconstruction from Radio Frequency Signals
+
+URL Source: https://arxiv.org/pdf/2605.29097v1
+
+Published Time: Fri, 29 May 2026 00:20:29 GMT
+
+Number of Pages: 24
+
+Markdown Content:
+# GeRaF : Neural Ge ometry Reconstruction from Ra dio Frequency Signals 
+
+Jiachen Lu *, Hailan Shanbhag *, Haitham Al Hassanieh 
+
+École Polytechnique Fédérale de Lausanne (EPFL) 
+
+https://ftpsens.epfl.ch/geraf/ 
+
+## Abstract 
+
+GeRaF is the first method to use neural implicit learning for near-range 3D geome-try reconstruction from radio frequency (RF) signals. Unlike RGB or LiDAR-based methods, RF sensing can see through occlusion but suffers from low resolution and noise due to its lensless imaging nature. While lenses in RGB imaging constrain sampling to 1D rays, RF signals propagate through the entire space, introducing sig-nificant noise and leading to cubic complexity in volumetric rendering. Moreover, RF signals interact with surfaces via specular reflections, requiring fundamentally different modeling. To address these challenges, GeRaF (1) introduces filter-based rendering to suppress irrelevant signals, (2) implements a physics-based RF volu-metric rendering pipeline, and (3) proposes a novel lensless sampling and lensless alpha blending strategy that makes full-space sampling feasible during training. By learning signed distance functions, reflectiveness, and signal power through MLPs and trainable parameters, GeRaF takes the first step towards reconstructing millimeter-level geometry from RF signals in real-world settings. 
+
+## 1 Introduction 
+
+Geometry reconstruction is a fundamental problem that enables a wide range of applications in fields such as virtual reality [ 14 , 21 , 32 ] and robotics [ 22 , 29 ]. In recent years, neural reconstruction methods [ 55 , 51 , 40 , 41 , 35 ] have gained significant attention. A key advantage of these methods is their ability to represent the geometry of a scene continuously, which can help in many down-stream tasks. However, vision-based sensors often struggle in environments with adverse weather conditions [ 67 , 20 , 37 , 34 ] or even become completely unusable when objects are obscured by occlusions [2, 65, 66, 30, 57, 12, 13]. In contrast, radio frequency (RF) sensing, specifically wireless millimeter-wave (mmWave) sensing, has the ability to see through occlusions and remains robust under challenging visibility conditions and, unlike X-Ray, is not dangerous to humans [ 56 ], making it a compelling alternative for 3D reconstruction. This could open up a plethora of applications; for example, seeing whether items inside a box are the correct items, are damaged, or pose a threat, without having to ever open up the box. On the other hand, mmWave resolution is extremely low compared to vision. Fig. 1 shows an example of one radar image, which shows significantly less visual context than camera images provide, making it hard to directly extract 3D reconstruction from a radar image alone. In order to perform more complete 3D reconstruction, some works [ 2, 65 , 30 , 57 , 13 ] have done 3D point cloud reconstruction or human body tracking by leveraging movement or emulating larger antenna apertures, however, the recovered point clouds from RF are still too sparse and noisy to reliably recover detailed geometry. Other works [ 6 , 24 ] have proposed using neural implicit representations for RF sensing, aiming to concentrate scene information from heavy noise through neural optimization. 
+
+> *
+
+Co-primary first authors, indicates equal contribution. 39th Conference on Neural Information Processing Systems (NeurIPS 2025). 
+
+> arXiv:2605.29097v1 [cs.CV] 27 May 2026 Radar
+> Camera
+> Radar
+> Ours
+> Object inside
+> Multiview
+> Scanning
+> Planes
+> 1 Scan
+
+Figure 1: GeRaF is the first method to reconstruct millimeter-level geometry of non-line-of-sight ob-jects using radio frequency (RF) signals by us-ing neural implicit representations. Right , shows the radar heatmap from one scan, a camera scan, the surface directly reconstructed from the radar heatmap images, and surface output from GeRaF. However, their systems are designed for large-scale environments and are far from achieving millimeter-level precision. Compared to near-field surface reconstruction, propagation charac-teristics of RF signals change dramatically when objects are close to the radar [ 57 , 45 ], meaning processing methods for large scale scenes, such as beamforming [ 5 ], introduces a considerable amount of distortion and noise, often exceeding the noise acceptable for gradient descent leading to unstable optimization. In this paper, we propose the first method to overcome the fundamental dilemma between massive RF noise in the input and millimeter-level geometry reconstruction by using neural representation learning, shown in Fig. 1. Achiev-ing this goal, however, is not so straightforward. Using RF imaging directly to infer surface ge-ometry presents fundamentally different chal-lenges from traditional image-based approaches, in three main ways. (1) A key challenge is the absence of a lens-based imaging model in wire-less systems. While vision rendering uses lenses to filter and focus relevant light rays, wireless systems operate via lensless imaging , capturing all incoming RF signals without directional fil-tering. This leads to low signal-to-noise ratios, as irrelevant signals cannot be excluded. (2) There is a fundamental difference in the propagation characteristics between RF signals and visible light. While visible light propagation is predominantly determined by scattering, RF reflections are dominated by specular reflections. Therefore, volumetric rendering techniques that are designed for scattering-based vision sensors are unsuitable for RF imaging. (3) Finally, a major challenge is the high computational cost of lensless volumetric rendering. Unlike lens-based rendering, which samples along 1D rays, lensless rendering requires sampling across the full 3D space, leading to cubic complexity, making naïve implementations intractable. To address the outlined challenges, we propose the following key contributions: (1) We perform geometry reconstruction by introducing a matched filter (MF) into the framework that discards irrelevant signals and preserves the most informative ones. (2) We implement physics-based RF volumetric rendering , which integrates a RF-specific reflection model and incorporates a mathe-matical framework for specular reflections directly into the rendering process. (3) We propose a novel lensless sampling and lensless alpha blending strategy that enables comprehensive scene coverage while significantly reducing computational cost, making volumetric rendering feasible for millimeter-level RF applications. Building upon these components, we design our neural model with three key sub-networks: a Signed Distance Function Network, a Reflective Network, and a Signal Power Prediction, which are implemented with MLPs or trainable parameters. We evaluate our system using a 77 GHz mmWave radar mounted on a robotic arm, scanning a variety of real-world objects. Our results demonstrate that GeRaF takes a significant first step toward accurate 3D reconstruction from RF signals, outperforming currently adopted methods in both reconstruction quality and robustness to experimental noise. These findings highlight GeRaF ’s ability to infer more detailed scene geometry, as compared to current methods, even under challenging sensing conditions. 
+
+## 2 Related Work 
+
+Vision-Based Multi-View 3D Reconstruction and Inverse Rendering Traditional methods exploit photometric consistency across images [ 17 ] and fuse the resulting depth maps into a dense point cloud [ 16 , 63 , 58 ]. To obtain a surface representation, techniques such as Alpha Shapes [ 15 ] and Poisson Surface Reconstruction [ 27 ] are commonly applied as post-processing steps on the point cloud. With the rise of deep learning, methods like Neural Radiance Fields (NeRF) [ 39 ] and Gaussian 2e) Radar Reflections c) Specular Reflections   
+
+> Incoming signal
+> 𝜃 𝜃
+> d) Diffuse Reflections
+> nn
+> Time
+> Frequency
+> Amplitude
+> Time
+> Transmitted Signal
+> a) FMCW amplitude b) Transmit/Refect Signal
+> Specular reflection
+> Reflected Signal
+> Incoming signal
+> Incoming signal
+> n
+
+Figure 2: (a) Frequency Modulated Continuous Waveform, (b) the reflected signal is a delayed version of the transmitted signal, to resolve distance. (c) Specular reflections dominate radar wave propagation vs (d) diffused reflections that dominate vision, (e) the radar reflections modeled to incorporate specular reflections and signal spread. Splatting (3DGS) [ 28 ] use learnable parameters to reconstruct 3D scenes from multi-view images. Building upon neural implicit representations [ 42 , 62 , 61 , 55 ] and 3DGS [ 23 , 25 , 33 , 18 , 8], recent work further decomposes scenes into explicit geometry and reconstruct surface meshes. Moreover, [ 46 , 7, 41 , 59 , 26 , 35 , 19 , 60 ] address the challenge of predicting lighting and material properties by considering complex light interactions, based on the explicit forward rendering equation with BRDF, a process known as inverse rendering. This technique is more physically grounded and brings reconstructions closer to real-world appearance. While these methods typically operate on lens-based RGB images, [ 38 ] proposes novel view synthesis on lensless RGB images. However, lensless RGB images can still be mapped to a lens-based imaging model without altering the underlying ray physics, unlike RF signals, where such transformation is fundamentally invalid. To date, all of these 3D representations are derived from RGB images , which are not easily transferable to mmWave data .
+
+3D Radar Imaging Some works have used low frequency radars to estimate the 3D pose of humans and track them through walls and occlusions [ 2, 1, 65 , 30 ]. However, these works leverage human motion to combat specularity, and are geared towards human mesh reconstruction. Past work also leverages deep learning in the context of millimeter wave radar data for imaging or point cloud completion, however these works primarily focus on the context of self-driving cars, where image resolution is not important and may not generalize to other objects [20, 47, 31, 48, 49]. More recently, [ 36 , 68 , 9] take inspiration from NeRF [ 39 ] to solve a different problem of estimating the wireless channel based on the predicted signal emitted from different reflectors in space. A group of work [ 4, 52 ] applies NeRF to simulated satellite images; [ 6, 24 ] tries to reconstruct 3D scenes by representing the wireless signal in the frequency domain, and learning the reflectance and occupancy of different points. However, all of these prior works try to perform radar image rendering tailored for reconstructing large scale scenes such as streets or satellite images and don’t address close range high resolution object reconstruction, which requires different wave propagation modeling as explained in Appendix A.4. Authors of [ 50 ], proposes a method for 3D neural reconstruction of objects. However, their evaluation is limited to simulated data, which when dealing with wireless signals, cannot come close to representing the complexity of real world experiments. It is important distinction to make, that all prior works of 3D neural reconstruction using radio frequency are either limited to simulated data or reconstruction for far range scenes, whereas our work is the first paper to propose complete high resolution 3D mesh reconstruction. 
+
+## 3 Technical Background 
+
+Radar Basics A mmWave radar works by transmitting a wireless signal and receiving back reflections that come from reflectors in the scene. It operates in the millimeter-wavelength frequency bands, and uses Frequency Modulated Continuous Wave (FMCW) and antenna arrays to help resolve spatial ambiguity. As shown in Fig. 2(a), the transmitted FMCW is a function that is linearly increasing in frequency over time. Considering a single reflector and a single antenna, the received chirp is simply a time-delayed version of the transmitted chirp, see Fig. 2(b). To resolve range ambiguity, the received chirp is multiplied with the conjugate of the transmitted chirp and can be expressed as a complex function: 
+
+s(t) = A · e−j2π(f +kt )d/c = A · e−(j2πkτ )t · e−j2πf τ (1) where A is the signal amplitude, d is the round-trip propagation distance, c is the speed of light, 
+
+τ = d/c is the round-trip delay, f is the starting frequency, and k is the chirp slope. For multiple reflectors, we simply receive the linear combination of all the reflections. 3Lens -based Imaging    
+
+> Lensless Imaging (a) Lens-based vs lensless imaging Top Down View Side View Front View (b) Example MF image from measured radar data.
+
+Figure 3: a) Comparison between lens-based imaging and lensless imaging models. b) Matched filter image of the metal bunny, summed along the vertical, horizontal, and depth axis. 
+
+Reflections Unlike light, whose wavelength (order of 10 −7 meters) is much smaller than surface irregularities, resulting in predominantly diffused reflection, RF signals have much longer wavelengths (order of 10 −3 meters). In this case, the majority of surfaces appear relatively smooth to the RF signal, and specular reflections becomes more prominent than diffused scattering. For specular reflections, the angle of incidence is the same as the angle of reflection, while diffused reflections tend to scatter at different angles. The difference is illustrated in Fig. 2(c,d). In this paper, we primarily expect specular reflections. We follow a shifted Lambertian model [ 44 , 43 ], where the power of the reflections that return to the receiver, is scaled according to the normal and the signals reflection angle, see Fig. 2(e). The received power is modulated by the directional scaling factor (ωo · ωr ), where (ωo is the ideal specular vector and ωr is the vector from the reflecting surface to the receiver (see Appendix A.3). The reflection strength also depends on material properties and the thickness of the object, which we model using a reflective coefficient a.An additional power decay factor of (4 πu )2 is divided from the received reflection amplitude ( (4 πu )4
+
+for power), where u is the distance between the point and antennas, to accurately model the free space path loss (see Appendix A.2). Given an input signal with amplitude Atx , the received signal amplitude Arx can be expressed as: 
+
+Arx ∝ a
+
+(4 πu )2 Atx (ωo · ωr ) (2) 
+
+Lensless imaging Unlike traditional visual imaging systems that rely on lenses, radar imaging is inherently a lensless imaging technique. As illustrated in Fig. 3a, a pinhole in visual systems acts as a physical filter, allowing only one ray per scene point to reach the CMOS sensor while blocking unrelated rays. In photography, increasing the aperture size allows more light rays to enter, but this also leads to blur and noise in the image. As the aperture approaches an infinite size, the system transitions into a lensless imaging model. Lensless imaging, such as with radar antenna arrays, does not employ any physical pinhole— all incoming rays are received by all antennas. In contrast, radar imaging relies on algorithmic processing to reconstruct the scene. The core idea involves applying a digital filter to remove unrealistic signals and keep the most relevant ones, leveraging the time-varying and phase-delay information of the received signals. Each received signal, arriving via a different path, carries a distinct phase shift defined by its propagation delay. The algorithm used for this process is called the matched filter .
+
+Differentiable Matched Filter This algorithm is implemented by correlating the received signal with an ideal reference signal. From Eq. 1, the reference signal for a single reflector and a single antenna is known. For multiple antenna measurements, we have: 
+
+P (x) = 
+
+> Nant
+
+X
+
+> i=1
+
+X
+
+> t
+
+s(i, t ) ej2πkτ it ej2πf τ i , (3) where Nant is the number of antennas, τi represent the round-trip delay corresponding to the i-th antenna, and s(i, t ) denotes the received signal at time t from the i-th antenna. We omit the transmitted amplitude Atx since it is constant. This process effectively averages out signals that are inconsistent with the hypothesized signal model, a matched filter (MF) power image is shown in Fig. 3b. To enable integration into a differentiable rendering framework, we also compute the backpropa-gation of MF. Both the forward and backward passes are implemented in parallel on the GPU. All implementation details are provided in Appendix A.5 and A.6. 4𝐱                     
+
+> SDF value 𝒇 (𝐱 )
+> Normal 𝐧
+> Reflectiveness 𝐚
+> 𝐀 !"
+> Primary Ray
+> Alpha Blending
+> Density 𝛼
+> Transmittance 𝑇
+> Differentiable
+> Matched Filter
+> SDF Network
+> Reflective Network
+> Amplitude Tracing
+> &Lensless Alpha
+> Blending
+> 𝐴 #"
+> Lambertian (𝝎 𝒐 ⋅𝝎 𝒓 )
+> Decay 𝜸
+> Physics -based RF Volumetric Rendering
+> Signal Power
+> Prediction
+> Lensless Sampling
+> Antenna
+> Aperture
+> Matched Filter
+> mmWave
+> Radar
+> 𝑠 $%! x$%! ,𝑡 =&𝐱 ∈(
+> 𝐴 #" 𝐱 𝑒 )*+,-.!/𝑒 )*+,0 .!
+> Loss
+> Primary ray
+> Radar Lobe
+> grad 𝛁 𝒇 (𝐱 )
+
+Figure 4: Overview of the GeRaF framework. (1) Lensless sampling replaces ray-based methods. (2) A neural implicit model predicts geometry, reflectivity, and power. (3) RF volumetric rendering simulates physical signal propagation. (4) Matched filtering produces MF power images (heatmaps). (5) An L2 loss compares the rendered and ground truth power for end-to-end training. 
+
+## 4 Overview 
+
+Given raw RF signals and the positions of all antennas across multiple antenna planes, GeRaF aims to reconstruct the surface geometry of the object by predicting a signed distance function (SDF), without requiring any additional information. GeRaF consists of five main components, illustrated in Fig. 4: (1) We begin with point sampling. Unlike the ray-based sampling used in vision-based methods [ 39 ], we propose a lensless sampling strategy that aligns with the physical nature of radar sensing. Details are provided in Sec. 6. (2) The sampled points are passed through three sub-networks to predict the scene’s geometry, reflective properties, and radar signal power. (3) Using these predictions, along with surface normals (computed as gradients of the SDF), reflection directions, and power decay, we perform physics-based RF volumetric rendering for each antenna, as described in Sec. 5. To correctly compute opacity and transmittance under the lensless setting, we introduce a novel 
+
+lensless alpha blending strategy , detailed in Sec. 6. (4) Next, we apply a matched filter (MF), defined in Eq. 3, to compute the reflected power at each sampled point and generate the rendered MF heatmap. This step converts high-frequency time-domain signals into a lower-dimensional spatial representation of the scene. (5) Finally, we apply an L2 loss to minimize the discrepancy between the rendered heatmap and the ground truth, enabling end-to-end optimization of the entire framework via backpropagation. 
+
+## 5 Physics-based RF Volumetric Rendering 
+
+We begin this section with a simple ray-tracing-based sampling strategy. Assume we sample a single ray emitted from a receiver antenna located at xant in the direction ωr . A point x along the ray can then be represented as x = xant + ur, where u is the sampling distance along the ray, and r is the unit direction vector opposite to ωr . We first present Signal Tracing , which computes the frequency and phase shift of the signal. Then, we introduce Signal Amplitude Rendering , which "renders" the amplitude term of the received signal. 
+
+5.1 Signal Tracing 
+
+The Signal Tracing generates expected signal responses for all possible propagation paths based on a hypothesized scene or spatial configuration. Simulating the received signal corresponds to modeling the received chirp at each individual antenna. Using the single-reflector expression in Eq. 1, the reference signal for a scene with multiple reflectors is the superposition of contributions from all reflectors. However, in practice, there are no explicit “reflectors”; instead, we are dealing with a continuous 3D scene. We treat every point x in the computational space Ωpts as a potential reflector, regardless of whether it lies in free space or on the surface of an object. Instead, volume density and reflective properties are encoded in the amplitude term A(x). The received signal is expressed in Eq. 4 and is implemented in parallel on the GPU. Implementation details are provided in 5Appendix A.5 and A.6.. 
+
+s(xant , t ) = X
+
+> x∈Ωpts
+
+Arx (x) e−j2πkτ xt e−j2πf τ x , (4) 
+
+5.2 Signal Amplitude Tracing 
+
+The amplitude of the reflected radio frequency signal is influenced by several factors, including surface geometry, material reflectivity, reflection angle, and power decay due to propagation distance. Unlike vision-based NeRF rendering [ 39 ], radar sensing involves a round-trip path, requiring us to model both the incoming ray from the transmitter and the outgoing ray to the receiver. Given the opaque density [ 55 ] ρ(u), the accumulated transmittance along the incoming path can be computed as T (u) = exp  − R u 
+
+> 0
+
+ρ(v) d v . However, due to the round-trip path of radar signals, the effective accumulated transmittance becomes T (u)2, meaning that only a fraction T (u)2 of the signal remains after returning to the receiver. By combining volumetric rendering, reflectivity, the reflection angle and power decay as defined in Eq. 2, the amplitude of the reflected signal at the receiver antenna (rx), assuming a symmetric return path along the same ray, is given by: 
+
+Arx (xant , ω r ) = a(u) ( ωo · ωr ) γ(u) T (u)2 ρ(u) A′ 
+
+> tx
+
+dt, (5) where a(u) is the reflectivity at distance u, ωo is the outgoing direction computed as ωo = ωi − 2( n ·
+
+ωi)n, with ωi being the incoming direction and n the surface normal (obtained from the gradient of the SDF), γ is the power decay, and A′ 
+
+> tx
+
+is the transmitted input power. The proportional constant, a,in Eq. 2 remains fixed across all points on the ray. Therefore, without loss of generality, we absorb this constant into the transmitted amplitude term Atx , and define an effective transmitted amplitude 
+
+A′
+
+> tx
+
+.
+
+Opaque density representation To represent volume density and accumulated transmittance, we start from the SDF. The scene is defined by an SDF f : R3 → R, which maps a spatial location 
+
+x ∈ R3 to its signed distance from the nearest surface of the object. This function is parameterized by a MLP. The object surface S is defined as the zero-level set of the SDF. Following [ 55 ], we use the S-density function ϕs(f (x)) , defined as the derivative of the sigmoid function Φs(f (x)) . The opaque density ρ(u) is computed based on the rate of change of the occupancy field Φs along the ray direction. 
+
+Signal representation We employ a separate MLP that takes the 3D spatial position x as input to predict the reflection coefficient a. The effective input amplitude A′ 
+
+> tx
+
+is treated as a learnable global parameter, since the transmitted amplitude is fixed and consistent across all experiments. 
+
+Discretization We adopt the same discretization scheme as in [ 55 ], using alpha-blending for opaque density and transmittance estimation. The surface normal n is computed as the gradient of the SDF. 
+
+Integration According to Eq. 4, the signal received at each antenna is computed as an integration over the amplitude defined in Eq. 5. To evaluate this integral, we apply Monte Carlo sampling by tracing Nray rays per antenna across space. However, when combining all components, the overall computational complexity becomes pro-hibitively high. Assuming we sample Nz depth points along each ray, and trace Nray rays for each antenna. The MLP network incurs a computational cost of Cmlp . The complexity of the signal tracing step for both forward and backpropagation is given by 
+
+O(Nray NzNant Cmlp ). (6) In practice, to achieve 1mm resolution, the number of voxels becomes very large. If the synthetic aperture antenna array contains on the order of 10 5 antennas, the total computation quickly reaches unrealistic limits. Even with GPU acceleration, a single forward pass in this setting has previously taken over one hour to compute. This scale far exceeds the number of available GPU threads and makes backpropagation-based learning infeasible under this brute-force computation strategy. 6Antenna               
+
+> Aperture
+> 𝑻′ =𝑻 −𝚽 𝐬 +𝚽 𝒔
+> #
+> 𝚽 𝐬
+> "
+> 𝚽 𝐬
+> "
+> 𝚽 𝐬
+> 𝑇
+> 𝑻′ =𝑻 −𝚽 𝐬 +𝚽 𝒔
+> #
+> Antenna
+> Aperture Patched Antenna
+> Aperture
+> Signal Tracing
+> Bank
+> Lensless Sampling Traditional Sampling
+
+Figure 5: Left: Naïve sampling traces rays across the entire space for each antenna, resulting in the highest computational complexity. Middle: Lensless sampling strategy samples points along the radar’s primary ray direction and reuses network predictions across antennas. Alpha blending and transmittance are calculated using lens-less alpha blending. Right: Signal Tracing Bank: subset of antennas is processed in each iteration, reducing computation for both forward and backward passes. 
+
+## 6 Lensless Sampling & Lensless Alpha Blending 
+
+To make volumetric rendering computationally feasible, we observe that the previous Monte Carlo sampling strategy contains significant redundancy. Specifically, rays emitted from different antennas frequently intersect at the same spatial locations, leading to duplicated computations. A straightfor-ward solution might be to adopt uniform grid-based sampling in 3D space. However, this approach fails to preserve the structure of transmittance accumulation along individual rays, which is critical for accurate signal modeling. To address both redundancy and physical correctness, we propose lensless sampling. The key insight is to share the computation of opaque density and accumulated transmittance across different antennas, where ρ(u) and T (u) only need to be computed once for each position, for all antenna rays that intersect the pose. 
+
+Primary Ray We first sample parallel rays aligned with the radar’s primary direction ωp. The starting points xapr of these rays are sampled within the antenna aperture, and points are then sampled along each ray. Initially, we ignore the fact that ρ(u) and T (u) depend on the real ray direction, effectively replacing all individual receive directions ωr with the shared primary direction ωp. The sampled points are formulated as x = xapr + up, making the assumption that these values are shared across all rays that pass through the same spatial location. Specifically, for each position, we compute ρ(u)
+
+and T (u) by using [ 55 ] once and reuse them for all antennas. We choose the radar’s primary direction as the ray direction in order to minimize the discrepancy between the approximate and the actual rays emitted from the antennas. 
+
+Lensless Alpha Blending Neglecting the dependencies of ρ(u) and T (u) on the ray direction can, in principle, lead to inaccuracies. However, we prove in Appendix B.1 that when computing 
+
+αi = 1 − exp 
+
+
+
+− R ui+1  
+
+> ui
+
+ρ(u) d u
+
+
+
+, the influence of the ray direction cancels out, and αi remains identical to the value computed along the primary ray. Furthermore, for the accumulated transmittance, we can show that, starting from the logistic distribu-tion, the difference in T (u) across different ray directions is equal to the difference in sigmoid-SDF values at the ray origins. Details of the derivation are provided in Appendix B.2. Formally, the transmittance along a real ray direction T (u′) can be efficiently derived from the transmittance along the primary ray direction T (u) by adjusting with the sigmoid-SDF values at the respective ray origins, rather than computing a ray-dependent product of accumulated alpha values: 
+
+T (u′) = T (u) − Φs(f (x(us))) + Φ s(f (x(u′
+
+> s
+
+))) , (7) where Φs(·) denotes the cumulative density function (CDF) of logistic distribution, and x(us), x(u′
+
+> s
+
+)
+
+are the starting points of the respective rays. The power decay term γ, as well as the time and phase components, are computed deterministically using the actual rays. Additionally, the Sigmoid-SDF value at the ray origin, used to correct accumulated transmittance, is excluded from backpropagation ,ensuring computational efficiency. 
+
+Signal Tracing Bank In Eq. 3, we iterate over sampled points, and for each point, we perform signal tracing across all antennas. Within each signal tracing operation, we again loop over all sampled points along the ray. Although these computations are unavoidable, we can significantly reduce the 7Camera Matched  Filter 
+
+> Bunny
+> Our  Result
+
+Line of Sight Non -Line of Sight      
+
+> Object
+> Elephant Bottle Knife Boat Knife Elephant
+
+Figure 6: Left : Experimental results of objects with nothing between the radar and the object. Right :Results when the object is occluded from the radar. The camera scan done in line of sight. computational burden by leveraging the fact that the matched filter contains no trainable parameters. This allows us to reuse signal tracing results of most antennas from previous iterations. During training, we implement a memory bank mechanism. We divide the antenna aperture into patches, analogous to convolutional processing. In each training iteration, signal tracing is performed only for antennas within a single patch, while the signal tracing results for antennas in the other patches are retrieved from the memory bank. After each iteration, the memory bank is updated with the newly computed results for the current patch. 
+
+Computational complexity By reusing the primary rays, we only need to evaluate the shared opaque density and accumulated transmittance O(Nray NzCmlp ) times for both the forward and backward passes. The lensless approximation affects only the forward computation, and with the introduction of the Signal Tracing Bank, the effective antenna size becomes constant per iteration. Thus, the overall learnable component complexity is reduced to O(Nray NzCmlp ). For the deterministic components of signal tracing and matched filtering, the computation time remains bounded by O(Nray NzNt) for both forward and backward propagation. This results in a total complexity that is significantly lower than the original formulation given in Eq. 6. 1600 3200 6400 w.o.                  
+
+> bank
+> 512 1024 2048 w.o.
+> lens-less
+> 32 64 128
+> 0
+> 10
+> 20
+> 30
+> 40
+> 50
+> Latency (s)
+> 333s
+> Antenna Nant v.s. Latency
+> Ray Nray v.s. Latency
+> Depth Nzv.s. Latency
+> Antenna Nant v.s. Memory
+> Ray Nray v.s. Memory
+> Depth Nzv.s. Memory
+> 0
+> 10
+> 20
+> 30
+> 40
+> 50
+> Memory Usage (GB)
+> 13385.9 GB
+
+Figure 7: Solid lines indicate latency (time per iteration), while dashed lines show GPU memory usage. Green represents the configuration on patch antenna size in the Signal Tracing Bank. Orange 
+
+represents the ray number, and “w.o. lens-less” refers to disabling lens-less sampling, whose mem-ory usage is too large to measure experimentally and is instead deduced from theory. Purple repre-sents the number of sample points on each ray. Fig. 7 presents the latency and GPU memory usage across different sampling configurations. The baseline is chosen with Nray = 1024 ,
+
+Nz = 32 , and a patch size of 3200 antennas for the Signal Tracing Bank. Without lensless sampling, training becomes infeasible due to the excessive memory demand of simultaneously processing Nant Nray Nz sample points. The Sig-nal Tracing Bank drastically reduces both train-ing time and memory consumption. We adopt this baseline configuration for all experiments to ensure efficiency. 
+
+## 7 Optimization 
+
+Dynamic loss masking Simply minimizing the difference between the rendered radar image and the ground truth using an L2 loss is not effective in radar imaging. This is because radar mea-surements are based on reflected signals, which are affected not only by the presence of volume density but also by the reflection direction. This means that a weak signal response in the rendered radar image can be caused by two distinct factors: 8(1) low volume density at the sampled location, or (2) high volume density with the signal being reflected away from the receiver due to geometric misalignment. This inherent ambiguity makes direct supervision unreliable. To address this, we introduce a masking strategy during training. If a sampled point has exhibited high matched filter response in any previous iteration but produces low power in the current iteration, we treat it as unreliable and exclude it from the loss computation. This prevents penalizing the model for physically valid signal paths that fail to reflect back to the receiver. 
+
+## 8 Experiments 
+
+Dataset & Implementation As there are no publicly available radar datasets for near range imaging, we collected our own dataset using a TI 1843BOOST mmWave radar [ 53 ] with a DCA1000EVM for raw data collection, attached to a Franka Research 3 controlled via the FrankaPy library [ 64 ]. We emulate 2D arrays by moving the radar with the robotic arm for 17-68 array viewpoints per object. For ground truth collection we used the Scaniverse App with an iPhone, which uses camera and LiDAR scans to compute 3D meshes and pointclouds. We trained our model for 50,000 iterations over 32 hours on a single NVIDIA H100 GPU. See the Appendix C for detailed data description and training hyperparameters. Table 1: Quantitative results ( ⋆occluded).                                              
+
+> F1 ↑CD (mm) ↓
+> Object MF Ours MF Ours
+> Wrench 0.52 0.88 0.29 0.07
+> Bunny 0.56 0.81 0.03 0.01
+> Elephant 0.65 0.79 0.25 0.14
+> Bottle 0.44 0.97 0.35 0.05
+> Knife 0.44 0.71 0.59 0.49
+> Star 0.80 0.86 0.60 0.50
+> Knife ⋆0.45 0.83 0.84 0.26
+> Elephant ⋆0.42 0.52 0.52 0.46
+> Boat ⋆0.51 0.69 0.35 0.30
+> Wrench ⋆0.63 0.86 0.29 0.14
+
+Comparison to Baseline As baseline, we compare results from GeRaF to the matched filter summation of all images. Since the corresponding output is a heatmap, we threshold the image and perform Poisson surface reconstruction on the point cloud. Qualitative comparisons are shown in Fig. 6. The object imaged is shown in the first row, followed by the camera scan, then the baseline matched filter reconstruction, and finally the output from GeRaF . The first four columns show reconstruction results when the object is in line of sight of the radar, and the last three columns show results for the object when it is occluded with a box or large sheet of paper. In the non-line-of-sight data processing, the box is cropped out of the MF image to just reconstruct inside the box. It is clear that the extracted meshes from the matched filter ground truth are not as complete as the outputs from GeRaF ,and our method works even when vision methods would fail (eg. when line of sight is completely blocked). Rendered Real 
+
+Figure 8: Rendered heatmaps compared to real heatmaps. Though the output of GeRaF is perhaps, not as detailed as the camera scans, this is primarily because our scans are limited to a single pitch axis, limiting the amount of reflec-tions we can receive back from the objects, this limitation is discussed in more detail in Appendix E. Fig. 8 shows ex-amples of the similarity between the rendered output and the ground truth radar heatmap. More qualitative results will be included in supplementary material. Quantitative results are shown in Tab. 1, for F1-Score (F1) and the Chamfer Distance (CD) in millimeters, ex-plained in Appendix C, where points were sampled uni-formly on the camera mesh, the matched filter mesh and GeRaF ’s mesh. We can see that our method outperforms the Matched Filter (MF) baseline in both F-Score and Chamfer distance with a slight drop in accuracy when the items are moved into the box. 
+
+Novel View Synthesis We also demonstrate GeRaF ’s ca-pability in novel view synthesis (NVS) [ 39 ]. To evaluate this, we split the available views into training and test sets. GeRaF is trained using only the training views and evaluated on the held-out test views. To assess the quality of the synthesized matched filter images, we compute the Peak Signal-to-Noise Ratio (PSNR) between the rendered outputs and the 9ground truth matched filter images. PSNR is a widely used metric for evaluating image reconstruction fidelity, where higher values indicate closer similarity to the reference. The Peak Signal-to-Noise Ratio (PSNR) is computed as: PSNR = 10 · log 10 
+
+ M AX 2
+
+MSE 
+
+
+
+, (8) where M AX is the maximum possible pixel value of the image, and MSE is the mean squared error between the synthesized image and the ground truth. Unlike RGB images, matched filter (MF) images do not have a fixed maximum pixel value. To make PSNR computation meaningful, we normalize each MF image by dividing it by its maximum value. As a result, the maximum possible pixel intensity is set to M AX = 1 .0 for all PSNR evaluations. We present four novel view synthesis results on the Bunny object in Fig. 9. The selected views include the front, left, back, and right sides of the object. In each case, GeRaF produces visualizations that closely match the ground truth. Quantitatively, the synthesized matched filter images achieve PSNR values around 30 dB, demonstrating the feasibility and effectiveness of GeRaF for novel view synthesis tasks. Novel Plane 1, PSNR=30.5dB                     
+
+> Target Image Synthesis Image
+> Novel Plane 2, PSNR=27.4dB
+> Novel Plane 3, PSNR=29.2dB
+> Target Image Synthesis Image
+> Novel Plane 4, PSNR=27.9dB
+> Top View Side View Front View Top View Side View Front View
+> Top View Side View Front View Top View Side View Front View
+> Top View Side View Front View Top View Side View Front View
+> Top View Side View Front View Top View Side View Front View
+
+Figure 9: Novel view synthesis on four selected novel planes. We visualize the 3D matched filter images by projecting them along three axes using maximum intensity projection. 
+
+## 9 Ablation Studies 
+
+9.1 Number of Radar Scanning Planes 
+
+We study the effect of varying the number of radar scanning planes (analogous to the number of views in vision-based reconstruction) used during training. A total of 104 planes were measured to cover a full 360-degree view of the object. We uniformly sampled subsets of these planes to simulate different input settings. Even with only 8 planes, GeRaF is able to reconstruct the basic shape of the Bunny, though the result contains noticeable noise and inaccurate details. When the number of planes is fewer than 40, the reconstructed shape becomes visibly distorted, and the noise level increases significantly. With more than 72 planes, the overall shape is correctly reconstructed, and differences are mostly limited to fine 10 details. This indicates that GeRaF is robust to the number of input planes once a sufficient coverage threshold is met. Overall, the results show a clear trend: increasing the number of radar scanning planes improves the reconstruction quality, yielding more accurate geometry and less noise. 
+
+9.2 Number of Temporal Sample F1 ↑= 0.75 | CD ↓= 0.19  F1 ↑= 0.84 | CD ↓= 0.13                                        
+
+> F1↑=0.81 |CD ↓=0.16 3
+> F1↑=0.81 |CD ↓=0.12
+> F1↑=0.81 |CD ↓=𝟎 .01 F1↑=0.72|CD ↓=0.18
+> 𝑵 𝐩𝐥𝐚𝐧𝐞𝐬 =𝟐𝟒 𝑵 𝐩𝐥𝐚𝐧𝐞𝐬 =𝟒𝟎 𝑵 𝐩𝐥𝐚𝐧𝐞𝐬 =𝟖
+> 𝑵 𝐩𝐥𝐚𝐧𝐞𝐬 =𝟏𝟎𝟒 𝑵 𝐩𝐥𝐚𝐧𝐞𝐬 =𝟏𝟑𝟔 𝑵 𝐩𝐥𝐚𝐧𝐞𝐬 =𝟕𝟐
+
+Figure 10: Ablation study on the number of radar scanning planes. F1 denotes the F1-Score and CD denotes the Chamfer Distance. ↑ indicates higher values are better, while ↓ indicates lower values are better. We study the effect of the number of temporal samples Nt on geometry reconstruction quality. According to the matched filter equation: 
+
+P (x) = 
+
+> Nant
+
+X
+
+> i=1
+> Nt
+
+X
+
+> t=1
+
+s(i, t ) ej2πkτ it ej2πf τ i ,
+
+increasing the number of temporal samples im-proves resolution. However, the computational cost of the matched filter increases with Nt.To assess this trade-off, we evaluate reconstruc-tion quality under different values of Nt, as shown in Fig. 11. Empirically, we observe no significant degradation in performance as Nt
+
+varies, demonstrating GeRaF ’s robustness to noise. While using fewer temporal samples can theoretically reduce the quality of the ground truth matched filter image, the increase in latency with larger Nt remains relatively limited. Consider-ing the balance between performance and efficiency, we set Nt = 64 in our final implementation. 
+
+9.3 Positional Encoding Frequency Level 
+
+We apply sinusoidal positional encoding as in NeRF [ 39 ], where each input x is mapped to a higher-dimensional space using: 
+
+γ(x) = sin(2 0πx ), cos(2 0πx ), . . . , sin(2 Nlevel −1πx ), cos(2 Nlevel −1πx ) ,
+
+with Nlevel controlling the number of frequency bands. 𝑁 ! = 32 𝑁 ! = 16                      
+
+> 𝑁 "#$ =2048 𝑁 "#$ =1024
+> Lat =3.66 s|MEM =8.4GB Lat =14 .6s |MEM =37 .6GB
+> Lat =3.66 s|MEM =8.4GB Lat =2.37s |MEM =4.3GB
+
+Figure 12: Top: Ablation study on the number of ray samples Nray . Bottom: 
+
+Ablation study on the number of depth samples Nz . Lat denotes latency, and 
+
+MEM denotes GPU memory usage. Low frequency levels (e.g., 20, 21) capture coarse, smooth variations, while high frequency levels (e.g., 29, 210 ) cap-ture fine, high-frequency details such as sharp edges or thin structures. The number of frequency levels Nlevel con-trols the trade-off between expressiveness and overfitting: a higher Nlevel enables modeling of finer details, whereas a lower Nlevel reduces model complexity and helps prevent overfitting to noise. To assess this trade-off, we evaluate reconstruction quality under different positional encoding frequency levels Nlevel ,as shown in the bottom of Fig. 11. We observe that higher frequency levels enable better re-construction of fine details in the Bunny and improve ro-bustness to noise in radio frequency signals. Additionally, increasing Nlevel leads to higher computational latency, but the increase is relatively limited. Considering this trade-off, we set Nlevel = 10 in our final configuration. 
+
+9.4 Resolution 
+
+In Sec. 6, we discuss the computational resources required by different training-time sampling resolutions. 11 𝑁 ! = 64 𝑁 ! = 32 𝑁 ! = 128 
+
+𝑁 "#$#" = 8𝑁 "#$#" = 6 𝑁 "#$#" = 10                           
+
+> Lat =4.06 s|MEM =8.4GB Lat =3.66 s|MEM =8.4GB Lat =4.54 s|MEM =8.4GB
+> Lat =4.06 s|MEM =8.4GB Lat =3.57s |MEM =8.4GB Lat =3.84s |MEM =8.4GB
+
+Figure 11: Top: Ablation study on the number of temporal samples Nt. Bottom: Ablation study on the positional encoding frequency level Nlevel . Lat denotes latency, and MEM denotes GPU memory usage. For the number of sampling rays, results show that increas-ing the number of rays leads to higher memory usage and longer latency, but surprisingly worse reconstruction performance. A possible explanation is that in radio frequency data, denser sampling introduces more noise, which slows convergence. As a result, under a fixed number of training itera-tions, higher sampling resolutions may lead to suboptimal solutions due to insufficient convergence. Based on these observations, we set Nray = 1024 in our final configuration. For the number of depth samples Nz , results indicate that fewer depth samples lead to lower reconstruction detail and a coarser overall shape. Although reducing depth samples improves training efficiency linearly in time, it comes at the cost of reduced fidelity. Therefore, we set Nz = 32 as our final configuration to balance quality and performance. 
+
+9.5 Dynamic loss masking w.o. Masking             
+
+> F1↑=0.63 |CD ↓=0.32
+> w. Masking
+> F1↑=0.81 |CD ↓=0.01
+
+Figure 13: Ablation study on dynamic loss masking. "w.o." denotes without masking, and "w." denotes with mask-ing. In Sec. 7, we discuss the motivation for using dynamic loss masking. The primary reason is the inherent ambi-guity in interpreting low-power regions in matched filter (MF) imaging. Specifically, a weak signal response in the rendered radar image may arise from two distinct causes: (1) low volume density at the sampled location, or (2) high volume density with the signal being reflected away from the receiver due to geometric misalignment. This ambigu-ity makes direct supervision unreliable in low-reflection regions. As shown in the top of Fig. 13, training without dynamic loss masking leads to incorrect reconstruction. The model tends to interpret low-intensity regions as low density, resulting in artifacts—such as a distorted ear in the Bunny example—where the true geometry reflects weakly due to its orientation rather than material absence. This highlights the importance of masking unreliable regions during training to improve geometric fidelity. 12 F1 ↑= 0.81 | CD ↓= 0.01 F1 ↑= 0.72 | CD ↓= 0.19                                 
+
+> w.o. radar physics w. radar physics
+> F1↑=0.70 |CD ↓=0.21 F1↑=0.79 |CD ↓=0.14
+> w.o. radar physics w. radar physics
+> F1↑=0.55 |CD ↓=0.35 F1↑=0.97 |CD ↓=0.05
+> w.o. radar physics w. radar physics
+
+Figure 14: Ablation study on radar physics. "Without radar physics" indicates that the Lambertian model [44] is not used. 
+
+9.6 Effect of Radar physics 
+
+We introduce radar physics in Sec. 3. Radar reflections are dominated by specular effects and are commonly approximated using the Lambertian model [ 44 ]. In this section, we study the effect of incorporating the Lambertian model into our formulation. To isolate its impact, we remove the ωo · ωr term from Eq. 2. As shown at the Fig. 14, the visual difference between using and not using the Lambertian model appears minor. However, quantitative results indicate that omitting the Lambertian term leads to worse performance. Specifically, in the left-side view, the reconstructed bottom of the Bunny appears significantly larger than in the right-side view, contributing to higher Chamfer Distance error. That said, the Lambertian model does not fully capture the physical behavior of radar reflections, especially under specular and material-dependent conditions. Thus, while it provides a useful approximation, the Lambertian model is not an optimal representation of true radar physics. 
+
+## 10 Conclusion 
+
+In this paper, we proposed the first method for applying differentiable rendering to radio frequency in the context of high resolution geometry reconstruction. Our method addresses the fundamental differ-ences between RF and optical imaging, and we show evaluation on real captured data. We proposed a physics-aware volumetric rendering pipeline that incorporates radar-specific signal propagation and reflection models and a novel lensless sampling strategy to significantly reduce computational cost while maintaining resolution. Though there are limitations, discussed in Appendix E, we believe that this paper serves as the first step towards making millimeter-level geometry reconstruction feasible with neural representation learning. 13 Acknowledgments 
+
+We thank the anonymous reviewers and members of the SENS Lab for their valuable feedback. We would also like to thank Ralf Boehnke, Dymtro Rachkov and Daniel Ardila Palomino from Sony Research for their helpful feedback. This project is funded in part by the Sony Faculty Innovation Fellowship. 
+
+## References 
+
+[1] Fadel Adib, Chen-Yu Hsu, Hongzi Mao, Dina Katabi, and Frédo Durand. Capturing the human figure through a wall. ACM Transactions on Graphics (TOG) , 2015. [2] Fadel Adib and Dina Katabi. See through walls with wifi! In SIGCOMM , 2013. [3] Fredrik Andersson, Randolph Moses, and Frank Natterer. Fast fourier methods for synthetic aperture radar imaging. IEEE Transactions on Aerospace and Electronic Systems , 2012. [4] Emile Barbier-Renard, Florence Tupin, Nicolas Trouvé, and Loïc Denis. Multi-view 3d surface reconstruction from sar images by inverse rendering, 2025. [5] Jacob Benesty, Jingdong Chen, and Yiteng Huang. Conventional beamforming techniques. 
+
+Microphone array signal processing , 2008. [6] David Borts, Erich Liang, Tim Broedermann, Andrea Ramazzina, Stefanie Walz, Edoardo Palladin, Jipeng Sun, David Brueggemann, Christos Sakaridis, Luc Van Gool, et al. Radar fields: Frequency-space neural scene representations for fmcw radar. In SIGGRAPH , 2024. [7] Mark Boss, Raphael Braun, Varun Jampani, Jonathan T Barron, Ce Liu, and Hendrik Lensch. Nerd: Neural reflectance decomposition from image collections. In ICCV , 2021. [8] Hanlin Chen, Chen Li, and Gim Hee Lee. Neusg: Neural implicit surface reconstruction with 3d gaussian splatting guidance. arXiv preprint , 2023. [9] Xingyu Chen, Zihao Feng, Kun Qian, and Xinyu Zhang. Radio frequency ray tracing with neural object representation. arXiv preprint , 2024. [10] MMDetection3D Contributors. MMDetection3D: OpenMMLab next-generation platform for general 3D object detection. https://github.com/open-mmlab/mmdetection3d , 2020. [11] Robert L Cook and Kenneth E. Torrance. A reflectance model for computer graphics. ACM Transactions on Graphics (TOG) , 1982. [12] Laura Dodds, Tara Boroushaki, Cusuh Ham, and Fadel Adib. Mito: A millimeter-wave dataset and simulator for non-line-of-sight perception. arXiv preprint , 2025. [13] Laura Dodds, Hailan Shanbhag, Junfeng Guan, Saurabh Gupta, and Haitham Hassanieh. Around the corner mmwave imaging in practical environments. In Proceedings of the 30th Annual International Conference on Mobile Computing and Networking , pages 953–967, 2024. [14] Zhao Dong, Ka Chen, Zhaoyang Lv, Hong-Xing Yu, Yunzhi Zhang, Cheng Zhang, Yufeng Zhu, Stephen Tian, Zhengqin Li, Geordie Moffatt, et al. Digital twin catalog: A large-scale photorealistic 3d object digital twin dataset. In CVPR , 2025. [15] Herbert Edelsbrunner, David Kirkpatrick, and Raimund Seidel. On the shape of a set of points in the plane. IEEE Transactions on information theory , 1983. [16] Yasutaka Furukawa, Carlos Hernández, et al. Multi-view stereo: A tutorial. Foundations and trends® in Computer Graphics and Vision , 2015. [17] Yasutaka Furukawa and Jean Ponce. Accurate, dense, and robust multiview stereopsis. IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI) , 2009. [18] Jian Gao, Chun Gu, Youtian Lin, Zhihao Li, Hao Zhu, Xun Cao, Li Zhang, and Yao Yao. Relightable 3d gaussians: Realistic point cloud relighting with brdf decomposition and ray tracing. In ECCV , 2024. 14 [19] Chun Gu, Xiaofei Wei, Zixuan Zeng, Yuxuan Yao, and Li Zhang. Irgs: Inter-reflective gaussian splatting with 2d gaussian ray tracing. In CVPR , 2025. [20] Junfeng Guan, Sohrab Madani, Suraj Jog, Saurabh Gupta, and Haitham Hassanieh. Through fog high-resolution imaging using millimeter wave radar. In CVPR , 2020. [21] Junfu Guo, Yu Xin, Gaoyi Liu, Kai Xu, Ligang Liu, and Ruizhen Hu. Articulatedgs: Self-supervised digital twin modeling of articulated objects using 3d gaussian splatting. arXiv preprint , 2025. [22] Nick Heppert, Muhammad Zubair Irshad, Sergey Zakharov, Katherine Liu, Rares Andrei Ambrus, Jeannette Bohg, Abhinav Valada, and Thomas Kollar. Carto: Category and joint agnostic reconstruction of articulated objects. In CVPR , 2023. [23] Binbin Huang, Zehao Yu, Anpei Chen, Andreas Geiger, and Shenghua Gao. 2d gaussian splatting for geometrically accurate radiance fields. In SIGGRAPH , 2024. [24] Tianshu Huang, John Miller, Akarsh Prabhakara, Tao Jin, Tarana Laroia, Zico Kolter, and Anthony Rowe. Dart: Implicit doppler tomography for radar novel view synthesis. In CVPR ,2024. [25] Yingwenqi Jiang, Jiadong Tu, Yuan Liu, Xifeng Gao, Xiaoxiao Long, Wenping Wang, and Yuexin Ma. Gaussianshader: 3d gaussian splatting with shading functions for reflective surfaces. In CVPR , 2024. [26] Haian Jin, Isabella Liu, Peijia Xu, Xiaoshuai Zhang, Songfang Han, Sai Bi, Xiaowei Zhou, Zexiang Xu, and Hao Su. Tensoir: Tensorial inverse rendering. In CVPR , 2023. [27] Michael Kazhdan, Matthew Bolitho, and Hugues Hoppe. Poisson surface reconstruction. In 
+
+Proceedings of the fourth Eurographics symposium on Geometry processing , 2006. [28] Bernhard Kerbl, Georgios Kopanas, Thomas Leimkühler, and George Drettakis. 3d gaussian splatting for real-time radiance field rendering. ACM Transactions on Graphics (TOG) , 2023. [29] Justin Kerr, Chung Min Kim, Mingxuan Wu, Brent Yi, Qianqian Wang, Ken Goldberg, and Angjoo Kanazawa. Robot see robot do: Imitating articulated object manipulation with monocu-lar 4d reconstruction. In Conference on Robot Learning (CoRL) , 2024. [30] Belal Korany, Chitra R Karanam, Hong Cai, and Yasamin Mostofi. Xmodal-id: Using wifi for through-wall person identification from candidate video footage. In MobiCom , 2019. [31] Haowen Lai, Gaoxiang Luo, Yifei Liu, and Mingmin Zhao. Enabling visual recognition at radio frequency. In MobiCom , 2024. [32] Ren Li, Cong Cao, Corentin Dumery, Yingxuan You, Hao Li, and Pascal Fua. Single view garment reconstruction using diffusion mapping via pattern coordinates. In SIGGRAPH , 2025. [33] Zhihao Liang, Qi Zhang, Ying Feng, Ying Shan, and Kui Jia. Gs-ir: 3d gaussian splatting for inverse rendering. In CVPR , 2024. [34] Yang Liu, Feng Wang, Naiyan Wang, and Zhaoxiang Zhang. Echoes beyond points: Unleashing the power of raw radar data in multi-modality fusion. In NeurIPS , 2023. [35] Yuan Liu, Peng Wang, Cheng Lin, Xiaoxiao Long, Jiepeng Wang, Lingjie Liu, Taku Komura, and Wenping Wang. Nero: Neural geometry and brdf reconstruction of reflective objects from multiview images. ACM Transactions on Graphics (TOG) , 2023. [36] Haofan Lu, Christopher Vattheuer, Baharan Mirzasoleiman, and Omid Abari. Newrf: A deep learning framework for wireless radiation field reconstruction and channel prediction. In ICML ,2024. [37] Sohrab Madani, Jayden Guan, Waleed Ahmed, Saurabh Gupta, and Haitham Hassanieh. Rada-tron: Accurate detection using multi-resolution cascaded mimo radar. In ECCV , 2022. 15 [38] Rakesh Raj Madavan, Akshat Kaimal, Vinayak Gupta, Rohit Choudhary, Chandrakala Shanmu-ganathan, Kaushik Mitra, et al. Ganesh: Generalizable nerf for lensless imaging. In WACV ,2025. [39] Ben Mildenhall, Pratul P Srinivasan, Matthew Tancik, Jonathan T Barron, Ravi Ramamoor-thi, and Ren Ng. Nerf: Representing scenes as neural radiance fields for view synthesis. 
+
+Communications of the ACM , 2021. [40] Thomas Müller, Alex Evans, Christoph Schied, and Alexander Keller. Instant neural graphics primitives with a multiresolution hash encoding. ACM Transactions on Graphics (TOG) , 2022. [41] Jacob Munkberg, Jon Hasselgren, Tianchang Shen, Jun Gao, Wenzheng Chen, Alex Evans, Thomas Müller, and Sanja Fidler. Extracting triangular 3d models, materials, and lighting from images. In CVPR , 2022. [42] Michael Niemeyer, Lars Mescheder, Michael Oechsle, and Andreas Geiger. Differentiable volumetric rendering: Learning implicit 3d representations without 3d supervision. In CVPR ,2020. [43] Ming-Hao Ren, Xi Liao, Jihua Zhou, Yang Wang, Yu Shao, Shasha Liao, and Jie Zhang. Diffuse scattering directive model parameterization method for construction materials at mmwave frequencies. International Journal of Antennas and Propagation , 2020. [44] Mark A Richards, Jim Scheer, William A Holm, and William L Melvin. Principles of modern radar. 2010. [45] David M Sheen, Douglas L McMakin, and Thomas E Hall. Three-dimensional millimeter-wave imaging for concealed weapon detection. IEEE Transactions on microwave theory and techniques , 2001. [46] Pratul P Srinivasan, Boyang Deng, Xiuming Zhang, Matthew Tancik, Ben Mildenhall, and Jonathan T Barron. Nerv: Neural reflectance and visibility fields for relighting and view synthesis. In CVPR , 2021. [47] Yue Sun, Zhuoming Huang, Honggang Zhang, Zhi Cao, and Deqiang Xu. 3drimr: 3d reconstruc-tion and imaging via mmwave radar based on deep learning. In IEEE International Performance, Computing, and Communications Conference (IPCCC) , 2021. [48] Yue Sun, Zhuoming Huang, Honggang Zhang, and Xiaohui Liang. 3d reconstruction of multiple objects by mmwave radar on uav. In 2022 IEEE 19th International Conference on Mobile Ad Hoc and Smart Systems (MASS) , 2022. [49] Yue Sun, Honggang Zhang, Zhuoming Huang, and Benyuan Liu. R2p: A deep learning model from mmwave radar to point cloud. In International Conference on Artificial Neural Networks ,2022. [50] Harshvardhan Takawale and Nirupam Roy. Spinr: Neural volumetric reconstruction for fmcw radars. arXiv preprint , 2025. [51] Towaki Takikawa, Joey Litalien, Kangxue Yin, Karsten Kreis, Charles Loop, Derek Nowrouzezahrai, Alec Jacobson, Morgan McGuire, and Sanja Fidler. Neural geometric level of detail: Real-time rendering with implicit 3d shapes. In CVPR , 2021. [52] Weiyi Tan, Yu Wang, Biao Tian, and Shiyou Xu. Fast 3d reconstruction of space targets from isar image sequences based on neural network. In IEEE 8th International Conference on Vision, Image and Signal Processing (ICVISP) , 2024. [53] TI Inc. Texas instrument awr1843. https://www.ti.com/product/AWR1843 , 2023. [54] Dor Verbin, Peter Hedman, Ben Mildenhall, Todd Zickler, Jonathan T Barron, and Pratul P Srinivasan. Ref-nerf: Structured view-dependent appearance for neural radiance fields. In 
+
+CVPR , 2022. 16 [55] Peng Wang, Lingjie Liu, Yuan Liu, Christian Theobalt, Taku Komura, and Wenping Wang. Neus: Learning neural implicit surfaces by volume rendering for multi-view reconstruction. In 
+
+NeurIPS , 2021. [56] Ting Wu, Theodore S Rappaport, and Christopher M Collins. Safe for generations to come: Considerations of safety for millimeter waves in wireless communications. IEEE microwave magazine , 2015. [57] Muhammet Emin Yanik and Murat Torlak. Near-field 2-d sar imaging by millimeter-wave radar for concealed item detection. In 2019 IEEE radio and Wireless Symposium (RWS) , 2019. [58] Yao Yao, Zixin Luo, Shiwei Li, Tian Fang, and Long Quan. Mvsnet: Depth inference for unstructured multi-view stereo. In ECCV , 2018. [59] Yao Yao, Jingyang Zhang, Jingbo Liu, Yihang Qu, Tian Fang, David McKinnon, Yanghai Tsin, and Long Quan. Neilf: Neural incident light field for physically-based material estimation. In 
+
+ECCV , 2022. [60] Yuxuan Yao, Zixuan Zeng, Chun Gu, Xiatian Zhu, and Li Zhang. Reflective gaussian splatting. In ICLR , 2025. [61] Lior Yariv, Jiatao Gu, Yoni Kasten, and Yaron Lipman. Volume rendering of neural implicit surfaces. In NeurIPS , 2021. [62] Lior Yariv, Yoni Kasten, Dror Moran, Meirav Galun, Matan Atzmon, Basri Ronen, and Yaron Lipman. Multiview neural surface reconstruction by disentangling geometry and appearance. In NeurIPS , 2020. [63] Zehao Yu and Shenghua Gao. Fast-mvsnet: Sparse-to-dense multi-view stereo with learned propagation and gauss-newton refinement. In CVPR , 2020. [64] Kevin Zhang, Mohit Sharma, Jacky Liang, and Oliver Kroemer. A modular robotic arm control stack for research: Franka-interface and frankapy. arXiv preprint arXiv:2011.02398 , 2020. [65] Mingmin Zhao, Tianhong Li, Mohammad Abu Alsheikh, Yonglong Tian, Hang Zhao, Antonio Torralba, and Dina Katabi. Through-wall human pose estimation using radio signals. In CVPR ,2018. [66] Mingmin Zhao, Yingcheng Liu, Aniruddh Raghu, Tianhong Li, Hang Zhao, Antonio Torralba, and Dina Katabi. Through-wall human mesh recovery using radio signals. In ICCV , 2019. [67] Mingmin Zhao, Yonglong Tian, Hang Zhao, Mohammad Abu Alsheikh, Tianhong Li, Rumen Hristov, Zachary Kabelac, Dina Katabi, and Antonio Torralba. Rf-based 3d skeletons. In 
+
+Proceedings of the Conference of the ACM Special Interest Group on Data Communication ,2018. [68] Xiaopeng Zhao, Zhenlin An, Qingrui Pan, and Lei Yang. Nerf2: Neural radio-frequency radiance fields. In MobiCom , 2023. 17 Appendix 
+
+This appendix is organized as follows: • Section A provides more extensive radar background information. • Section B provides the proof for our lenless alpha blending. • Section C describes in detail the experimental parameters for collecting data. • Section D describes the setup for the Novel View Synthesis experiment. • Section E goes into detail on limitations, future work and societal impact. 
+
+## A Radar Background 
+
+A.1 Radar Basics 
+
+A mmWave radar works by transmitting a wireless signal (chirp) and receiving back the reflections that come from various reflectors in the scene. In this case, the transmitter and receiver are collocated, meaning they are side by side. It operates in the millimeter-wavelengths frequency bands at 77 GHz, and uses Frequency Modulated Continuous Wave (FMCW) and antenna arrays to help resolve spatial ambiguity. As shown in Fig. 2(a), the transmitted FMCW is a function that is linearly increasing in frequency over time. Considering a single reflector and a single antenna, the received chirp is simply a time-delayed version of the transmitted chirp, see Fig. 2(b). To resolve range ambiguity, the received chirp is multiplied with the conjugate of the transmitted chirp and can be expressed as a complex function: 
+
+s(t) = A · e−j2π(f +kt )d/c = A · e−(j2πkτ )t · e−j2πf τ (9) where A is the signal amplitude, d is the round-trip propagation distance, c is the speed of light, 
+
+τ = d/c is the round-trip delay, f is the starting frequency, and k is the chirp slope. For multiple reflectors, we simply receive the linear combination of all the reflections. 
+
+A.2 Free-space Power Decay 
+
+In free space, the power of a radio frequency signal attenuates proportionally to the square of the distance it travels due to spherical spreading. When considering a round-trip path, where the signal travels from the transmitter to a point in space and then reflects back to the receiver, the decay is even more pronounced. This is known as round-trip free-space path loss , and the power decay factor reflected from distance u is given by: 
+
+Prx ∝ 1(4 πu )4 Ptx (10) This expression accounts for two instances of inverse-square spreading: one during transmission to the point and another during reflection back to the receiver. As such, the received power decreases proportionally to 1/u 4.
+
+A.3 Radar Reflections 
+
+Building off of Sec. 3, we primarily expect specular reflections, albeit some flexibility in the signals which return to the receiver. Even though a perfectly specular signal will only return to the receiver if the reflecting surface is normal to the transmitted chirp, in actuality, there is a margin in which the signal is not perfectly specular, yet some signal still returns. Similar to commons ways of modeling diffused reflections, we follow a shifted Lambertian model [ 44 , 43 ], sometimes also called the directive model. We represent the incident direction by the unit vector ωi, the surface normal by 
+
+n, and the ideal specular reflection direction by: 
+
+ωo = ωi − 2( n · ωi)n (11) The ray which returns to the receiver antenna is denoted as ωr , and is calculated by taking the unit vector that goes from the surface point to the receiver location. The received power is modulated by the directional scaling factor: 
+
+(ωo · ωr ) (12) 18 Reflector is far away Reflector is nearby Figure 15: Difference between far-field and near-field rays. On the left, it’s shown that the incoming rays can be approximated as nearly parallel, while 
+
+on the right , when the object is close to the anten-nas, we can no longer make this assumption. following the scaled Lambertian model men-tioned above. 
+
+A.4 Near Field vs. Far Field 
+
+Wireless imaging systems operate differently depending on the distance between the sensor and the target. This is denoted as near-field (or near range) and far-field (or far range) imaging. When an object is in the far-field, this is catego-rized as when the distance between the object and the radar are much larger than the wave-length and the aperture of the antenna system. For example, 10’s of meters away. In this case, the incoming waves can be approximated as pla-nar [ 44 ]. Meaning all the incoming signals are parallel to each other. This significantly simplifies the image reconstruction, assuming the antennas are uniformly spaced, because (1) the corresponding filter weights can be reused across depth and (2) the weights are uniform, allowing us to use beam-forming and Fourier Transforms to speed up computation time [ 3]. However, operating in the far-field comes at the cost of lower resolution reconstruction, since the RF waves spread out the further it travels. Matched Filter Beamform 
+
+Figure 16: Difference between processing radar data captured in near-field with matched filter vs beamforming. On the other hand, in this paper, we are operating in the near-field. This mean the object is much closer to the antenna aperture, within a meter in our case. Im-portantly, this means that the incoming waves that are reflected from the object in the scene can no longer be approximated as parallel. The difference in sig-nal paths is illustrated in Fig. 15. In this case, it is required that the exact signal propagation paths are taken into account, otherwise the radar images ap-pear distorted [ 57 , 45 ]. To correctly reconstruct an undistorted radar image, we need to use a matched filter (see Sec. 3), which comes with a high compu-tational complexity, albeit a higher resolution image. For example, in Fig. 16 a heatmap of a wrench is shown when processed with beamforming vs. using the matched filter. 
+
+A.5 Differentiable Matched Filter & Signal Tracing 
+
+We have the forward path of the Matched Filter shown in Eq. 3: 
+
+P (xj ) = 
+
+> Nant
+
+X
+
+> i=1
+
+X
+
+> t
+
+s(i, t ) · ej2πkτ it · ej2πf τ i , xj ∈ Ωpts ,
+
+The backpropagated gradient to the signal s(i, t ) is given by: 
+
+∂L ∂s (i, t ) = X 
+
+> xj∈Ωpts
+
+1
+
+P (x) · ∂L ∂P (x) · e−j2πkτ it · e−j2πf τ i (13) Signal Tracing is given by Eq 4, 
+
+s(i, t ) = X 
+
+> xj∈Ωpts
+
+Arx (xj ) e−j2πkτ j t e−j2πf τ j ,
+
+The backpropagated gradient to the amplitude Arx (xj ) is given by: 
+
+∂L ∂A rx (xj ) =
+
+> Nant
+
+X
+
+> i=1
+
+X
+
+> t
+
+∂L ∂s (i, t ) · ej2πkτ it · ej2πf τ i (14) 19 A.6 Code Implementation Differentiable Matched Filter We implement both the forward and backpropagation of the matched filter in CUDA using parallel computation. The corresponding pseudocode is shown in Alg. 1. 
+
+Algorithm 1 Differentiable Matched Filter Algorithm 
+
+[1] Forward: Input signal s(i, t ) where i = 0 , . . . , N ant − 1, t = 0 , . . . , N t − 1;sampling points xj where j = 0 , . . . , N ray Ns − 1
+
+for Parallel j = 0 , . . . , N ray Ns − 1 do 
+
+P (xj ) ← 0
+
+for i = 0 , . . . , N ant − 1 do for t = 0 , . . . , N t − 1 do 
+
+P (xj ) ← P (xj ) + s(i, t ) · ej2πkτ it · ej2πf τ i
+
+P (xj ) ← ∥ P (xj )∥
+
+Output: P (xj ) for all j
+
+[2] Backward: Gradient of matched filter power ∂L ∂P (xj ) for j = 0 , . . . , N ray Ns − 1;Input signal s(i, t ) where i = 0 , . . . , N ant − 1, t = 0 , . . . , N t − 1;Sampling points xj where j = 0 , . . . , N ray Ns − 1
+
+for Parallel i = 0 , . . . , N ant − 1 do for Parallel t = 0 , . . . , N t − 1 do  
+
+> ∂L ∂s (i,t )
+
+← 0
+
+for j = 0 , . . . , N ray Ns − 1 do  
+
+> ∂L ∂s (i,t )
+
+← ∂L ∂s (i,t ) + 1   
+
+> P(xj)
+
+· ∂L ∂P (xj ) · e−j2πkτ it · e−j2πf τ i
+
+Output: ∂L ∂s (i,t ) for all i, t 
+
+Signal Tracing We implement both the forward and backpropagation in CUDA using parallel computation. The corresponding pseudocode is shown in Alg. 2. 
+
+Algorithm 2 Signal Tracing 
+
+[1] Forward: Sampling points xj where j = 0 , . . . , N ray Ns − 1;Amplitude Arx (xj ) where j = 0 , . . . , N ray Ns − 1
+
+for Parallel i = 0 , . . . , N ant − 1 do for Parallel t = 0 , . . . , N t − 1 do 
+
+s(i, t ) ← 0
+
+for j = 0 , . . . , N ray Ns − 1 do 
+
+s(i, t ) ← s(i, t ) + Arx (x) · e−j2πkτ it · e−j2πf τ i
+
+Output: s(i, t ) for all i, t 
+
+[2] Backward: Gradient of signal ∂L ∂s (i,t ) for i = 0 , . . . , N ant − 1, t = 0 , . . . , N t − 1
+
+Sampling points xj where j = 0 , . . . , N ray Ns − 1
+
+for Parallel j = 0 , . . . , N ray Ns − 1 do   
+
+> ∂L ∂A rx (xj)
+
+← 0
+
+for i = 0 , . . . , N ant − 1 do for t = 0 , . . . , N t − 1 do   
+
+> ∂L ∂A rx (xj)
+
+← ∂L ∂A rx (xj ) + ∂L ∂s (i,t ) · ej2πkτ it · ej2πf τ i
+
+Output: ∂L ∂A rx (xj ) for all j
+
+20 B Lensless Alpha Blending 
+
+B.1 Alpha 
+
+Following [55], the opaque density computed along the primary ray p is defined as: 
+
+ρ(u) = max − dΦ s 
+
+> du
+
+(f (x(u))) Φs(f (x(u))) , 0
+
+!
+
+, (15) where ϕs(x) and Φs(x) denote the probability density function (PDF) and cumulative distribution function (CDF) of the logistic distribution, respectively. The corresponding alpha value over the interval [ui, u i+1 ] is then: 
+
+αi = 1 − exp 
+
+
+
+−
+
+Z ui+1 
+
+> ui
+
+ρ(u)d u
+
+
+
+= 1 − exp −
+
+Z ui+1 
+
+> ui
+
+− dΦ s 
+
+> du
+
+(f (x(u))) Φs(f (x(u))) du
+
+!
+
+. (16) When changing from the primary ray p to a real ray r, the derivative term in the numerator transforms as: 
+
+− dΦ s
+
+du (f (x(u))) = − dΦ s
+
+du′ (f (x(u))) · du′
+
+du = ρ′(u′) · du′
+
+du , (17) where u and u′ are the sampling parameters along the primary and real rays, respectively, and ρ′(u′)
+
+denotes the opaque density computed along the real ray. In integration, we have: 
+
+αi = 1 − exp 
+
+
+
+−
+
+Z ui+1 
+
+> ui
+
+ρ(u) d u
+
+
+
+= 1 − exp 
+
+
+
+−
+
+Z ui+1 
+
+> ui
+
+ρ(u) d u′ · du
+
+du′
+
+
+
+. (18) By substituting the transformed opaque density from Eq. 17 into Eq. 18, we obtain: 
+
+αi = 1 − exp −
+
+Z u′
+
+> i+1
+> u′
+> i
+
+ρ′(u′) d u′
+
+!
+
+= α′
+
+> i
+
+, (19) demonstrating that the computed αi remains unchanged when transitioning from the primary ray to the real ray. 
+
+B.2 Transmittance 
+
+Following [55], in the primary ray direction p, we define the transmittance as: 
+
+T (u)ρ(u) = |∇ f (x(u)) · p| ϕs(f (x(u))) = − dΦ s
+
+du (f (x(u))) , (20) where ϕs(·) and Φs(·) are the PDF and CDF of the logistic distribution, respectively. Given the transmittance is defined as T (u) = exp  − R u 
+
+> 0
+
+ρ(v) d v, differentiating both sides yields: 
+
+dT
+
+du = ddu exp 
+
+
+
+−
+
+Z u
+
+> 0
+
+ρ(v) d v
+
+
+
+= −ρ(u) exp 
+
+
+
+−
+
+Z u
+
+> 0
+
+ρ(v) d v
+
+
+
+= −ρ(u)T (u),
+
+which implies: 
+
+T (u)ρ(u) = − dT
+
+du (u). (21) Combining Eq. 20 and Eq. 21, we obtain: 
+
+− dΦ s
+
+du (f (x(u))) = − dT
+
+du (u). (22) Because the geometry-dependent signed distance function (SDF) does not vary with ray direction, we assume the boundary condition: 
+
+Φs(f (x(u))) = Φ s(f (x(u′))) .
+
+Then, given the starting CDF values Φs(f (x(us))) on the primary ray p and Φs(f (x(u′
+
+> s
+
+))) on the real ray r, integrating Eq. 22 leads to: 
+
+T (u′) − T (u) = Φ s(f (x(u′
+
+> s
+
+))) − Φs(f (x(us))) , (23) which completes the proof of Eq. 7. 21 Front View Side View Top View   
+
+> Wrench Bottle Elephant
+
+Figure 17: Subset of matched filter images used as ground truth in GeRaF . The first row shows the radar heatmaps summed across the depth, giving a front view of the object relative to GeRaF ’s coordinate system, the second row is summed across the horizontal axis (azimuth), giving a side view and the last row is summed along the vertical axis (elevation), giving a top down or bird’s eye view. 
+
+## C Experiment Details 
+
+Data Collection Setup We collected our own dataset using a TI 1843BOOST mmWave radar [ 53 ]with a DCA1000EVM for raw data collection, attached to a Franka Research 3 controlled via the FrankaPy library [ 64 ]. We emulate 2D arrays by moving the radar with the robotic arm for 17-68 (more scans were made for more complex objects) different array viewpoints, which are each 0.14m 
+
+× 0.25m in size with an antenna spacing of ∼ ( λ 
+
+> 4
+
+− λ 
+
+> 2
+
+) between all antennas. Each imaging plan was shifted circularly (yaw) around the center of the objects location to measure various viewpoints. A subset of the ground truth heatmaps are visualized in Fig. 17. Though the actual groundtruth used in GeRaF is a 3D heatmap, for ease of visualization, we plot the 3D heatmap summed along each of the 3 dimensions (depth, azimuth, elevation), respectively. Each of the columns show the radar heatmap from a different scanning plane. In order to capture 360 ◦ scans, we use a rotation platform to rotate the object which was placed aroun 0.3-0.5m away. The radar parameters were set to have a starting frequency of 77 GHz usable sweeping bandwidth of 3.59 GHz, giving 0.04 m in range resolution. The slope used is 70.15( MHz /μs) capturing 64 ADC samples with a 1250ksps sampling rate for each chirp. 
+
+Training Setup For the SDF Network, we use an MLP with 8 layers and a hidden dimension of 256. We apply sinusoidal positional encoding with 10 frequency levels as input. The Reflectivity Network is implemented as an MLP with 4 layers and a hidden dimension of 256. The signal power prediction is implemented as a single trainable parameter. We trained our model for 50,000 iterations over 32 hours on a single NVIDIA H100 GPU, using 
+
+mmDetection3D [10 ] as the code base. We used an initial learning rate of 1 × 10 −3, but due to the sparsity of the input, the learning rate for the SDF Network was reduced to 1 × 10 −4. Training was performed using the AdamW optimizer with cosine annealing learning rate scheduling. 
+
+Metric Calculation The metrics used to compare GeRaF and the matched filter baseline against the camera ground truth are the F1-Score (evaluated with τ = 0 .01 ) and Chamfer distance. These two metrics evaluate the similarity between two 3D point clouds. For mesh to point cloud conversion, we sample uniformly along the meshes for each of the three candidates with 5000 points. We then align the matched filter point clouds to the camera baseline and align GeRaF ’s point clouds to the camera baseline. The F1-Score is calculated by finding the nearest point in the camera point cloud and computing the distance in both directions. Precision and recall are computed as the proportions of these distances that fall below τ , and the F1-Score is derived by: 
+
+F1 = 2 · Precision · Recall Precision + Recall (24) 22 The Chamfer distance computes the pairwise distance between two pointclouds by finding the nearest neighbors for each point between point clouds and calculating the squared distance, returning the average distance. This is calculated in both directions. 
+
+## D Novel View Synthesis Novel Plane 1  
+
+> Novel Plane 2 Novel Plane 3
+> Novel Plane 4
+
+Figure 18: Novel view synthesis setting. The blue planes represent novel views that are not included during training. We also demonstrate GeRaF ’s capability in novel view synthesis (NVS) [ 39 ]. To evaluate this, we split the avail-able views into training and test sets. Figure 18 illustrates the detailed data split. The results are shown in Fig. 9. 
+
+## E Discussion 
+
+E.1 Potential Societal Impacts 
+
+There are a few potential negative impacts that RF neural representations could cause. Being able to perform 3D re-construction of things behind occlusions could potentially raise concerns for privacy. Additionally like many other learning based work, the heavy compute power raises con-cerns over the environment sustainability. However, this work could also potentially help with things like suspicious package detection. 
+
+E.2 Limitations & Future Work Radar Scans Our method currently is limited by the diversity of the networks radar heatmap ground truths collected. More specifically, if there was a point that existed on the surface of the object, which never reflects back to the radar in any of the scans taken, then the network has no way of creating a point in that location, because it has never received any reflection from that location, making it invisible. Future work is required for dealing with unseen surfaces, and more comprehensive scanning methods. 
+
+Materials We currently tested the system with objects made of metals, which allows for more clear reflections. On the other hand, metal objects are very specular, meaning more radar scans are required to receive signals from all parts of the object. Dealing with objects made of other materials or a composition of materials is left for future work, which will require significantly adjusting the radar reflection model. 
+
+Thick Occlusions We have shown results for some occlusions (cardboard, paper), however, in the case of thicker occlusions this problem is not so straightforward since this requires the network to predict two or more surfaces rather than ignoring the weak occlusion reflections. Future work is required to extend the surface reconstruction to deal with multiple surfaces. 
+
+Better Radio Frequency Model As discussed in the radar physics section, unlike vision-based inverse rendering which often adopts the Cook-Torrance BRDF [ 11 ], with components such as the Fresnel term, Schlick-GGX geometry function, and Trowbridge-Reitz GGX distribution to model diffraction and metallic reflections, the radio frequency (RF) domain still relies on the simplified Lambertian model. This model is not even sufficient for accurate forward rendering, leading to significant reflection errors. As a result, inverse rendering based on such a coarse approximation cannot reliably reconstruct detailed geometry, since the underlying reflection model introduces substantial errors. 
+
+Lower Computational Complexity Even with the introduction of lens-less sampling and alpha blending, which make real-time differentiable rendering feasible, the computational cost remains significantly higher compared to vision-based rendering. In the vision domain, reflective models benefit from techniques such as split-sum approximation [ 41 ] and spherical harmonics [ 54 ], which avoid costly Monte Carlo sampling by operating efficiently over 1D rays. However, directly applying these techniques to radar reflection is not feasible, since traditional alpha blending operates along 1D rays, whereas radar rendering requires sampling over a 3D space. This 23 dimensional difference introduces substantial complexity.Therefore, future work should explore how to achieve 3D space sampling with computational complexity comparable to that of 1D ray-based sampling, in order to further improve the efficiency of RF-based differentiable rendering. 
+
+Accurate multi-level surface representation In vision-based geometry reconstruction, multi-level surfaces are typically not a concern, as surfaces occluded by others are not visible in RGB images and therefore do not contribute to reconstruction. However, this is not the case in radar sensing, where signals can penetrate and reflect off multiple layers of geometry, resulting in observable multi-level surfaces. As a result, representing and reconstructing such multi-layered structures becomes a key challenge in RF-based 3D reconstruction. Developing an effective multi-level surface representation is thus essential for fully leveraging the unique capabilities of radar. 24
