@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T13:13:19.055096+00:00",
+  "generated_at": "2026-06-03T14:51:29.133823+00:00",
   "updated_date": "20260525-20260603",
   "carryover_days": 9,
   "tag_states": {
@@ -527,6 +527,11 @@
           "carry_days": 1
         }
       ]
+    },
+    "mdr": {
+      "updated_date": "20260525-20260603",
+      "carryover_days": 9,
+      "items": []
     }
   }
 }
