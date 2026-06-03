@@ -1,0 +1,346 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-03T22:22:19.852227+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 6,
+    "quick_skim_target": 11,
+    "quick_selected": 6
+  },
+  "deep_dive": [
+    {
+      "id": "2605.28270v1",
+      "source": "arxiv",
+      "title": "Every9D-21M: Large-Scale Real-World 9D Canonicalization of Everyday Objects",
+      "abstract": "Estimating the 9D pose of everyday objects from a single real-world image remains challenging. This is largely due to the lack of large-scale supervision. Most existing datasets either rely heavily on synthetic renderings or provide limited coverage of real-world objects: the largest real-world 9D pose dataset to date contains only 17K annotated objects across 9 categories. We address this gap with Every9D-21M, a dataset of 9D pose annotations for 21.8M real-world images from 109K object- centric videos spanning 700 everyday object categories - two orders of magnitude larger than prior real-world 9D pose benchmarks in both image and category count. To achieve this scale, we leverage object-centric videos by reconstructing object- level point clouds via multi-view geometry and aligning similar instances into a shared canonical coordinate frame. Canonical poses are manually annotated for only a small set of reference objects (fewer than 0.01% of all images) and propagated to the remaining instances via cross-instance alignment. All propagated canonical poses are then verified from multiple viewpoints. We further introduce cross-category orientation rules that induce category-level symmetries, enabling symmetry-aware evaluation. Beyond establishing dedicated training and evaluation splits as a benchmark for 9D pose foundation models, we show that training on Every9D-21M improves performance on ImageNet3D and PASCAL3D+, and generalizes to HANDAL substantially better than training on ImageNet3D. Data and code are available at https://github.com/GenIntel/Every9D.",
+      "authors": [
+        "Leonhard Sommer",
+        "Emil Akopyan",
+        "Adam Kortylewski"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-27T10:16:17+00:00",
+      "link": "https://arxiv.org/pdf/2605.28270v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "large-scale real-world 9D canonicalization including scale estimation",
+      "llm_evidence_cn": "大规模真实世界9D规范化，包含尺度估计",
+      "llm_evidence": "大规模真实世界9D规范化，包含尺度估计",
+      "canonical_evidence": "大规模真实世界9D规范化，包含尺度估计",
+      "llm_tldr_en": "Every9D-21M provides 21.8M 9D pose annotations (including scale) for 109K objects across 700 categories, enabling metric 3D reconstruction from real-world images.",
+      "llm_tldr_cn": "针对真实世界物体9D姿态估计缺乏大规模标注数据的问题，Every9D-21M数据集提供了2180万张真实图像上的9D姿态标注（包含旋转、平移和尺度），覆盖700类别10.9万物体。通过从物体中心视频重建点云并人工验证，数据集规模比现有真实世界基准大两个数量级。该数据集可直接用于训练能恢复绝对物理尺寸的3D重建模型，对度量三维重建任务具有重要价值。",
+      "llm_tldr": "针对真实世界物体9D姿态估计缺乏大规模标注数据的问题，Every9D-21M数据集提供了2180万张真实图像上的9D姿态标注（包含旋转、平移和尺度），覆盖700类别10.9万物体。通过从物体中心视频重建点云并人工验证，数据集规模比现有真实世界基准大两个数量级。该数据集可直接用于训练能恢复绝对物理尺寸的3D重建模型，对度量三维重建任务具有重要价值。",
+      "llm_tags": [
+        "query:mdr"
+      ],
+      "matched_query_tag": "query:mdr",
+      "matched_query_text": "3D reconstruction that recovers absolute physical dimensions for measurement purposes",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2605.30320v1",
+      "source": "arxiv",
+      "title": "MonoPhysics: Estimating Geometry, Appearance, and Physical Parameters from Monocular Videos",
+      "abstract": "Existing inverse physics methods recover physical parameters from multi-view videos, where geometric constraints across views resolve scale and 3D structure. In monocular settings, however, such constraints are absent, leading to severe scale ambiguity, inaccurate geometry, and weak coupling between appearance optimization and physical simulation. We propose MonoPhysics, a framework for monocular inverse physics estimation of deformable objects using differentiable MPM simulation and 3D Gaussian Splatting, which jointly optimizes geometry, appearance, and physical parameters from a single camera view. We address these challenges through three visual-physical bridges: global scale alignment, physics-aware geometry refinement, and a differentiable position map, which together enable accurate optimization from monocular observations alone. We evaluate on Vid2Sim and our new dataset of elastic and plastic objects, showing that MonoPhysics outperforms existing baselines in monocular settings and achieves performance comparable to multi-view baselines using only a single camera. Our project page is available at https://daniel03c1.github.io/MonoPhysics/",
+      "authors": [
+        "Daniel Rho",
+        "Jun Myeong Choi",
+        "Matthew Thornton",
+        "Biswadip Dey",
+        "Roni Sengupta"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-28T17:55:34+00:00",
+      "link": "https://arxiv.org/pdf/2605.30320v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "monocular inverse physics with global scale alignment for physical measurement",
+      "llm_evidence_cn": "单目逆物理估计结合全局尺度对齐用于物理测量",
+      "llm_evidence": "单目逆物理估计结合全局尺度对齐用于物理测量",
+      "canonical_evidence": "单目逆物理估计结合全局尺度对齐用于物理测量",
+      "llm_tldr_en": "MonoPhysics jointly optimizes geometry, appearance, and physical parameters from monocular video using differentiable MPM simulation and 3D Gaussian Splatting, addressing scale ambiguity via global scale alignment.",
+      "llm_tldr_cn": "针对单目视频中尺度模糊和几何不准确问题，提出MonoPhysics，结合可微MPM仿真和3D高斯点云，联合优化几何、外观和物理参数，通过全局尺度对齐恢复绝对尺度，适用于物理参数估计和尺寸测量。",
+      "llm_tldr": "针对单目视频中尺度模糊和几何不准确问题，提出MonoPhysics，结合可微MPM仿真和3D高斯点云，联合优化几何、外观和物理参数，通过全局尺度对齐恢复绝对尺度，适用于物理参数估计和尺寸测量。",
+      "llm_tags": [
+        "query:mdr"
+      ],
+      "matched_query_tag": "query:mdr",
+      "matched_query_text": "absolute scale recovery in 3D reconstruction for physical measurement",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2605.31419v1",
+      "source": "arxiv",
+      "title": "Triangle Splatting SLAM",
+      "abstract": "We present a dense RGB-D SLAM system using differentiable triangles as the 3D map representation. While 3D Gaussian Splatting has emerged as the leading method for novel-view synthesis, triangles remain the standard primitive for traditional rendering hardware, game engines, and downstream tasks requiring explicit geometry such as simulation, collision, and editing. Recent offline methods have demonstrated that an unstructured 'triangle soup' can be optimised into a photorealistic mesh via Delaunay triangulation across a set of posed images. Building upon this insight, we present the first dense SLAM system to employ Triangle Splatting to perform both tracking and mapping through online differentiable rendering of a triangle soup. The map can be converted into a connected mesh on-the-fly via restricted Delaunay triangulation, enabling new online capabilities such as mesh deformation and collision checking. On Replica and TUM-RGBD, our system outperforms baselines on 3D geometry, matches the camera-tracking accuracy, and enables online mesh-based scene editing.",
+      "authors": [
+        "Nicholas Fry",
+        "Eric Dexheimer",
+        "Kirill Mazur",
+        "Paul H. J. Kelly",
+        "Andrew J. Davison"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-05-29T15:20:38+00:00",
+      "link": "https://arxiv.org/pdf/2605.31419v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "dense RGB-D SLAM with differentiable triangle splatting",
+      "llm_evidence_cn": "基于可微分三角形溅射的稠密RGB-D SLAM",
+      "llm_evidence": "基于可微分三角形溅射的稠密RGB-D SLAM",
+      "canonical_evidence": "基于可微分三角形溅射的稠密RGB-D SLAM",
+      "llm_tldr_en": "Triangle Splatting SLAM uses differentiable triangles for online dense SLAM, enabling photorealistic mapping and on-the-fly mesh extraction.",
+      "llm_tldr_cn": "本文提出首个使用可微分三角形表示进行稠密RGB-D SLAM的系统。通过在线可微分渲染三角形汤，同时实现跟踪和建图，并能实时提取连通网格。与现有的3D高斯溅射不同，三角形适合传统渲染和下游任务。实验证明了跟踪精度和建图质量，且地图可直接用于碰撞检测等任务，但未显式关注物理尺寸测量精度。",
+      "llm_tldr": "本文提出首个使用可微分三角形表示进行稠密RGB-D SLAM的系统。通过在线可微分渲染三角形汤，同时实现跟踪和建图，并能实时提取连通网格。与现有的3D高斯溅射不同，三角形适合传统渲染和下游任务。实验证明了跟踪精度和建图质量，且地图可直接用于碰撞检测等任务，但未显式关注物理尺寸测量精度。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.26519v1",
+      "source": "arxiv",
+      "title": "$R^3$: 3D Reconstruction via Relative Regression",
+      "abstract": "Recent feed-forward geometry foundation models have demonstrated impressive generalization by recovering depth and poses in a single forward pass. However, these models are typically constrained by a global coordinate frame assumption. This dependency becomes a significant bottleneck for long-context and streaming reconstruction, as it forces the network to maintain an arbitrary temporal origin and handle translation magnitudes that grow unbounded over time. Our solution, which we call $R^3$, employs relative regression. We employ a lightweight MLP to predict confidence-weighted relative constraints. These confidences serve as a unified anchor: weighting losses during training and guiding pose aggregation during inference. $R^3$ supports both full-context offline reconstruction and causal, bounded-memory streaming. Our evaluation in both offline and streaming settings validates the effectiveness of our relative mechanism. Project page: https://kevinxu02.github.io/r3-site",
+      "authors": [
+        "Congrong Xu",
+        "Huachen Gao",
+        "Xingyu Chen",
+        "Yuliang Xiu",
+        "Jun Gao",
+        "Anpei Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-26T04:03:38+00:00",
+      "link": "https://arxiv.org/pdf/2605.26519v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "relative regression for 3D reconstruction overcoming global coordinate frame dependency",
+      "llm_evidence_cn": "通过相对回归克服全局坐标系依赖的三维重建方法",
+      "llm_evidence": "通过相对回归克服全局坐标系依赖的三维重建方法",
+      "canonical_evidence": "通过相对回归克服全局坐标系依赖的三维重建方法",
+      "llm_tldr_en": "R3 uses confidence-weighted relative constraints for 3D reconstruction, enabling long-context and streaming reconstruction without global coordinate assumptions.",
+      "llm_tldr_cn": "针对前馈式几何基础模型因全局坐标系假设而无法处理长序列和流式重建的问题，R3采用相对回归策略。通过轻量级MLP预测置信度加权的相对约束，统一训练权重和推理聚合。该方法支持全上下文离线和流式在线重建，实验证明了其在多视图重建中的扩展性和鲁棒性。但该方法不保证绝对尺度。",
+      "llm_tldr": "针对前馈式几何基础模型因全局坐标系假设而无法处理长序列和流式重建的问题，R3采用相对回归策略。通过轻量级MLP预测置信度加权的相对约束，统一训练权重和推理聚合。该方法支持全上下文离线和流式在线重建，实验证明了其在多视图重建中的扩展性和鲁棒性。但该方法不保证绝对尺度。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.31466v1",
+      "source": "arxiv",
+      "title": "VolFill: Single-View Amodal 3D Scene Reconstruction with Volumetric Flow Matching",
+      "abstract": "Reconstructing the complete geometry of a scene from a single RGB image remains challenging - especially when inferring hidden structures where visual evidence is incomplete. We introduce VolFill, a generative framework that predicts the 3D structure of the complete scene rather than relying on traditional pixel-aligned regression. Our method utilizes a hybrid 3D VAE to compress sparse truncated unsigned distance function grids into a compact latent space, paired with a latent Diffusion Transformer that denoises this representation to recover the complete scene. We condition the generation on geometry foundation models, leveraging rich spatial priors for robust reasoning. Unlike existing methods limited by per-ray constraints or unstructured point-cloud queries, VolFill provides a structured representation that supports direct surface extraction and occupancy queries at scale. Extensive experiments on the SCRREAM and NRGB-D datasets demonstrate that our approach significantly outperforms current baselines, providing a robust foundation for holistic spatial understanding.",
+      "authors": [
+        "Tuan Duc Ngo",
+        "Chuang Gan",
+        "Evangelos Kalogerakis"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-29T15:59:20+00:00",
+      "link": "https://arxiv.org/pdf/2605.31466v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "single-view amodal 3D scene reconstruction with generative flow matching",
+      "llm_evidence_cn": "使用生成式流匹配进行单视图无模态三维场景重建",
+      "llm_evidence": "使用生成式流匹配进行单视图无模态三维场景重建",
+      "canonical_evidence": "使用生成式流匹配进行单视图无模态三维场景重建",
+      "llm_tldr_en": "VolFill generates complete 3D geometry from a single image using hybrid VAE and latent diffusion transformer, conditioned on geometry foundation models.",
+      "llm_tldr_cn": "针对单张RGB图像重建完整三维场景的难题，VolFill提出混合3D VAE压缩截断符号距离函数网格，结合潜在扩散变换器生成完整几何，并以几何基础模型作为条件。该方法突破了像素对齐回归的限制，能够推断被遮挡区域。实验证明了其在隐式几何推理上的优势，但未涉及尺度恢复。",
+      "llm_tldr": "针对单张RGB图像重建完整三维场景的难题，VolFill提出混合3D VAE压缩截断符号距离函数网格，结合潜在扩散变换器生成完整几何，并以几何基础模型作为条件。该方法突破了像素对齐回归的限制，能够推断被遮挡区域。实验证明了其在隐式几何推理上的优势，但未涉及尺度恢复。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.30060v1",
+      "source": "arxiv",
+      "title": "Towards Consistent Video Geometry Estimation",
+      "abstract": "This work presents ViGeo, a feed-forward foundation model for recovering spatially dense and temporally consistent geometry from video sequences. Built upon a plain transformer architecture without task-specific architectural modifications, ViGeo supports streaming, full-sequence, and long-video inference within a unified model. The key design is dynamic chunking attention, which exposes the model to both bidirectional and causal temporal contexts during training and allows it to adapt its attention pattern at test time without retraining. To improve supervision quality, we further introduce a completion-based data refinement framework. This framework trains a video depth completion teacher that conditions on sparse and noisy annotations and exploits video/multi-view context to produce dense, temporally coherent, and geometrically reliable training targets. Beyond depth and point maps, ViGeo also predicts surface normals within the same framework. Trained solely on public datasets, ViGeo achieves state-of-the-art performance across online, offline, and long-video depth estimation, surface normal estimation, and video point map estimation.",
+      "authors": [
+        "Zhu Yu",
+        "Jingnan Gao",
+        "Runmin Zhang",
+        "Lingteng Qiu",
+        "Zhengyi Zhao",
+        "Rui Peng",
+        "Yichao Yan",
+        "Kejie Qiu",
+        "Siyu Zhu",
+        "Si-Yuan Cao",
+        "Hui-Liang Shen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-28T15:11:17+00:00",
+      "link": "https://arxiv.org/pdf/2605.30060v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "feed-forward foundation model for consistent video geometry",
+      "llm_evidence_cn": "视频几何一致性的前馈基础模型",
+      "llm_evidence": "视频几何一致性的前馈基础模型",
+      "canonical_evidence": "视频几何一致性的前馈基础模型",
+      "llm_tldr_en": "ViGeo uses a plain transformer with dynamic chunking attention to recover spatially dense and temporally consistent geometry from video, supporting streaming and long-video inference.",
+      "llm_tldr_cn": "现有视频几何方法在时空一致性上存在不足，ViGeo通过动态分块注意力机制，在纯Transformer架构上实现流式、全序列和长视频几何估计，无需任务特定修改。",
+      "llm_tldr": "现有视频几何方法在时空一致性上存在不足，ViGeo通过动态分块注意力机制，在纯Transformer架构上实现流式、全序列和长视频几何估计，无需任务特定修改。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.30060v2",
+      "source": "arxiv",
+      "title": "Towards Consistent Video Geometry Estimation",
+      "abstract": "This work presents ViGeo, a feed-forward foundation model for recovering spatially dense and temporally consistent geometry from video sequences. Built upon a plain transformer architecture without task-specific architectural modifications, ViGeo supports streaming, full-sequence, and long-video inference within a unified model. The key design is dynamic chunking attention, which exposes the model to both bidirectional and causal temporal contexts during training and allows it to adapt its attention pattern at test time without retraining. To improve supervision quality, we further introduce a completion-based data refinement framework. This framework trains a video depth completion teacher that conditions on sparse and noisy annotations and exploits video/multi-view context to produce dense, temporally coherent, and geometrically reliable training targets. Beyond depth and point maps, ViGeo also predicts surface normals within the same framework. Trained solely on public datasets, ViGeo achieves state-of-the-art performance across online, offline, and long-video depth estimation, surface normal estimation, and video point map estimation.",
+      "authors": [
+        "Zhu Yu",
+        "Jingnan Gao",
+        "Runmin Zhang",
+        "Lingteng Qiu",
+        "Zhengyi Zhao",
+        "Rui Peng",
+        "Yichao Yan",
+        "Kejie Qiu",
+        "Siyu Zhu",
+        "Zilong Dong",
+        "Si-Yuan Cao",
+        "Hui-Liang Shen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-28T15:11:17+00:00",
+      "link": "https://arxiv.org/pdf/2605.30060v2",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "feed-forward video depth estimation, consistent geometry",
+      "llm_evidence_cn": "前馈视频深度估计，一致性几何",
+      "llm_evidence": "前馈视频深度估计，一致性几何",
+      "canonical_evidence": "前馈视频深度估计，一致性几何",
+      "llm_tldr_en": "ViGeo is a transformer foundation model for dense temporally consistent video geometry estimation, supporting streaming and long-video inference via dynamic chunking attention.",
+      "llm_tldr_cn": "本文提出ViGeo，一种基于Transformer的基础模型，从视频序列恢复空间密集且时间一致的几何。通过动态分块注意力机制，支持流式、全序列和长视频推理。引入基于补全的数据精炼框架优化训练数据质量。",
+      "llm_tldr": "本文提出ViGeo，一种基于Transformer的基础模型，从视频序列恢复空间密集且时间一致的几何。通过动态分块注意力机制，支持流式、全序列和长视频推理。引入基于补全的数据精炼框架优化训练数据质量。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.30215v1",
+      "source": "arxiv",
+      "title": "Déjà View: Looping Transformers for Multi-View 3D Reconstruction",
+      "abstract": "Recent feed-forward 3D reconstruction transformers have scaled to over a billion parameters, following the broader trend of increasing model capacity in computer vision. Yet emerging evidence suggests that contiguous transformer layers often behave like repeated applications of similar operations, and multi-view reconstruction transformers refine their predictions progressively across decoder depth. We posit that model depth partially buys iteration, paid for inefficiently in unique parameters, and instead make that iteration explicit in architecture. Our model, DéjàView, applies a single looped transformer block recurrently to per-view features for K refinement steps. Trained once, it exposes K as an inference-time compute knob, matching or outperforming substantially larger feed-forward baselines across five reconstruction benchmarks spanning indoor, outdoor, object-centric, and driving scenes, while using a fraction of their parameters and comparable or lower compute. Importantly, the same looped block formulation outperforms an otherwise identical variant with independent per-step parameters under matched training data and compute, suggesting that explicit iteration is not merely a compute-efficient substitute for capacity but a stronger inductive bias for multi-view 3D reconstruction.",
+      "authors": [
+        "Alessandro Burzio",
+        "Tobias Fischer",
+        "Sven Elflein",
+        "Qunjie Zhou",
+        "Riccardo de Lutio",
+        "Jiawei Ren",
+        "Jiahui Huang",
+        "Shengyu Huang",
+        "Marc Pollefeys",
+        "Laura Leal-Taixé",
+        "Zan Gojcic",
+        "Haithem Turki"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-28T16:47:48+00:00",
+      "link": "https://arxiv.org/pdf/2605.30215v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multi-view 3D reconstruction with looped transformers",
+      "llm_evidence_cn": "多视图三维重建，循环Transformer",
+      "llm_evidence": "多视图三维重建，循环Transformer",
+      "canonical_evidence": "多视图三维重建，循环Transformer",
+      "llm_tldr_en": "Déjà View applies a single looped transformer block recurrently to per-view features for efficient multi-view 3D reconstruction, matching larger models.",
+      "llm_tldr_cn": "本文提出Déjà View，通过循环应用单个Transformer模块到每视角特征，实现多视图三维重建。训练后，推理步数K作为计算旋钮，在性能匹配或超越更大模型的同时显著降低参数量。",
+      "llm_tldr": "本文提出Déjà View，通过循环应用单个Transformer模块到每视角特征，实现多视图三维重建。训练后，推理步数K作为计算旋钮，在性能匹配或超越更大模型的同时显著降低参数量。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
