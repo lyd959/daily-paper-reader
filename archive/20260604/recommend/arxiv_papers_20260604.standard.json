@@ -1,0 +1,351 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-04T21:12:21.116780+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 8,
+    "quick_skim_target": 11,
+    "quick_selected": 8
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2605.27952v1",
+      "source": "arxiv",
+      "title": "Con-DSO: Learning Short-Horizon Consistency Priors for RGB-D Direct Sparse Odometry",
+      "abstract": "Visual odometry (VO) is a fundamental component in robotics and augmented reality. RGB-D direct VO benefits from metric depth measurements, but it can degrade in challenging environments, where dynamic objects, occlusions, illumination changes, and unreliable depth violate the short-horizon photometric and depth-geometric consistency assumptions used by direct alignment. Existing approaches mitigate these issues through semantic filtering, explicit occlusion reasoning, illumination adaptation, or hand-crafted geometric criteria, but often rely on external modules or fixed assumptions tailored to individual failure modes, limiting their flexibility and ability to handle diverse challenges in a unified manner. In this work, we propose Con-DSO, a consistency-aware RGB-D direct sparse odometry framework that predicts dense photometric and depth-geometric consistency uncertainty from temporally adjacent RGB-D frame pairs. The consistency network is trained using flow-guided photometric errors and projective depth-consistency errors, allowing consistency violations to be represented as pixel-level uncertainty. These pairwise uncertainty predictions are converted into a host-side quality prior for keyframe-based tracking. The prior is then applied to VO through quality-aware support-pixel selection and decoupled photometric-geometric weighting during pose estimation, enabling continuous attenuation of unreliable observations rather than hard rejection or threshold-based gating. Experiments on five public RGB-D benchmarks show substantial gains over direct RGB-D VO baselines, with over 20\\% absolute trajectory error reduction on ICL-NUIM and 50\\%--80\\% reductions on RGB-D Scenes V2, TUM/Bonn Dynamic, and OpenLORIS sequences.",
+      "authors": [
+        "Haolan Zhang",
+        "Thanh Nguyen Canh",
+        "Chenghao Li",
+        "Ziyan Gao",
+        "Xiongwen Jiang",
+        "Nak Young Chong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-05-27T04:46:52+00:00",
+      "link": "https://arxiv.org/pdf/2605.27952v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "metric depth measurements for visual odometry accuracy",
+      "llm_evidence_cn": "度量深度测量用于视觉里程计精度",
+      "llm_evidence": "度量深度测量用于视觉里程计精度",
+      "canonical_evidence": "度量深度测量用于视觉里程计精度",
+      "llm_tldr_en": "Con-DSO learns short-horizon consistency priors to improve RGB-D direct sparse odometry in challenging environments, leveraging metric depth.",
+      "llm_tldr_cn": "针对RGB-D直接稀疏里程计在动态、遮挡等环境下退化的问题，提出Con-DSO，通过学习短期一致性先验，统一处理多种挑战，在度量深度数据上显著提升鲁棒性和精度，为需要度量尺度重建的应用提供底层支持。",
+      "llm_tldr": "针对RGB-D直接稀疏里程计在动态、遮挡等环境下退化的问题，提出Con-DSO，通过学习短期一致性先验，统一处理多种挑战，在度量深度数据上显著提升鲁棒性和精度，为需要度量尺度重建的应用提供底层支持。",
+      "llm_tags": [
+        "query:mdr"
+      ],
+      "matched_query_tag": "query:mdr",
+      "matched_query_text": "accuracy of 3D reconstruction in physical units",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.30310v1",
+      "source": "arxiv",
+      "title": "City-Mesh3R: Simulation-Ready City-Scale 3D Mesh Reconstruction from Multi-View Images",
+      "abstract": "City-scale 3D surface reconstruction from multiview images for downstream 3D simulation, poses highly challenging problems due to the scale and complexity of urban scenes. Existing city-scale 3D reconstruction methods based on NeRF, Gaussian Splatting etc. often fail to recover 3D meshes ready for simulation due to incomplete/missing geometry and irregular, noisy surfaces. Scaling existing small-scale 3D reconstruction methods to arbitrarily large urban scenes is highly infeasible due to their computational complexity. We present City-Mesh3R, a scalable framework for reconstructing watertight surface meshes directly from large unordered image collections. Unlike recent methods which use global sparse SfM point-cloud initialization followed by a distributed 3D dense reconstruction of large-scale scenes, our method follows an end-to-end images-to-mesh 3D reconstruction approach using a divide-and-conquer strategy. The sparse city map is reconstructed via topological image clustering, cluster-wise independent sparse SfM and map merging, without need for exhaustive image feature matching. Then this map is partitioned spatially to perform geometry-aware camera selection, followed by dense surface reconstruction and surface refinement using curvature-aware adaptive vertex density remeshing. These partition meshes are then stitched together to produce the global mesh of the city. The proposed end-to-end framework is evaluated on city-scale reconstruction datasets. As demonstrated by our qualitative and quantitative results, our proposed method yields high-fidelity watertight 3D meshes with regular geometry, capturing fine surface details, and is suitable for scaling to arbitrarily large scenes owing to the end-to-end processing in a distributed setting.",
+      "authors": [
+        "Sayan Paul",
+        "Sourav Ghosh",
+        "Siddharth Katageri",
+        "Soumyadip Maity",
+        "Sanjana Sinha",
+        "Brojeshwar Bhowmick"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.GR"
+      ],
+      "published": "2026-05-28T17:53:26+00:00",
+      "link": "https://arxiv.org/pdf/2605.30310v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "city-scale 3D mesh reconstruction from multi-view images",
+      "llm_evidence_cn": "城市尺度三维网格重建",
+      "llm_evidence": "城市尺度三维网格重建",
+      "canonical_evidence": "城市尺度三维网格重建",
+      "llm_tldr_en": "Proposes a scalable framework for reconstructing watertight surface meshes from large unordered image collections for simulation.",
+      "llm_tldr_cn": "针对城市尺度三维重建中现有方法难以生成仿真就绪网格的问题，提出City-Mesh3R框架，直接从大规模无序图像集合重建水密表面网格，可扩展至任意大型城市场景，为仿真应用提供高质量几何模型。",
+      "llm_tldr": "针对城市尺度三维重建中现有方法难以生成仿真就绪网格的问题，提出City-Mesh3R框架，直接从大规模无序图像集合重建水密表面网格，可扩展至任意大型城市场景，为仿真应用提供高质量几何模型。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2605.30239v1",
+      "source": "arxiv",
+      "title": "SAM3D-Phys: Towards Multi-Object Interactive Simulation in Real World",
+      "abstract": "This work addresses the problem of recovering complete, simulatable object geometry from reconstructed real-world scenes, enabling physics-based interaction with objects embedded in the scene. While modern multi-view reconstruction methods can produce visually accurate environments, objects are often incomplete due to occlusions and limited observations, making them unsuitable for physics simulation. To address this limitation, we propose SAM3D-Phys, a framework that integrates scene reconstruction with generative 3D priors of SAM3D to recover physically simulatable objects. Our approach first reconstructs the scene from multi-view images to obtain scene geometry and partial observations of objects. We then leverage SAM3D to infer complete object geometry from these partial observations. To ensure that the recovered objects remain consistent with the reconstructed scene, we restore scene-consistent object states through two complementary strategies: a physics-constrained spatial optimization algorithm that iteratively aligns the recovered object to its original location, and a mask-guided appearance distillation module that refines texture fidelity based on the observed images. By recovering complete object geometry and restoring its pose and appearance within the scene, SAM3D-Phys produces clean object representations suitable for physics-based simulation, enabling simultaneous and physically consistent interactive simulation of multiple objects within a reconstructed scene. Project page: https://chnxindong.github.io/sam3d-phys/",
+      "authors": [
+        "Xin Dong",
+        "Weijian Deng",
+        "Lihan Zhang",
+        "Tianru Dai",
+        "Wenfeng Deng",
+        "Yansong Tang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-05-28T17:07:51+00:00",
+      "link": "https://arxiv.org/pdf/2605.30239v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "recovering complete object geometry for physics simulation, likely metric",
+      "llm_evidence_cn": "恢复完整物体几何以用于物理仿真，隐含度量尺度",
+      "llm_evidence": "恢复完整物体几何以用于物理仿真，隐含度量尺度",
+      "canonical_evidence": "恢复完整物体几何以用于物理仿真，隐含度量尺度",
+      "llm_tldr_en": "Proposes SAM3D-Phys to recover complete, simulatable object geometry from multi-view scenes using generative 3D priors, enabling physics-based interaction.",
+      "llm_tldr_cn": "该文针对多视图重建中物体几何不完整而无法用于物理仿真的问题，提出SAM3D-Phys框架，利用SAM3D的生成先验恢复完整物体几何。通过先重建场景再推断完整形状，使得物体可用于物理交互。实验表明该方法能有效处理遮挡并产生可模拟的几何，为真实世界物理仿真提供了新途径。",
+      "llm_tldr": "该文针对多视图重建中物体几何不完整而无法用于物理仿真的问题，提出SAM3D-Phys框架，利用SAM3D的生成先验恢复完整物体几何。通过先重建场景再推断完整形状，使得物体可用于物理交互。实验表明该方法能有效处理遮挡并产生可模拟的几何，为真实世界物理仿真提供了新途径。",
+      "llm_tags": [
+        "query:mdr"
+      ],
+      "matched_query_tag": "query:mdr",
+      "matched_query_text": "metric 3D reconstruction estimating physical size",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2605.31419v1",
+      "source": "arxiv",
+      "title": "Triangle Splatting SLAM",
+      "abstract": "We present a dense RGB-D SLAM system using differentiable triangles as the 3D map representation. While 3D Gaussian Splatting has emerged as the leading method for novel-view synthesis, triangles remain the standard primitive for traditional rendering hardware, game engines, and downstream tasks requiring explicit geometry such as simulation, collision, and editing. Recent offline methods have demonstrated that an unstructured 'triangle soup' can be optimised into a photorealistic mesh via Delaunay triangulation across a set of posed images. Building upon this insight, we present the first dense SLAM system to employ Triangle Splatting to perform both tracking and mapping through online differentiable rendering of a triangle soup. The map can be converted into a connected mesh on-the-fly via restricted Delaunay triangulation, enabling new online capabilities such as mesh deformation and collision checking. On Replica and TUM-RGBD, our system outperforms baselines on 3D geometry, matches the camera-tracking accuracy, and enables online mesh-based scene editing.",
+      "authors": [
+        "Nicholas Fry",
+        "Eric Dexheimer",
+        "Kirill Mazur",
+        "Paul H. J. Kelly",
+        "Andrew J. Davison"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-05-29T15:20:38+00:00",
+      "link": "https://arxiv.org/pdf/2605.31419v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "dense RGB-D SLAM with triangle splatting for 3D reconstruction",
+      "llm_evidence_cn": "基于三角形泼溅的密集RGB-D SLAM三维重建",
+      "llm_evidence": "基于三角形泼溅的密集RGB-D SLAM三维重建",
+      "canonical_evidence": "基于三角形泼溅的密集RGB-D SLAM三维重建",
+      "llm_tldr_en": "First dense SLAM system using differentiable triangle splatting for real-time tracking and mapping, producing explicit geometry compatible with physical measurement.",
+      "llm_tldr_cn": "提出首个使用可微三角形泼溅的密集RGB-D SLAM系统，在线优化三角形汤实现跟踪与建图，并能实时转换为连通网格；其显式几何表示直接支持碰撞检测、编辑等下游任务，为度量尺度重建提供了可用的实时方案。",
+      "llm_tldr": "提出首个使用可微三角形泼溅的密集RGB-D SLAM系统，在线优化三角形汤实现跟踪与建图，并能实时转换为连通网格；其显式几何表示直接支持碰撞检测、编辑等下游任务，为度量尺度重建提供了可用的实时方案。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.01939v1",
+      "source": "arxiv",
+      "title": "SAVMap: Structure-Aided Visual Mapping of Large-Scale 2.5D Manhattan Wireframes from Panoramic Video",
+      "abstract": "Precise 3D representations of industrial environments enable tasks such as robot localization and digital twin generation. We propose SAVMap, a method for generating a semantic wireframe map of warehouse shelf and light structures using only a panoramic video camera as the sensor input. Sequences of rectified images with shelf and ceiling-facing views are extracted from a panoramic video captured along the warehouse aisles. Using a semantic segmentation network front end, a set of sparse, semantic structure feature points (e.g., corners of shelf structures, centers of lights) are extracted from each image and tracked across the sequences. By accounting for real-world geometric relationships among the points such as Manhattan grids, a constrained structure-from-motion algorithm yields the 3D points that form a wireframe map. We demonstrate the scalability and accuracy of our proposal in a warehouse with 46 shelving rows, each with faces spanning 55\\,m by 7\\,m. From an hour of panoramic video content, we create wireframe maps for over 5000 shelf elements across the rows, achieving an aggregate mean absolute error of 4.8\\,cm with respect to ground-truth.",
+      "authors": [
+        "Howard Huang",
+        "Bharath Surianarayanan",
+        "Keifer Lee",
+        "Chenyu Wang",
+        "Chen Feng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-01T09:04:29+00:00",
+      "link": "https://arxiv.org/pdf/2606.01939v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "generates semantic wireframe map with real-world geometric relationships",
+      "llm_evidence_cn": "生成带有真实世界几何关系的语义线框地图",
+      "llm_evidence": "生成带有真实世界几何关系的语义线框地图",
+      "canonical_evidence": "生成带有真实世界几何关系的语义线框地图",
+      "llm_tldr_en": "SAVMap generates a precise 3D semantic wireframe map of industrial environments from panoramic video using geometric relationships for robot localization.",
+      "llm_tldr_cn": "该文针对工业环境需要精确3D表示的问题，提出SAVMap从全景视频生成仓库货架和灯光的语义线框地图。利用语义分割提取特征点并跟踪，结合曼哈顿等真实世界几何关系进行重建。实验表明该方法能生成可用于定位和数字孪生的高精度度量地图。",
+      "llm_tldr": "该文针对工业环境需要精确3D表示的问题，提出SAVMap从全景视频生成仓库货架和灯光的语义线框地图。利用语义分割提取特征点并跟踪，结合曼哈顿等真实世界几何关系进行重建。实验表明该方法能生成可用于定位和数字孪生的高精度度量地图。",
+      "llm_tags": [
+        "query:mdr"
+      ],
+      "matched_query_tag": "query:mdr",
+      "matched_query_text": "real-world dimension measurement using 3D reconstruction",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.00452v1",
+      "source": "arxiv",
+      "title": "Beyond Static Gaussians: An Empirical Investigation of Architectural Paradigms for Dynamic 3D Scene Reconstruction",
+      "abstract": "Dynamic scene reconstruction via 3D Gaussian Splatting (3DGS) has emerged as a compelling approach for representing evolving environments, yet understanding trade-offs between methodologies remains crucial. This paper presents a comprehensive analysis of dynamic 3DGS methods, categorizing them into two paradigms: structure-guided methods employing auxiliary representations (deformation fields, canonical spaces, grids) to model temporal changes, and gaussian-centric methods encoding dynamics directly into primitives via continuous functions or 4D representations. We evaluate representative methods from both paradigms on the D-NeRF benchmark. Our findings reveal that structure-guided methods achieve superior reconstruction fidelity and compact model sizes, while gaussian-centric approaches demonstrate significantly higher rendering speeds enabling real-time performance, though with greater quality variability and potentially substantial storage overhead. This analysis highlights a fundamental trade-off between reconstruction quality/compactness versus rendering speed, providing insights to guide future research and application development in dynamic scene reconstruction.",
+      "authors": [
+        "Adrian Ramlal",
+        "John S. Zelek"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR"
+      ],
+      "published": "2026-05-30T00:42:38+00:00",
+      "link": "https://arxiv.org/pdf/2606.00452v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "empirical analysis of dynamic 3D scene reconstruction paradigms",
+      "llm_evidence_cn": "动态三维场景重建范式实证分析",
+      "llm_evidence": "动态三维场景重建范式实证分析",
+      "canonical_evidence": "动态三维场景重建范式实证分析",
+      "llm_tldr_en": "Comprehensive analysis of dynamic 3DGS methods, categorizing structure-guided and gaussian-centric paradigms, evaluating on D-NeRF benchmark.",
+      "llm_tldr_cn": "对动态三维场景重建的两类主要范式（结构引导与高斯中心）进行了系统对比，在D-NeRF基准上评估代表性方法，发现结构引导方法在重建质量上更优，为动态场景重建提供了设计指导。",
+      "llm_tldr": "对动态三维场景重建的两类主要范式（结构引导与高斯中心）进行了系统对比，在D-NeRF基准上评估代表性方法，发现结构引导方法在重建质量上更优，为动态场景重建提供了设计指导。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.03994v1",
+      "source": "arxiv",
+      "title": "SimuScene: Simulation-Ready Compositional 3D Scene Reconstruction from a Single Image",
+      "abstract": "Reconstructing interactive, simulation-ready 3D scenes from a single image is a critical bottleneck for robotic manipulation. While recent single-image lifters recover plausible per-object shapes, composing them yields scenes that collapse under physical simulation due to interpenetrating, hovering, or sinking objects. Existing physics-aware methods address this strictly as a post-hoc layout correction, leaving the underlying geometric errors unresolved. To address this, we introduce SimuScene, a compositional 3D reconstruction pipeline that puts physics in the loop of shape and layout estimation. Rather than using physics merely for layout cleanup, we utilize the physics engine as a diagnostic measurement tool during the generative process itself. By diagnostically simulating reconstructed objects under gravity, we convert penetration and support failures into quantitative correction signals that drive gravity-axis stretching and amodal shape resampling. This physics-informed feedback loop mitigates accumulated reconstruction errors and produces a stable, simulation-ready compositional 3D scene. Extensive experiments demonstrate state-of-the-art performance on physical stability and geometric alignment benchmarks. We further highlight SimuScene's utility by deploying reconstructed environments in humanoid control and robot-arm manipulation tasks.",
+      "authors": [
+        "Inhee Lee",
+        "Sangwon Baik",
+        "Sungjoo Kim",
+        "Hyeonwoo Kim",
+        "Hyunsoo Cha",
+        "Hanbyul Joo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-06-02T17:59:59+00:00",
+      "link": "https://arxiv.org/pdf/2606.03994v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "compositional 3D scene reconstruction from a single image with physics in the loop",
+      "llm_evidence_cn": "单图像组合式三维场景重建，物理引擎参与",
+      "llm_evidence": "单图像组合式三维场景重建，物理引擎参与",
+      "canonical_evidence": "单图像组合式三维场景重建，物理引擎参与",
+      "llm_tldr_en": "SimuScene integrates physics engine as diagnostic tool during generative reconstruction to ensure simulation-ready 3D scenes from a single image.",
+      "llm_tldr_cn": "针对单图像重建的场景在物理仿真中崩溃的问题，SimuScene提出将物理引擎作为诊断工具融入重建过程，在形状和布局估计阶段即考虑物理合理性，从而生成可直接用于仿真交互的三维场景。",
+      "llm_tldr": "针对单图像重建的场景在物理仿真中崩溃的问题，SimuScene提出将物理引擎作为诊断工具融入重建过程，在形状和布局估计阶段即考虑物理合理性，从而生成可直接用于仿真交互的三维场景。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.05160v1",
+      "source": "arxiv",
+      "title": "GRAIL: Generating Humanoid Loco-Manipulation from 3D Assets and Video Priors",
+      "abstract": "Scaling humanoid loco-manipulation requires robot-compatible demonstrations across diverse objects, whole-body motions, and scene geometries, but teleoperation and motion capture are difficult to scale because each collection depends on physical setups, instrumented actors, and robot operation. We present GRAIL, a digital generation pipeline that remains fully virtual until deployment: it composes 3D assets, simulator-ready scenes, and priors from video foundation models (VFMs) to synthesize interactions without rebuilding physical environments or teleoperating the robot. Rather than reconstructing unconstrained in-the-wild videos, GRAIL starts from fully specified 3D configurations in which object geometry, camera parameters, metric scale, environment depth, and a robot-proportioned character are known before video generation and reused during reconstruction. This privileged setup better conditions 4D recovery, allowing model-based object tracking, human motion estimation, and interaction-aware optimization to reconstruct metric 4D human-object interaction (HOI) trajectories with reduced depth ambiguity and morphology mismatch. We retarget the recovered motions to a humanoid robot and train complementary task-general trackers: an object-aware latent adaptor for manipulation and a scene-aware tracker for terrain traversal. GRAIL produces over 20,000 sequences spanning pick-up, object manipulation, sitting, and terrain traversal. Using only GRAIL-generated data, we train egocentric visual policies through a sim-to-real pipeline and deploy them on a Unitree G1 humanoid, achieving 84\\% real-world success on diverse object pick-up and 90\\% success on stair-climbing.",
+      "authors": [
+        "Tianyi Xie",
+        "Haotian Zhang",
+        "Jinhyung Park",
+        "Zi Wang",
+        "Bowen Wen",
+        "Jiefeng Li",
+        "Xueting Li",
+        "Qingwei Ben",
+        "Haoyang Weng",
+        "Yufei Ye",
+        "David Minor",
+        "Tingwu Wang",
+        "Chenfanfu Jiang",
+        "Sanja Fidler",
+        "Jan Kautz",
+        "Linxi Fan",
+        "Yuke Zhu",
+        "Zhengyi Luo",
+        "Umar Iqbal",
+        "Ye Yuan"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-06-03T17:57:45+00:00",
+      "link": "https://arxiv.org/pdf/2606.05160v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "metric scale in 3D configurations for real-world measurement",
+      "llm_evidence_cn": "在三维配准中使用度量尺度，适用于实际测量",
+      "llm_evidence": "在三维配准中使用度量尺度，适用于实际测量",
+      "canonical_evidence": "在三维配准中使用度量尺度，适用于实际测量",
+      "llm_tldr_en": "GRAIL generates humanoid loco-manipulation demonstrations from 3D assets with metric scale, enabling real-world deployments without physical setups.",
+      "llm_tldr_cn": "提出GRAIL数字生成管线，利用三维资产和视频基础模型生成人形机器人全身操控演示，无需物理搭建和遥操作；管线从完全指定的三维配置开始，包含物体几何、相机参数和度量尺度，直接支持基于物理尺寸的真实世界部署。",
+      "llm_tldr": "提出GRAIL数字生成管线，利用三维资产和视频基础模型生成人形机器人全身操控演示，无需物理搭建和遥操作；管线从完全指定的三维配置开始，包含物体几何、相机参数和度量尺度，直接支持基于物理尺寸的真实世界部署。",
+      "llm_tags": [
+        "query:mdr"
+      ],
+      "matched_query_tag": "query:mdr",
+      "matched_query_text": "real-world dimension measurement using 3D reconstruction",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

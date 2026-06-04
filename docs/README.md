@@ -6,46 +6,49 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-03
-- 运行时间：2026-06-03 22:27:37 UTC
+- 最新运行日期：2026-06-04
+- 运行时间：2026-06-04 21:14:26 UTC
 - 运行状态：成功
 - 本次总论文数：8
-- 精读区：2
-- 速读区：6
+- 精读区：0
+- 速读区：8
 
 ### 今日简报（AI）
-今日精读2篇高分论文，速读6篇，聚焦3D视觉与物理参数估计。  
-最值得关注的方向是日常物体的大尺度9D规范化（Every9D-21M）与单目视频的几何-物理联合推理（MonoPhysics）。  
-建议普通读者优先从这两篇入手，理解真实场景下3D规范化与物理参数估计的融合趋势。
-- 详情：[/202606/03/README](/202606/03/README)
+今日速读3篇7分论文，涵盖SLAM一致性先验、多物体物理仿真及大场景结构地图。
+
+最值得关注：Con-DSO为RGB-D直接法里程计引入短时一致性先验，SAVMap利用全景视频高效构建曼哈顿线框地图。
+
+下步建议：可优先细读Con-DSO论文，理解其如何结合学习先验提升视觉里程计鲁棒性。
+- 详情：[/202606/04/README](/202606/04/README)
 
 ### 精读区论文标签
-1. [Every9D-21M: Large-Scale Real-World 9D Canonicalization of Everyday Objects](/202606/03/2605.28270v1-every9d-21m-large-scale-real-world-9d-canonicalization-of-everyday-objects)  
-   标签：评分：8.0/10、query:mdr
-   evidence：大规模真实世界9D规范化，包含尺度估计
-2. [MonoPhysics: Estimating Geometry, Appearance, and Physical Parameters from Monocular Videos](/202606/03/2605.30320v1-monophysics-estimating-geometry-appearance-and-physical-parameters-from-monocular-videos)  
-   标签：评分：8.0/10、query:mdr
-   evidence：单目逆物理估计结合全局尺度对齐用于物理测量
+- 本次无精读推荐。
 
 ### 速读区论文标签
-1. [Triangle Splatting SLAM](/202606/03/2605.31419v1-triangle-splatting-slam)  
-   标签：评分：7.0/10、query:dr
-   evidence：基于可微分三角形溅射的稠密RGB-D SLAM
-2. [VolFill: Single-View Amodal 3D Scene Reconstruction with Volumetric Flow Matching](/202606/03/2605.31466v1-volfill-single-view-amodal-3d-scene-reconstruction-with-volumetric-flow-matching)  
-   标签：评分：7.0/10、query:dr
-   evidence：使用生成式流匹配进行单视图无模态三维场景重建
-3. [$R^3$: 3D Reconstruction via Relative Regression](/202606/03/2605.26519v1-r3-3d-reconstruction-via-relative-regression)  
+1. [Con-DSO: Learning Short-Horizon Consistency Priors for RGB-D Direct Sparse Odometry](/202606/04/2605.27952v1-con-dso-learning-short-horizon-consistency-priors-for-rgb-d-direct-sparse-odometry)  
+   标签：评分：7.0/10、query:mdr
+   evidence：度量深度测量用于视觉里程计精度
+2. [SAM3D-Phys: Towards Multi-Object Interactive Simulation in Real World](/202606/04/2605.30239v1-sam3d-phys-towards-multi-object-interactive-simulation-in-real-world)  
+   标签：评分：7.0/10、query:mdr
+   evidence：恢复完整物体几何以用于物理仿真，隐含度量尺度
+3. [SAVMap: Structure-Aided Visual Mapping of Large-Scale 2.5D Manhattan Wireframes from Panoramic Video](/202606/04/2606.01939v1-savmap-structure-aided-visual-mapping-of-large-scale-25d-manhattan-wireframes-from-panoramic-video)  
+   标签：评分：7.0/10、query:mdr
+   evidence：生成带有真实世界几何关系的语义线框地图
+4. [City-Mesh3R: Simulation-Ready City-Scale 3D Mesh Reconstruction from Multi-View Images](/202606/04/2605.30310v1-city-mesh3r-simulation-ready-city-scale-3d-mesh-reconstruction-from-multi-view-images)  
    标签：评分：6.0/10、query:dr
-   evidence：通过相对回归克服全局坐标系依赖的三维重建方法
-4. [Towards Consistent Video Geometry Estimation](/202606/03/2605.30060v1-towards-consistent-video-geometry-estimation)  
+   evidence：城市尺度三维网格重建
+5. [Triangle Splatting SLAM](/202606/04/2605.31419v1-triangle-splatting-slam)  
    标签：评分：6.0/10、query:dr
-   evidence：视频几何一致性的前馈基础模型
-5. [Towards Consistent Video Geometry Estimation](/202606/03/2605.30060v2-towards-consistent-video-geometry-estimation)  
+   evidence：基于三角形泼溅的密集RGB-D SLAM三维重建
+6. [Beyond Static Gaussians: An Empirical Investigation of Architectural Paradigms for Dynamic 3D Scene Reconstruction](/202606/04/2606.00452v1-beyond-static-gaussians-an-empirical-investigation-of-architectural-paradigms-for-dynamic-3d-scene-reconstruction)  
    标签：评分：6.0/10、query:dr
-   evidence：前馈视频深度估计，一致性几何
-6. [Déjà View: Looping Transformers for Multi-View 3D Reconstruction](/202606/03/2605.30215v1-dj-view-looping-transformers-for-multi-view-3d-reconstruction)  
+   evidence：动态三维场景重建范式实证分析
+7. [SimuScene: Simulation-Ready Compositional 3D Scene Reconstruction from a Single Image](/202606/04/2606.03994v1-simuscene-simulation-ready-compositional-3d-scene-reconstruction-from-a-single-image)  
    标签：评分：6.0/10、query:dr
-   evidence：多视图三维重建，循环Transformer
+   evidence：单图像组合式三维场景重建，物理引擎参与
+8. [GRAIL: Generating Humanoid Loco-Manipulation from 3D Assets and Video Priors](/202606/04/2606.05160v1-grail-generating-humanoid-loco-manipulation-from-3d-assets-and-video-priors)  
+   标签：评分：6.0/10、query:mdr
+   evidence：在三维配准中使用度量尺度，适用于实际测量
 
 
 <div class="dpr-home-promo-card">
