@@ -6,60 +6,50 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-05
-- 运行时间：2026-06-05 21:53:50 UTC
+- 最新运行日期：2026-06-06
+- 运行时间：2026-06-06 20:19:16 UTC
 - 运行状态：成功
-- 本次总论文数：12
-- 精读区：1
-- 速读区：11
+- 本次总论文数：9
+- 精读区：0
+- 速读区：9
 
 ### 今日简报（AI）
-今日精读1篇、速读11篇，聚焦多视图3D重建与视频几何一致性估计。
-
-最值得关注的是《Déjà View》（8.0分），其循环Transformer架构为多视图3D重建带来新突破；速读中《Towards Consistent Video Geometry Estimation》和《FRUC》分别针对视频几何与协作驾驶动态重建，同样值得参考。
-
-建议优先精读《Déjà View》理解循环机制如何提升重建质量，再结合速读论文对比视频几何一致性优化思路。
-- 详情：[/202606/05/README](/202606/05/README)
+今日速读9篇论文，聚焦SLAM、单图3D场景重建及皮肤触觉机制三大方向。  
+最值得关注《Triangle Splatting SLAM》与《SimuScene》，分别提出高效SLAM框架和从单张图像生成仿真级3D场景的方法。  
+建议优先阅读这两篇速读论文，把握技术前沿。
+- 详情：[/202606/06/README](/202606/06/README)
 
 ### 精读区论文标签
-1. [Déjà View: Looping Transformers for Multi-View 3D Reconstruction](/202606/05/2605.30215v2-dj-view-looping-transformers-for-multi-view-3d-reconstruction)  
-   标签：评分：8.0/10、query:dr
-   evidence：基于循环transformer的多视角三维重建，高效细化
+- 本次无精读推荐。
 
 ### 速读区论文标签
-1. [FRUC: Feedforward Dynamic Scene Reconstruction from Uncalibrated Collaborative Driving Views](/202606/05/2605.29997v1-fruc-feedforward-dynamic-scene-reconstruction-from-uncalibrated-collaborative-driving-views)  
-   标签：评分：7.0/10、query:dr
-   evidence：无标定协作视图的前馈动态场景重建
-2. [Towards Consistent Video Geometry Estimation](/202606/05/2605.30060v1-towards-consistent-video-geometry-estimation)  
+1. [Triangle Splatting SLAM](/202606/06/2605.31419v1-triangle-splatting-slam)  
    标签：评分：7.0/10、query:mdr
-   evidence：视频几何估计，包含深度和一致性，潜在支持尺度恢复
-3. [Towards Consistent Video Geometry Estimation](/202606/05/2605.30060v2-towards-consistent-video-geometry-estimation)  
+   evidence：密集RGB-D SLAM提供公制三维地图，可用于尺寸测量
+2. [SimuScene: Simulation-Ready Compositional 3D Scene Reconstruction from a Single Image](/202606/06/2606.03994v1-simuscene-simulation-ready-compositional-3d-scene-reconstruction-from-a-single-image)  
    标签：评分：7.0/10、query:dr
-   evidence：前馈式视频几何估计，保持时间一致性
-4. [Topologically Consistent Multi-view 3D Head Reconstruction via Coarse-Guided Layered Surface Sampling](/202606/05/2605.31283v1-topologically-consistent-multi-view-3d-head-reconstruction-via-coarse-guided-layered-surface-sampling)  
-   标签：评分：7.0/10、query:dr
-   evidence：前馈多视图3D头部重建，具有密集语义对应
-5. [VolFill: Single-View Amodal 3D Scene Reconstruction with Volumetric Flow Matching](/202606/05/2605.31466v1-volfill-single-view-amodal-3d-scene-reconstruction-with-volumetric-flow-matching)  
-   标签：评分：7.0/10、query:dr
-   evidence：从单RGB图像的生成式3D重建
-6. [Learning Global Motion with Compact Gaussians for Feed-Forward 4D Reconstruction](/202606/05/2605.31595v1-learning-global-motion-with-compact-gaussians-for-feed-forward-4d-reconstruction)  
-   标签：评分：7.0/10、query:dr
-   evidence：用紧致高斯从单目视频进行前馈4D重建
-7. [ParCo-SDF: Learning Prior-Free Partial-to-Complete Signed Distance Fields of Deformable Objects](/202606/05/2605.29417v1-parco-sdf-learning-prior-free-partial-to-complete-signed-distance-fields-of-deformable-objects)  
+   evidence：单图像3D场景重建，将物理引擎融入形状和布局估计
+3. [Epidermal microstructure and tactile sensitivity in the glabrous skin of hands and feet](/202606/06/biorxiv-10-64898-2026-05-27-728083-v1-epidermal-microstructure-and-tactile-sensitivity-in-the-glabrous-skin-of-hands-and-feet)  
+   标签：评分：7.0/10、query:mdr
+   evidence：使用3D重建测量表皮微结构的物理尺寸
+4. [SurGe: Improved Surface Geometry in Point Maps](/202606/06/2605.31577v1-surge-improved-surface-geometry-in-point-maps)  
    标签：评分：6.0/10、query:dr
-   evidence：通过符号距离场对可变形物体进行部分到完整的三维重建
-8. [Geometry-Guided Modeling of Foundation Features Enables Generalizable Object Shape Deformation Learning](/202606/05/2605.29661v1-geometry-guided-modeling-of-foundation-features-enables-generalizable-object-shape-deformation-learning)  
+   evidence：在前馈式3D点图重建中改进局部表面几何
+5. [TROPHIES: Temporal Reconstruction of Places, Humans, and Cameras from Multi-view Videos](/202606/06/2606.02350v1-trophies-temporal-reconstruction-of-places-humans-and-cameras-from-multi-view-videos)  
    标签：评分：6.0/10、query:dr
-   evidence：单目三维形状恢复变分学习
-9. [Geometry Matters: 3D Foundation Priors for Learning Semantic Correspondence](/202606/05/2605.30093v1-geometry-matters-3d-foundation-priors-for-learning-semantic-correspondence)  
+   evidence：多视角视频统一重建人、场景和相机
+6. [Depth from Dual Differential Defocus and Stereo Consensus](/202606/06/2606.02906v1-depth-from-dual-differential-defocus-and-stereo-consensus)  
    标签：评分：6.0/10、query:dr
-   evidence：三维几何估计用于语义对应
-10. [REST3D: Reconstructing Physically Stable 3D Scenes from a Single Image](/202606/05/2605.30338v1-rest3d-reconstructing-physically-stable-3d-scenes-from-a-single-image)  
+   evidence：融合散焦和立体线索的高精度深度估计
+7. [GARDEN: Gravity-Aligned Reconstruction of Disentangled ENvironments from RGB images](/202606/06/2606.03921v1-garden-gravity-aligned-reconstruction-of-disentangled-environments-from-rgb-images)  
    标签：评分：6.0/10、query:dr
-   evidence：单图像3D场景重建，关注物理合理性
-11. [Uncertainty-driven 3D Gaussian Splatting Active Mapping via Anisotropic Visibility Field](/202606/05/2605.30342v1-uncertainty-driven-3d-gaussian-splatting-active-mapping-via-anisotropic-visibility-field)  
+   evidence：多视图RGB转可仿真3D环境，基于物理的场景分解
+8. [4D Reconstruction from Sparse Dynamic Cameras](/202606/06/2606.04593v1-4d-reconstruction-from-sparse-dynamic-cameras)  
    标签：评分：6.0/10、query:dr
-   evidence：三维高斯泼溅主动建图的不确定性量化
+   evidence：面向稀疏动态摄像机的4D重建，引入多视图约束
+9. [Geometry Gaussians: Decoupling Appearance and Geometry in Gaussian Splatting](/202606/06/2606.05124v1-geometry-gaussians-decoupling-appearance-and-geometry-in-gaussian-splatting)  
+   标签：评分：6.0/10、query:dr
+   evidence：改进高斯溅射中的几何精度，用于三维重建
 
 
 <div class="dpr-home-promo-card">
