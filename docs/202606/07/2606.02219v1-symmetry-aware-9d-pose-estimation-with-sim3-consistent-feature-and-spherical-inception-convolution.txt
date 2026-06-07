@@ -1,0 +1,516 @@
+Title: Symmetry-Aware 9D Pose Estimation with Sim(3)-Consistent Feature and Spherical Inception Convolution
+
+URL Source: https://arxiv.org/pdf/2606.02219v1
+
+Published Time: Tue, 02 Jun 2026 03:17:10 GMT
+
+Number of Pages: 12
+
+Markdown Content:
+> 1
+
+# Symmetry-Aware 9D Pose Estimation with Sim(3)-Consistent Feature and Spherical Inception Convolution 
+
+Panfei Cheng , Hongshan Yu , Wenrui Chen ,Xiaojun Tang, Jian Liu and Naveed Akhtar , Member, IEEE 
+
+Abstract —Object pose estimation is a fundamental problem for an agent system to perceive or manipulate objects in images or videos. However, current instance-level methods struggle with generalization to unseen objects. Category-level methods seek to address this, but remain constrained by the complexities of learning in the non-linear Sim(3) space and intra-class variations. To address these challenges, We propose an effective method for category-level object pose estimation with two key innovations: (1) A translation/size estimator, featuring a semantic-guided symmetry-aware module that leverages robust generalization capabilities of a large vision model (LVM) to infer symmetry points, resulting in accurate translation and size without shape priors. This result serves as a precomputed cue for rotation estimation, thereby reducing the difficulty of learning in the non-linear Sim(3) space and laying a robust foundation for tackling the inherently more challenging rotation estimation. (2) A feature fusion module, based on our proposed spherical large-kernel inception convolution, fuses semantic features from the LVM with systematically computed geometric features to extract essential pose features from intra-class variations by modeling long-range dependencies without excessive computational cost. Built on these innovations, we achieve SOTA on benchmarks and real-world scenes, while developing a robust robotic picking system capable of handling diverse objects. Our code will be available at the project page: https://panfei-cheng.github.io/SSH-Pose. 
+
+Index Terms —Object pose estimation, robotic picking, sim(3)-consistent feature, inception convolution. 
+
+I. I NTRODUCTION 
+
+# OBJECT pose estimation serves as a critical prerequi-site for AR/VR [1]–[3], object manipulation [4]–[7], and facilitating human-robot interaction [8], [9]. Whereas instance-level methods [10]–[12] for estimating object poses deliver high accuracy, they need an instance-specific CAD model and inherently lack generalization to unseen objects. To overcome these limitations, research has shifted towards category-level object pose estimation [13]–[18]. This paradigm extends 6D object pose estimation [19], [20] to 9D Pose (3D translation, 3D rotation, and 3D metric size), simultaneously removing the requirement for instance-specific CAD models and enabling generalization to novel instances within known categories. Despite these significant advantages in real world and modern industrial manufacturing, the inherent complexity 
+
+Panfei Cheng, Hongshan Yu, Wenrui Chen and Jian Liu are with the Na-tional Engineering Research Center for Robot Visual Perception and Control, School of Robotics and Artificial Intelligence, Hunan University, Changsha 410012, China. (email: chengpf@hnu.edu.cn, yuhongshan@hnu.edu.cn, chen-wenrui@hnu.edu.cn, jianliu@hnu.edu.cn)). Xiaojun Tang is with the Beijing Spacecrafts, China Academy of Space Technology, Beijing 100094, China. (email: xiaojuntang87@castbsc.cn). Naveed Akhtar is with the School of Computing and Information Systems, The University of Melbourne, Parkville, Victoria 3010, Australia (email: naveed.akhtar1@unimelb.edu.au). HiPPF-MLP Bolck                                   
+
+> HP-PPF
+> 00
+> 11
+> 22
+> 33
+> 44
+> 55
+> 66
+> 77
+> 88
+> 99
+> 5678901234
+> 0123456789
+> Laptop Mug Camera
+> Can Bowl Bottle
+> Rotational Symmetry
+> Reflectional
+> Symmetry
+> Flattening Padding=(0,1)
+> Padding=(1,0)
+> (a) SSA-Module (c) SlinConv
+> Observed Points Symmetric Points
+> Symmetric Completion Without Shape Prior
+> Ours: More Distinctive
+> SecondPose
+> Input Point Cloud
+> Geometric Encoding
+> Geometric Encoding
+> Instance Image
+> (b) MHP-Module
+
+Fig. 1. The proposed method generates Rotational-symmetric or Reflectional-symmetric representations of point clouds from a single viewpoint, as shown in (a). For weakly symmetric objects like cameras, we still use symmetry processing, as their translation happens not at the lens axis but at the camera’s geometric center, which is closer to its overall symmetric center plane. In (b), our MHP-Module generates more distinctive features as compared to existing methods, e.g., SecondPose [21], for the handle of the cup, which contains more orientation information. The concept of Spherical large-kernel inception convolution is illustrated in (c) and detailed in Section III. 
+
+of pose estimation in the non-linear Sim(3) space (Similarity Transformations in 3D space), coupled with diverse intra-class variations, results in far-from-satisfactory performance. A common method to tackle intra-class variation is us-ing shape priors to encapsulate category information [14], [22], [23]. However, learning shape priors is time-consuming and struggles to comprehensively encapsulate the structural information of intra-category objects in practice. Therefore, prior-free based methods [24]–[28] are becoming increasingly popular. Meanwhile, it has also become particularly important to learn features that are more meaningful for pose estimation without shape priors. The complexities of learning in the nonlinear Sim(3) space and intra-class variations without shape priors make pose estimation more challenging. Recently, some prior-free methods [21], [29], [30] com-pletely decouple 9D pose estimation into translation, size, viewpoint rotation, and in-plane rotation to tackle the com-plexity of learning in the nonlinear Sim(3) space. Typically, these methods first estimate the object’s translation and size, then translate and scale the object before rotation estimation. However, such a serial pipeline forces the method to priori-tize efficiency, making it impossible to adopt more complex networks for extracting more effective features in addressing intra-class variation. Meanwhile, the inaccurate outputs of simple translation/size estimator is used as priors for rotation estimation, which undermines the performance of even elabo-
+
+> arXiv:2606.02219v1 [cs.CV] 1 Jun 2026 2
+
+rately designed decoupled rotation estimation modules. This paper follows the decoupled estimation paradigm to tackle nonlinear Sim(3) pose learning complexity, and pro-poses SSH-Pose, a novel shape prior-free method with simple effective modules for category-level pose estimation. First, we designed a Semantic-guided Symmetry-Aware Module (SSA-Module) that combines the strong generalization of DINOv2 [31] with a simple encoder-decoder (see Fig. 1(a)). By inte-grating with PointNet++ [32] for feature extraction and direct regression, this design enhances translation/size estimation, while providing more accurate priors to simplify pose es-timation from Sim(3) to SO(3). Unlike existing completion methods for pose estimation [27], [28], [33], our approach neither relies on shape priors nor requires complex network components, except for the reusable DINOv2. The predicted translation/size translate and scale observed points into the object coordinate system. Next, we project the semantic and geometric features of the points onto the sphere and utilize our proposed Spherical large-kernel inception convolution (Slinconv - see in Fig. 1(c)) to capture contextual information and extract the high-level spherical feature map without incurring the quadratic com-putational complexity of Transformers. This design learns more essential features from intra-class variations and maintain lightweight properties. Specifically, the semantic features are obtained from the same DINOv2 [31] in SSA-Module, while the geometric features are generated by our designed MLP-based Hierarchical Point Pair Feature (MHP) Module. As shown in Fig. 1(b), despite the challenge of intra-class vari-ation, our MHP-Module generates more distinctive features for the cup handle (a key orientation component of the cup) and clearly distinguishes between the root and the middle part of the handle. Besides, the MHP-Module is Sim(3)-consistent and can run in parallel with the translation/size estimation. The spherical feature map generates rotation via a rotation head. Our main contributions are as follows: 1) By leveraging the generalization of reusable DINOv2, we designed the SSA-Module for translation and size estimation. This approach eliminates the reliance on shape priors and excessive computation, simplifies pose learning from Sim(3) to SO(3) space, and lays a robust foundation for tackling the inherently more challenging rotation estimation 2) To track intra-class variations, we propose a novel rota-tion estimator with two key modules. First, we design a more robust and effective geometric feature generator via the MHP-Module. Second, our Slinconv efficiently models long-range dependencies on the sphere while avoiding the computational overheads of Transformers. 3) Based on SSH-Pose, we build a robotic picking system. With well-designed translation/size and rotation estima-tors, it can robustly and accurately pick category-level unseen objects. Robotic picking experiments are de-signed to demonstrate the effectiveness of our approach in real-world applications. Besides DINOv2 [31], which is commonly used in upstream tasks of object pose estimation, all modules in our network are designed using simple 2D convolution and MLP; yet they achieve state-of-the-art (SOTA) performance on benchmark datasets as well as local real-world challenging scenes. II. RELATED WORK We review the related work from three perspectives: shape prior-based methods, shape prior-free methods, and object pose estimation based on 3D reconstruction. Unless otherwise specified, all pose estimation discussed in this section refers to category-level object pose estimation. 
+
+A. Shape prior-based methods for pose estimation 
+
+Shape prior-based methods typically use an offline category-level shape prior network, which learns from training-set instance CAD models to generate a category-specific shape prior. As a pioneer, Object-DeformNet [22] first deforms the offline-learned shape, uses learned correspondences to get a normalized object coordinate space [13] for observed points, and finally applies the Umeyama algorithm [34] to recover 6D pose and metric size. SAR-Net [33] uses shape priors for symmetric completion of observed points, and transforms shape priors to obtain corresponding points for rotation es-timation. However, alignment is often non-differentiable and outside deep learning frameworks. Direct regression methods avoid this by offering an alternative. CenterSnap [35] performs object reconstruction and pose estimation using object-centric scene representations. However, its reconstruction requires a complex network and is not directly used for pose estimation. Besides, MH6D [16] proposes multi-hypothesis consistency learning for category-level pose estimation. Despite good results, the cumbersomeness of category-level shape priors has driven exploration of simpler, more direct solutions. 
+
+B. Shape prior-free methods for pose estimation 
+
+Shape prior-free methods are gaining traction in category-level pose estimation owing to their simplicity and usability. These methods can be further categorized into correspondence-based and direct regression approaches. IST-Net [24] argues that 3D priors are not the driver of high performance and introduces a deformation network independent of prior knowl-edge, additionally establishing correspondences to enable pose estimation. For AG-Pose, it leverages an attention module for Instance-Adaptive and Geometric-Aware Keypoint Learning, and similarly estimates pose via correspondence establishment. On the other hand, DualPoseNet [26] adopts dual networks for explicit and implicit direct pose prediction, while enforcing consistency to refine pose estimates. GPV-Pose [27] proposes 3DGC to jointly estimate symmetric reconstruction and 9D pose. Building upon GPV-Pose, HS-Pose [28] designs an HS-layer: an efficient module that addresses the insensitivity of GPV-Pose to scale and translation features. Recently, VI-Net [30] has been proposed as a novel shape prior-free framework, which improves rotation estimation accuracy by decoupling rotation into viewpoint and in-plane components. Furthermore, SecondPose [21] enhances VI-Net by integrating an SE(3)-consistent module, which fuses semantic and geometric fea-tures for better performance. 3C Concatenation  Add  AP  Average Pooling  MP  Max Pooling  P&F  Projection and Flattening  Id  Identity                           
+
+> Point
+> Decoder
+> DINOv2
+> Point
+> Encoder
+> AP & MLP
+> CPoint
+> Decoder CPointNet++
+> Translation Head
+> Size Head
+> 𝑡𝑡 ∈ 3
+> 𝑠𝑠 ∈ 3
+> Hierarchical Grouping
+> Normalized PPF
+> MLP
+> ……
+> MP
+> Split
+> MLP
+> Broadcast
+> MLP
+> MP  C
+> update
+> skip connect
+> Relu
+> Group-wise
+> ……
+> FPN C
+> Rotation Head
+> Split
+> SymDWConv:
+> 3×3 Id 9×11×9 C
+> Norm
+> MLP
+> Resnet18
+> P&F
+> Downsampling
+> CConcatenation Add AP Average Pooling MP Max Pooling P&F Projection and Flattening Id Identity
+> (a) Symmetry-Aware Translation & Size Estimation
+> (b) MHP-Module
+> (c) Rotation Estimation With SlinConv
+> skip connect
+> Relu
+> SSA-Module
+> SlinConv block
+> Fig. 2. Overview of SSH-Pose, where the three background colors represent its three main components, and the two dashed boxes denote its two sub-modules respectively. We design (a) Symmetry-aware Translation & Size Estimation with the SSA-Module to obtain accurate tand s. Meanwhile, (b) MLP-based Hierarchical Point Pair Feature (MHP) Module is proposed to extract effective geometric features. (c) Rotation Estimation with SlinConv fuses semantic features Flseg , geometric features Fgeo , and radius features Frad to estimate rotation. See text for details.
+
+C. Pose estimation with 3D object reconstruction 
+
+Owing to occlusions or the inherent limitation of a single viewing angle, the information acquired about an object is invariably partial. This limitation significantly constrains the performance of object pose estimation. An intuitive solution is to complete or reconstruct the object to obtain comprehensive geometric information, which in turn enhances the accuracy of pose estimation. Object-DeformNet [22] introduces a de-formation network that leverages category-level shape priors to reconstruct the observed object, thereby facilitating object pose estimation. In contrast, IST-Net [24] contends that shape priors are dispensable during the deformation process. IST-Net [24] proposes a prior-free 3D object reconstruction network specifically designed for object pose estimation. However, the objects reconstructed by these two types of methods are all in the world coordinate system, losing crucial pose information. GSNet [36] tackles this issue by utilizing a point cloud completion network based on 3D graph convolution [37] to complete the observed object within the camera co-ordinate system. However, this completion network suffers from excessive complexity. Recent studies [27], [28], [33] have explored approaches based on symmetric inexact completion. While these methods have demonstrated promising results, they still depend on either shape priors or complex network architectures such as 3D graph convolutions. 
+
+Discussions: Overall, whereas SAR-Net [33], GPV-Pose [27], and HS-Pose [28] integrate symmetric reconstruction modules, they require shape priors or rely on intricate geometric fea-tures. In contrast, our SSA-Module uses reusable semantic fea-tures, eliminating dependence on complex geometric represen-tations while directly boosting pose regression accuracy. The most similar methods are VI-Net [30] and SecondPose [21], which both lack deep geometric features to handle intra-class variations and use 3×3 convolutions, limiting the network’s ability to model long-range pose estimation dependencies. Though Transformers could address this, direct adoption would significantly increase computation and overfitting risks. III. M ETHOD 
+
+This paper aims to estimate the 9D pose of diverse in-stances from known categories, transforming them from the camera coordinate system to the object coordinate system, which is also known as category-level object pose estimation. The inputs are cropped images I ∈ RW ×H×3 and masked point clouds P ∈ RN ×3 generated by mask-RCNN [38], where W = 210 , H = 210 , N = 2048 . As shown in Fig. 2, our SSH-Pose method consists of three major components. First, the Symmetry-Aware Translation & Size Estimation branch comprises a Semantic-guided Symmetry-Aware Module (SSA-Module) that builds upon DINOv2 [31]. By exploiting symmetric-aware guidance, we estimate accurate translation and size priors, thereby streamlining pose learning from Sim(3) to SO(3) space. This approach establishes a solid foundation for effectively tackling the more challenging rotation estimation. Then, we propose an MLP-based Hierar-chical Point Pair Feature (MHP) Module, which efficiently extracts sim(3)-consistent and robust geometric features to address intra-class variations. Finally, rotation estimation with SlinConv is proposed. Leveraging the precomputed translation and size as priors, we reconstruct the masked point clouds P
+
+to the origin of the object coordinate system. The geometric, semantic, and radius features are projected onto a sphere, forming a spherical feature map that is highly correlated with 4ML     
+
+> Norm
+> MLP(64)
+> MLP(64)
+> MLP(128)
+> MLP(256)
+> MLP(512)
+> C
+> M
+> M
+> M
+> MLP(512)
+> MLP(256)
+> MLP(128)
+> MLP(64)
+> MLP(3)
+> C
+> Point Encoder Point Decoder
+> MC
+> Max Pooling Concatenation
+> Fig. 3. SSA-Module point encoder and decoder architecture.
+
+rotational information. The SlinConv block is employed to form an encoder-decoder feature pyramid network (FPN) with a ResNet18 structure, which fuses the three spherical features and extracts spherical rotation signals with contextual infor-mation. The resulting spherical features are then processed by a rotation head for accurate 3D rotation estimation. 
+
+A. Symmetry-Aware Translation & Size Estimation 
+
+Previous works [21], [30] also employ separate networks to estimate object translation and size, often treating this as trivial. However, achieving highly accurate translation/size estimation without complex networks remains non-trivial and significantly affects rotation estimation accuracy. This mo-tivates us to revisit this task and develop a more accurate translation/size estimation network. We design a SSA-Module for estimating object translation and metric size. Symmetry awareness is built upon the premise that vast majority of artificial products exhibit global symmetry. On the other hand, sensors typically acquire incomplete data from a single view, while object translation is usually based on the geometric center of the object, and metric size requires measurements in three specific directions, demanding complete point clouds. Unlike SAR-Net [33], our SSA-Module does not require the pre-preparation of shape priors for each category. Instead, it relies on features from the large semantic model DINOv2 [31], which can be reutilized by upstream tasks or other modules. As illustrated in Fig. 2(a), we generate the global se-mantic feature F gseg ∈ R1×Cgseg from the DINOv2 features 
+
+F lseg ∈ RNseg ×Clseg through average pooling and a simple dimensionality transformation, where Cgseg = 1024 , Nseg =225(15 × 15) and Clseg = 384 . Then, we leverage this global semantic feature F gseg to guide the symmetric completion of the point cloud P . Specifically, we employ a PointNet-like structure [33] as the point encoder and point decoder, detailed in Fig. 3. The point global features F gp ∈ R1×Cgp gener-ated by the Point Encoder are concatenated with the global semantic features and point-wise coordinates in the feature dimension. Ultimately, we generate corresponding symmetric points P sym for input points P and concatenate them to obtain the object’s complete points, P c ∈ R2N ×3.To further process the completed points, we employ a PointNet++ [32] network with three downsampling steps and generate point features F l 
+
+> p
+
+∈ R2N ×256 . We then adopt two simple MLP-based output heads [21], [30] to estimate the translation t ∈ R3 and size s ∈ R3, respectively. Notably, even incompletely symmetric objects (e.g., cameras) can benefit from this symmetric structure. Since our estimation of the object’s position and size does not rely on extremely fine-grained local details, even inaccurate symmetric completion still facilitates the estimation of position and size. 
+
+B. MLP-based Hierarchical Point Pair Feature Module 
+
+Recently, SecondPose [21] remodels the underlying object pose estimation process from {point cloud → canonical space }
+
+to {point cloud → SE(3)-consistent representation → canoni-cal space }. However, the SE(3)-consistent representation in the latter relies on a known scale, thus requiring the serialization of size estimation and extraction of geometric feature, which reduces the algorithm’s efficiency. Our method remodels this process as {point cloud → Sim(3)-consistent representation 
+
+→ canonical space }, thereby enabling the synchronous execu-tion of geometric representation and size estimation. SE(3) comprises rigid transformations of rotation and translation in Euclidean space, while Sim(3) extends this with uniform scaling. This not only improves the algorithm’s efficiency but also enhances the robustness of point cloud features. MHP-Module is proposed to extract effective geometric features F geo ∈ RNg ×Cgeo with Ng = 300 and Cgeo = 96 ,as illustrated in Fig. 2(b). To learn the sim(3)-consistent point features, we first introduce a simple Normalized PPF (Point Pair Feature) block. Specifically, we compute a robust scale factor siqr based on the Interquartile range (IQR) [39] method from the input points: 
+
+dIQR = Q0.75 (∥P geo ∥2) − Q0.25 (∥P geo ∥2) , (1) 
+
+siqr = Q0.75 (∥P geo ∥2) + k · dIQR , (2) where P geo ∈ RNg ×3 is the downsampled points. Q0.75 
+
+and Q0.25 represent the 75th and 25th percentiles of the data, respectively, and k = 1.5 is an empirical constant. Then, we compute a sim(3)-consistent PPF feature matrix 
+
+F ppf ∈ RNg ×Ng ×4 for the point cloud P geo , where each element fi,j ∈ R4 in F ppf is defined as below. 
+
+fi,j =
+
+h ˜di,j , α i,j , β i,j , θ i,j 
+
+i
+
+, (3) where, ˜di,j = ∥pj − pi∥ /s iqr is defined as the normalized Euclidean distance between points pi ∈ P geo and pj ∈ P geo .The angle αi,j (or βi,j ) are the inferior angle formed by the normal of pi (or pj ) and the direction from pi to pj ,while θi,j signifies the inferior angle between the normals of 
+
+pi and pj . Then, given a strictly increasing list of integers 
+
+K = [ k0, k 1, . . . , k L], we obtain a hierarchical set of neighbour indices Nℓ ∈ ZNg ×(kℓ−kℓ−1), ℓ = 1, . . . , L , where Nℓ
+
+contains the indices of the kℓ−1 + 1 to kℓ-th nearest points in P geo for every point in P geo .For the sake of convenience and clarity in our presenta-tion, subsequent steps of feature processing will be explicitly exemplified using the i-th point in the point cloud; other points will undergo identical operations. We obtain the hi-erarchical normalized PPF feature groups (patch) G(i) 
+
+> hier
+
+=n
+
+G(i) 
+
+> ℓ
+
+∈ R(kℓ−kℓ−1)×4 | ℓ = 1 , 2, . . . , L 
+
+o
+
+by indexing from 
+
+F ppf . Then, we employ an MLP to perform dimension 5
+
+Algorithm 1 SymDWConv 
+
+Input: x ∈ Rh×w×c, k1, k 2 ∈ N ▷ k 1,k2 is the kernel size 
+
+Output: y ∈ Rh×w×c 
+
+> 1:
+
+xpadding ← PaddingFunction (x, m = k1// 2, n = k2// 2)  
+
+> 2:
+
+x1 ← DWConv c→ck1×k2 (xpadding ) ▷ depthwise convolution  
+
+> 3:
+
+x2 ← DWConv c→ck1×k2 (FLIP (xpadding , dim = 1))  
+
+> 4:
+
+y ← Max (x1, FLIP (x2, dim = 1)) ▷ element-wise max  
+
+> 5:
+
+return y
+
+transformation on the nearest PPF feature group G(i)1 , and apply max-pooling within the group to obtain intermediate geometric features f (i) 
+
+> y
+
+∈ R1×Cgeo y , where y denotes the y-th time this feature is obtained. Subsequently, f (i) 
+
+> y
+
+is split into L
+
+parts along the feature dimension. Each part, denoted as f (i)
+
+> y,ℓ
+
+,is added to the PPF feature group processed by the MLP. This addition does not follow the broadcasting mechanism; instead, group-wise addition is performed. Specifically, each feature part f (i) 
+
+> y,ℓ
+
+is grouped in the same manner as G(i) 
+
+> ℓ
+
+before the addition operation. Here, the PPF feature group acts as positional encoding. Then, these split features are concatenated after being dimensionally expanded by an MLP and pooled within groups. This concatenated result is used to update the intermediate features after skip connection, where the update operation is performed only once by default. After the features of all points in P geo are updated, the above operations are repeated, ultimately obtaining the geometric features F geo 
+
+through a ReLU function. Through the MHP-Module, we achieve parallel processing of translation/size estimation and extraction of geometric fea-tures, enhancing their ability to handle intra-class variations. 
+
+C. Rotation Estimation With SlinConv 
+
+First, We project the semantic features F lseg , geometric features F geo , and radius features F rad = ∥ P −t 
+
+> ∥s∥2
+
+∥2 onto the sphere based on their coordinates transformed by t and s.The spherical surface is divided into H0 × W0 bins ( H0 =
+
+W0 = 64 ). For features in the same bin, we select those farther from the origin; empty bins are initialized to zero. This process yields three flattened spherical surface feature representations: Sseg  
+
+> 0
+
+∈ RH0×W0×Clseg , Sgeo  
+
+> 0
+
+∈ RH0×W0×Cgeo 
+
+and Srad  
+
+> 0
+
+∈ RH0×W0×1.After obtaining spherical features, works like [21], [30] employed a feature pyramid built from 3x3 convolutions. However, 3x3 convolutions lack long-range dependency mod-eling capability [40], so their performance is surpassed by Transformers, which in turn introduce quadratic computational complexity issues. To enhance the capability of perceiving rotation information from the sphere under intra-class variation challenges, we propose a SlinConv block that incorporates context modeling capabilities while minimizing computational overhead. The overall structure of our rotation estimation Encoder-Decoder is the FPN with ResNet18. The key difference from existing networks lies in our design of a SlinConv block to replace the 3×3 convolution. Specifically, for the input feature map, e.g., Sseg  
+
+> 0
+
+, we split it along the feature dimension 
+
+Algorithm 2 PaddingFunction 
+
+Input: x ∈ Rh×w×c, m, n ∈ N
+
+Output: xpadding ∈ R(h+2 m)×(w+2 n)×c 
+
+> 1:
+
+x11 ← x[0 : m, 0 : w// 2, :]  
+
+> 2:
+
+x13 ← x[h − m : h, 0 : w// 2, :]  
+
+> 3:
+
+x12 ← x[0 : m, w// 2 : w, :]  
+
+> 4:
+
+x14 ← x[h − m : h, w// 2 : w, :]  
+
+> 5:
+
+if m > 1 then  
+
+> 6:
+
+x11 , x 12 ← FLIP (x11 , 0) , FLIP (x12 , 0)  
+
+> 7:
+
+x13 , x 14 ← FLIP (x13 , 0) , FLIP (x14 , 0)  
+
+> 8:
+
+end if  
+
+> 9:
+
+xtop ← CONCATENATE (x12 , x 11 , dim = 1)  
+
+> 10:
+
+xbottom ← CONCATENATE (x14 , x 13 , dim = 1)  
+
+> 11:
+
+xtb ← CONCATENATE (xtop , x, x bottom , dim = 0)  
+
+> 12:
+
+xlef t , x right ← x[: , 0 : n, :] , x[: , w − n : w, :]  
+
+> 13:
+
+xpadding ← CONCATENATE (xright , x tb, x lef t , dim = 1)  
+
+> 14:
+
+return xpadding 
+
+into four distinct partitions: Sseg hw , Sseg h , Sseg w , Sseg id . Among them, the feature dimension of Sseg hw , Sseg h and Sseg w is set to Chw seg = Chseg = Cwseg = rg Cseg , where rg = 0.125 .The feature dimension of the remaining partition is given by Cid seg = (1 − 3rg )Cseg . Subsequently, the split features are processed using the parallel SymDWConv module, as illustrated in Algorithm 1 and 2, where Algorithm 2 serves to align the differences between spherical convolution and 2D convolution. For Sseg hw , we use a small square kernel size with a default of 3 × 3. In contrast, for Sseg h and Sseg w , we utilize a band kernel size, with default settings of 9 × 1
+
+and 1 × 9, respectively. Through these operations, we can perceive a larger context range without significantly increasing the computational load. Ultimately, as shown in Fig. 2(c), we concatenate the features processed by SymDWConv and perform simple transformations. Parallel ResNet18 modules with SlinConv blocks are employed to simultaneously process 
+
+Sseg  
+
+> 0
+
+, Sgeo  
+
+> 0
+
+, and Srad  
+
+> 0
+
+. The output results are concatenated, and a similar inverted FPN is used as a decoder to generate the final feature map Sf inal . The structures of the encoding and decoding pyramids consist of three layers, with each layer connected through standard downsampling or upsampling lay-ers. Finally, we employ the rotation head [30] to estimate the rotation matrices. The rotation head obtains the final rotation through voting after performing row-wise and column-wise max pooling on the finally obtained 2D feature map, which echoes our band convolution kernel. 
+
+D. Loss Function 
+
+We train two separate networks for translation-size and rota-tion. This is in-line with previous related methods [21], [30]. The translation-size network utilizes L1 loss for translation, size, and symmetric point cloud as follows. 
+
+Lts = |tpred − tgt | + |spred − sgt | + |P pred sym − P gt sym |, (4) For rotation estimation, we predict the full 9D rotation matrix and apply L1 loss. 
+
+LR = |Rpred − Rgt |. (5) 6
+
+TABLE I QUANTITATIVE EVALUATION : O UR METHOD VS . SOTA ON NOCS-REAL275 AND NOCS-CAMERA25. C ORR DENOTES CORRESPONDENCE -BASED METHODS . DR DENOTES DIRECT REGRESSION METHODS . ‘*’ DENOTES THE CATRE [41] I OU METRICS .Method Shape Priors NOCS-REAL275 (mAP (%)) NOCS-CAMERA25 (mAP (%)) 
+
+IoU 75 ∗ 5◦2cm 5◦5cm 10 ◦2cm 10 ◦5cm IoU 75 ∗ 5◦2cm 5◦5cm 10 ◦2cm 10 ◦5cm Corr SPD [22] ✓ 27.0 19.3 21.4 43.2 54.1 46.9 54.3 59.0 73.3 81.5 SAR-Net [33] ✓ – 31.6 42.3 50.3 68.3 – 66.7 70.9 75.3 80.3 SGPA [14] ✓ 37.1 35.9 39.6 61.3 70.7 69.1 70.7 74.5 82.7 88.4 DPDN [15] ✓ – 46.0 50.7 70.4 78.4 – – – – –GPT-COPE [42] ✓ – 45.9 53.8 63.1 77.7 – 70.4 76.5 81.3 88.7 GCE-Pose [23] ✓ – 57.0 65.1 75.6 86.3 – – – – –DR CenterSnap-R [35] ✓ – – 29.1 – 64.3 – – 66.2 – 81.3 MH6D [16] ✓ – 53.0 61.1 72.0 82.0 – – – – –Corr IST-Net [24] ✗ – 47.5 53.4 72.1 80.5 – 47.5 53.4 72.1 80.5 AG-Pose [25] ✗ – 54.7 61.7 74.7 83.1 – 77.8 82.8 85.5 91.6 
+
+DR DualPoseNet [26] ✗ 30.8 29.3 35.9 50.0 66.8 71.7 64.7 70.7 77.2 84.7 GPV-Pose [27] ✗ – 32.0 42.9 – 73.3 – 72.1 79.1 – 89.0 HS-Pose [28] ✗ – 46.5 55.2 68.6 82.7 – 73.3 80.5 80.4 89.4 VI-Net [30] ✗ 48.3 50.0 57.6 70.8 82.1 79.1 74.1 81.4 79.3 87.3 CLIPose [43] ✗ – 48.7 58.3 70.4 85.2 – 74.8 82.2 82.0 90.6 SecondPose [21] ✗ 49.7 56.2 63.6 74.7 86.0 – – – – –Ours ✗ 51.7 59.3 66.3 77.2 87.4 79.6 76.5 83.5 82.7 91.4 SecondPose 
+
+Ours 
+
+Ground Truth 
+
+General  Occlusion 
+
+Wild-light  Wild-dark 
+
+> SecondPose Ours SecondPose Ours
+
+Fig. 4. Qualitative results of 9D pose estimation on NOCS-REAL275. We compare our predictions with ground-truth annotations and those produced by SecondPose. Our approach achieves markedly higher accuracy. 
+
+Points are centered/normalized using tgt and sgt during training, but predictions enable this normalization at inference. IV. EXPERIMENTS We first evaluate our method on three widely used bench-marks against SOTA to demonstrate its superiority. Next, visual experiments with real objects in various scenarios further demonstrate the effectiveness of our method. Finally, we integrate the proposed object pose estimation method into a designed picking system and conduct picking experiments on five object categories with four instances each, validating the effectiveness of our approach. Ablation studies further quantify each component’s contribution. 
+
+Datasets : We conduct experiments on the following widely-used 9D pose estimation benchmarks: NOCS-REAL275 [13], NOCS-CAMERA25 [13] and Wild6D [44]. NOCS-REAL275 consists of 13 real-world scenes featuring six object categories 
+
+(bowl, bottle, can, camera, mug, and laptop) , with 4,300 images from 7 scenes used for training and 2,750 images from the remaining 6 scenes for testing. NOCS-CAMERA25 is a synthetic dataset designed to enhance NOCS-REAL275. It includes 300,000 RGB-D images spanning 1,085 objects, with 25,000 images from 184 objects allocated for validation purposes. Wild6D comprises images from 486 videos, with only the test set annotated, covering 162 objects from five categories (excluding “ can ”). 
+
+Metrics : We employ the standard mean Average Precision (mAP (%)) as the evaluation metric, computed for 5◦2cm ,
+
+5◦5cm , 10 ◦2cm , and 10 ◦5cm . Specifically, the metric denoted as m◦ncm corresponds to the proportion of predictions where the rotation estimation error is constrained within m degrees and the translation estimation error is limited to n centimeters. 7SecondPose           
+
+> Ours
+> Fig. 5. On the Wild6D dataset, we provide a comparative visualization of pose bounding boxes between our method and the baseline approach, SecondPose. Green and red correspond to the predicted results and ground truth, respectively. Specifically, the center of the 3D bounding box indicates the object’s position, its orientation reflects the object’s pose, and its length, width, and height represent the object’s dimensions. TABLE II COMPARISON OF EFFICIENCY METRICS ON THE NOCS-REAL275 Method Inference Speed (FPS) ↑Parameter Size (MB) ↓
+> SecondPose [21] 9.87 60.2 Ours 10.16 48.2
+
+Furthermore, we include the mAP value calculated at a 3D Intersection over Union (IoU) threshold of 75% and 50%, a metric that simultaneously assesses errors in both pose and size. The used metrics enable comprehensive evaluation. 
+
+Implementation details : In this paper, the raw images are provided at a resolution of 640 × 480 . We then uti-lize Grounded-SAM [45] for segmentation in real-world and robotic picking evaluation. To ensure fairness in evaluating public datasets, we use Mask R-CNN [38] for object segmen-tation, in line with other SOTA methods. During geometric feature extraction, we configure the hierarchical neighbor parameters as K = [10 , 20 , 40 , 80 , 160 , 300] and Cgeo y equals 48 and 96 when y = 1 and y = 2. We calculate the appropriate bin for each point to be projected and utilize the sparsification feature in MinkowskiEngine [46] to eliminate features that project into the same bin. Subsequently, we apply the densification feature in MinkowskiEngine [46] to set unprojected bins to zero, which enables to automatically compute the gradients for this process. Our models are trained with batch size 48 on a single NVIDIA 4090 GPU up to epoch 40. The Adamw optimizer is employed with an initial learning rate set to 0.001. For learning rate scheduling, we use WarmupCosineLR with parameters including max iterations 200k, warmup factor 0.001, and warmup iterations 2K. 
+
+A. Evaluation on Public Datasets 
+
+We conducted extensive experiments to validate our method on the NOCS-REAL275 [13], NOCS-CAMERA25 [13], and Wild6D [44] datasets. Specifically, the experiments on NOCS-REAL275 [13] and Wild6D [44] were trained on a mixed dataset where NOCS-REAL275 [13] and NOCS-CAMERA25 were combined at a ratio of 1:3, while the experiment on                                                                     
+
+> TABLE III QUANTITATIVE RESULTS ON THE WILD 6D DATASET :COMPARISON BASED ON MEAN AVERAGE PRECISION (MAP) METRICS OF IoU 3D(%) AND
+> m◦ncm (%) Method Mean Average Precision (mAP)
+> IoU 50 IoU 75 5◦2cm 5◦5cm 10 ◦2cm 10 ◦5cm NOCS [13] 0.00 0.00 0.04 0.04 0.04 0.04 SPD [22] 52.60 20.30 6.90 9.30 20.10 27.80 SGPA [14] 63.50 34.50 26.30 29.20 33.80 39.50 GPV-Pose [27] --14.10 21.50 23.80 41.10 MH6D-sup [16] 76.10 41.90 27.00 31.20 34.40 40.50 Diff9D [47] 76.48 38.16 25.52 30.46 32.48 40.94 PENet [8] 74.60 -33.10 39.30 -48.50 SecondPose [21] 77.48 36.04 27.56 41.30 31.92 51.78
+> Ours 77.34 43.04 33.30 42.32 38.56 51.62
+
+NOCS-CAMERA25 [13] was trained solely on the NOCS-CAMERA25 [13] dataset. The relevant quantitative results are presented in Table I and Table III, where the best-performing results for each evaluation metric are highlighted in bold. The visualization results can be found in Fig. 4 and Fig. 5. 
+
+1) NOCS-REAL275: The left part of Table I presents a comprehensive quantitative comparison between our proposed method, the SOTA method of the same technical type (Second-Pose [21] - highlighted in gray), and other SOTA approaches on the NOCS-REAL275 [13] dataset. In contrast to NOCS-CAMERA25 [13], the data in NOCS-REAL275 [13] is entirely sourced from real-world scenarios, making the results on this dataset more indicative of the algorithm’s effectiveness in practical applications. Our method outperforms all SOTA methods on NOCS-REAL275 [13]. Specifically, it exceeds SecondPose by 3.1 percentage points (pp) in the mAP at 
+
+5◦2cm. Furthermore, our method remains competitive with GCE-Pose [23], a SOTA method that relies on shape priors, and even outperforms it by 2.3 pp in mAP over the entire test set under the most stringent 5◦2cm threshold. The qual-itative comparison results are shown in Fig. 4. Our method demonstrates higher accuracy in pose estimation, especially for the more challenging rotation information. Furthermore, in the case of the “can” at the right corner of the image in Column 5 of Fig. 4, our method still achieves success even when only 8Ground Truth 
+
+Genera l Occlusion 
+
+Wild -light  Wild -dark  
+
+> SecondPose Ours SecondPose Ours
+> Fig. 6. Qualitative results in real-world scenarios. We compare our method with SecondPose in four different real-world scenarios. To keep the result visualization clear and uncluttered, we hid the coordinate axes and only visualize the 3D bounding boxes. The length, width, and height of the 3D boxes reflect the size of the objects, their orientation indicates the object pose, and the center of the 3D boxes represents the object position. Arrows point to novel objects not present in the training set. Figure is best viewed enlarged.
+
+a small amount of data is captured, whereas SecondPose [21] clearly makes an error in estimating the position of the can. 
+
+Efficiency : The efficiency of the proposed algorithm was evaluated using the NOCS-REAL275 test dataset, as shown in II. To quantify the inference speed, a standard metric was adopted: the total time consumed during testing was divided by the total number of images in the test dataset, yielding the number of Frames processed Per Second (FPS). Note that each image here contains 5 to 6 objects. Specifically, the baseline method (SecondPose) achieved an inference speed of 9.87 FPS with a model parameter size of 60.2 MB. In contrast, the proposed algorithm outperformed SecondPose in both key metrics: it attained a higher inference speed of 10.16 FPS while maintaining a more compact parameter size of 48.2 MB. Notably, this performance gain is substantial, as the proposed algorithm not only reduces the model complexity (via fewer parameters) but also simultaneously improves both inference accuracy and speed, which is non-trivial in the field of efficient computer vision model design. 
+
+2) NOCS-CAMERA25: The right part of Table I presents the quantitative experimental results of our method on the NOCS-CAMERA25 [13] dataset. The results demonstrate that our method significantly outperforms other methods in the same category across multiple metrics evaluating the accuracy of pose and size estimation on this dataset. Additionally, it still maintains a slight advantage in the mAP at IoU 75 ∗ and 
+
+5◦5cm compared to methods based on shape priors or corre-spondence. However, our method shows limited improvement and performs worse than correspondence-based methods at other thresholds. This can be attributed to the overly clean                    
+
+> TABLE IV SUCCESS RATE (%) OF ROBOTIC PICKING ACROSS FIVE OBJECT CLASSES
+> Method Picking Success Rate (%) Bottle Can Bowl Mug Camera Avg SecondPose [21] 75 80 80 60 70 73 Ours 80 90 95 75 90 86
+
+synthetic dataset, which allows the network to achieve good results despite lacking robustness. Additionally, the depth data is more accurate, enabling correspondence-based methods to better leverage their advantages. Notably, the experimental results on the synthetic data are only for reference and do not diminish the fact that our method still has advantages. 
+
+3) WILD6D: Trained on the combined NOCS-CAMERA25 [13] and NOCS-REAL275 [13] datasets, our model was further evaluated on the Wild6D [44] test set to validate its generalization capability, with results presented in Table III. As evidenced in Table III, our method attains SOTA parity on the IoU 75 , 5◦2 cm, 5◦5 cm and 10 ◦5 cm metrics, while also delivering strong performance on the remaining metrics. Notably, it achieves a 4.16 pp improvement on 10 ◦2 cm. This indicates that our method still maintains its advantages on newly encountered data with unseen styles. The visualization results are provided in Fig. 5, which displays comparative 9D pose visualizations of two distinct instances across five object categories: bottle, bowl, camera, mug, and laptop. Notably, for axially rotationally symmetric objects (e.g., bottles and bowls), rotational estimation is only meaningful with respect to the axis direction. It can be observed from the visualization 9 
+
+> Fig. 7. Category-level picking visualization, including five categories of objects: bottle, bowl, camera, can, and mug. The robotic picking demo can be seen at https://youtu.be/z5LxH-4fI34.
+
+results that our method exhibits greater advantages in terms of size and rotation estimation. 
+
+B. Real-world and robotic picking evaluation 
+
+To further verify the effectiveness and robustness of our method in estimating object poses in real-world scenarios, we conducted comparative visualization experiments between the baseline and our method across various real-world settings. Additionally, to validate the role of the method in practical applications, we designed a picking experiment. 
+
+1) Object Pose Estimation in the Real World: We conducted extensive experiments across four scenarios: general, occlu-sion, wild-lighting, and dark environments. In this experiment, we used the Intel RealSense L515 RGB-D camera as the data acquisition device and employed Grounded-SAM [45] for object segmentation. Notably, both the camera device and the segmentation algorithm can be replaced by any alternatives that achieve the same effect. As indicated by the yellow arrows in Fig. 6, our method remains effective for novel objects in real-world scenarios (none of the objects shown in Fig. 6 were present in the training set). Furthermore, even in challenging scenarios such as occlusion, wild lighting, and dark environments, our method still outperforms the baseline. Additionally, it should be noted that in the third column of the “general” section in Fig. 6, the estimation of the mug with a smiling face failed. This is because the handle of that mug is pure black, and the camera used tends to produce abnormal depth data when capturing black regions. 
+
+2) Robotic Picking Validation: To verify the effectiveness of our method in practical industrial applications, we designed a robotic picking system. This system comprises a host com-puter, a UR5 robotic arm, a RH56E2-L dexterous hand, and an Intel RealSense D435i camera. Furthermore, as shown in Fig. 7, we have designed a picking software system to serve as an interactive visualization interface. This system continues to employ Grounded-SAM [45] as the object segmentation module and our method as the pose estimation module, which is the core of the picking process. Picking poses are manually designed for each object category relative to the object’s pose. To avoid mechanical interference, we enforce a technical setup such that only the back of the hand is visible in the presented images, , rather than the palm. We perform continuous picking in the order from near to far based on the distance of objects from the camera. For five categories (bottle, can, camera, mug, bowl), we collected 4 different instances for each category and conducted 5 pick tests with different poses for each instance. Thus, a total of 100 picking experiments were performed for each method. It should be noted that all instances involved in the picking experiments have not been seen during the training. To focus on object pose, we consider the experiment successful as long as the object is picked up. As shown in Table IV, our method achieved an average picking success rate of 86%, while the baseline reached 73%, which demonstrates the superiority of our method. 
+
+C. Ablation Studies 
+
+To further investigate the effectiveness of the constituent modules of the proposed method, we conducted extensive ablation experiments on the NOCS-Real275 dataset, which is more realistic and a widely used dataset. 
+
+1) Module: We conducted ablation studies for the con-stituents of our approach, and the results are presented in Table V. There are three key improvements in our method corresponding to three constituent modules. M 1 : The SSA-Module enhances the prediction accuracy of object translation 10 
+
+TABLE V ABLATION STUDIES OF NETWORK CONFIGURATIONS ON REAL275 
+
+Module Cgeo REAL275 M 1 M 2 M 3 IoU 75 ∗ 5◦2cm 5◦5cm 10 ◦2cm 10 ◦5cm 
+
+✓ ✓ 96 50.9 57.2 65.5 75.4 86.6 
+
+✓ ✓ 24 49.8 56.9 64.1 75.5 86.2 
+
+✓ ✓ 96 51.4 58.6 65.8 76.7 86.9 
+
+✓ ✓ ✓ 24 51.4 58.2 64.5 76.4 86.4 
+
+✓ ✓ ✓ 48 51.5 57.4 63.7 75.4 85.6 
+
+✓ ✓ ✓ 96 51.7 59.3 66.3 77.2 87.4 
+
+✓ ✓ ✓ 192 51.6 57.2 63.8 75.7 86.0 
+
+✓ ✓ ✓ 384 51.8 55.8 62.2 75.6 85.8 
+
+and size by predicting the symmetric point of each point, and indirectly improves the rotation estimation accuracy. M 2 :The Sim(3)-consistent geometric features generated by the 
+
+MHP-Module are more robust than the handcrafted geometric features in the baseline and more suitable for object pose estimation tasks. M 3 : The SlinConv block improves the model’s ability to model contextual information by imple-menting spherical convolution with a larger receptive field, thereby enhancing the algorithm accuracy. To study the role of each module, we replaced one of the three individually with the baseline’s corresponding module, with results in the upper part of Table V. No checkmark in the table indicates a replaced module. The results indicate that all three modules play a positive role in the network. 
+
+2) Geometric feature dimension: In computer vision tasks, feature dimensions are usually set to 192 or 384, which is more appropriate. Therefore, we further investigated the impact of geometric dimensions on the algorithm, and the results are shown in the lower part of Table V. We found that the algo-rithm performs best with a geometric feature dimension set to 96. Increasing the geometric feature dimension did not lead to significant performance improvements; rather, it resulted in a decline in performance and increased computational overhead. We attribute this to the fact that this feature is only an initial feature, and deeper features will be further learned and the dimension will be increased during spherical convolution. Moreover, the loss function does not explicitly supervise this feature, so a larger feature dimension here will make it difficult for the network to learn effective features. V. CONCLUSION AND FUTURE WORK This paper presents SSH-Pose, a shape prior-free frame-work for category-level 9D object pose estimation to enhance robotic picking. Key innovations include a symmetry-aware translation/size estimator using DINOv2 for symmetric ge-ometry inference, and a novel rotation estimator that fuses DINOv2 features with our proposed efficient, parallelizable geometric features for rotation prediction. This rotation estima-tor is driven by our SlinConv block, which models contextual relationships without increasing computational cost to enhance rotation estimation. SSH-Pose achieves SOTA performance among shape prior-free and direct regression frameworks. Extensive experiments on public datasets, real-world visu-alizations, and robotic picking tests validate its superiority. However, its training requires real-world data, which is scarce and hard to collect. Future work will focus on training solely with synthetic datasets and breaking domain barriers to reduce training requirements. REFERENCES [1] F. Tang, Y. Wu, X. Hou, and H. Ling, “3d mapping and 6d pose computation for real time augmented reality on cylindrical objects,” 
+
+IEEE Transactions on Circuits and Systems for Video Technology ,vol. 30, no. 9, pp. 2887–2899, 2019. [2] Y. Su, J. Rambach, N. Minaskan, P. Lesur, A. Pagani, and D. Stricker, “Deep multi-state object pose estimation for augmented reality assem-bly,” in 2019 IEEE International Symposium on Mixed and Augmented Reality Adjunct (ISMAR-Adjunct) . IEEE, 2019, pp. 222–227. [3] E. Marchand, H. Uchiyama, and F. Spindler, “Pose estimation for aug-mented reality: a hands-on survey,” IEEE transactions on visualization and computer graphics , vol. 22, no. 12, pp. 2633–2651, 2015. [4] J. Liu, W. Sun, H. Yang, C. Liu, X. Zhang, and A. Mian, “Domain-generalized robotic picking via contrastive learning-based 6-d pose estimation,” IEEE Transactions on Industrial Informatics , 2024. [5] S. Yu, D.-H. Zhai, and Y. Xia, “Robotic grasp detection based on category-level object pose estimation with self-supervised learning,” 
+
+IEEE/ASME Transactions on Mechatronics , vol. 29, no. 1, pp. 625–635, 2023. [6] C. Kim and J.-N. Hwang, “Object-based video abstraction for video surveillance systems,” IEEE Transactions on Circuits and Systems for Video Technology , vol. 12, no. 12, pp. 1128–1138, 2002. [7] L. Chen, P. Huang, Y. Li, and Z. Meng, “Edge-dependent efficient grasp rectangle search in robotic grasp detection,” IEEE/ASME Transactions on Mechatronics , vol. 26, no. 6, pp. 2922–2931, 2020. [8] S. Yu, D.-H. Zhai, J. Yin, and Y. Xia, “Category-level 6-d object pose estimation with learnable prior embeddings for robotic grasping,” IEEE Transactions on Industrial Electronics , 2025. [9] X. Liang, Y. Yan, W. Wang, T. Su, G. He, G. Li, and Z.-G. Hou, “Adaptive human–robot interaction torque estimation with high accuracy and strong tracking ability for a lower limb rehabilitation robot,” 
+
+IEEE/ASME Transactions on Mechatronics , vol. 29, no. 6, pp. 4814– 4825, 2024. [10] S. Zhang, W. Zhao, Z. Guan, W. Zhao, J. Peng, and J. Fan, “Learning cross-view consistent 3d keypoints for object 6d pose estimation,” IEEE Transactions on Circuits and Systems for Video Technology , 2025. [11] J. Zhou, K. Chen, M. Wei, X.-P. Zhang, Q. Dou, and J. Qin, “Canonical shape reconstruction with se (3) equivariance learning for weakly-supervised object pose estimation,” IEEE Transactions on Circuits and Systems for Video Technology , 2025. [12] J. Liu, W. Sun, C. Liu, X. Zhang, S. Fan, and W. Wu, “Hff6d: Hierarchical feature fusion network for robust 6d object pose tracking,” 
+
+IEEE Transactions on Circuits and Systems for Video Technology ,vol. 32, no. 11, pp. 7719–7731, 2022. [13] H. Wang, S. Sridhar, J. Huang, J. Valentin, S. Song, and L. J. Guibas, “Normalized object coordinate space for category-level 6d object pose and size estimation,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 2019, pp. 2642–2651. [14] K. Chen and Q. Dou, “Sgpa: Structure-guided prior adaptation for category-level 6d object pose estimation,” in Proceedings of the IEEE/CVF international conference on computer vision , 2021, pp. 2773– 2782. [15] J. Lin, Z. Wei, C. Ding, and K. Jia, “Category-level 6d object pose and size estimation using self-supervised deep prior deformation networks,” in European Conference on Computer Vision . Springer, 2022, pp. 19– 34. [16] J. Liu, W. Sun, C. Liu, H. Yang, X. Zhang, and A. Mian, “Mh6d: Multi-hypothesis consistency learning for category-level 6-d object pose estimation,” IEEE Transactions on Neural Networks and Learning Systems , 2024. [17] J. Liu, W. Sun, H. Yang, Z. Zeng, C. Liu, J. Zheng, X. Liu, H. Rahmani, N. Sebe, and A. Mian, “Deep learning-based object pose estimation: A comprehensive survey,” International Journal of Computer Vision , vol. 134, no. 81, pp. 1–45, 2026. [18] J. Liu, W. Sun, K. Zeng, J. Zheng, H. Yang, H. Rahmani, A. Mian, and L. Wang, “Scalable unseen objects 6-dof absolute pose estimation with robotic integration,” IEEE Transactions on Robotics , vol. 42, pp. 1884–1901, 2026. 11 
+
+[19] J. Zhou, Q. Zhu, Y. Wang, M. Feng, X. Liu, F. Shafait, and A. Mian, “Multiscale-hashing network for 6-d pose estimation of unseen objects in the wild,” IEEE/ASME Transactions on Mechatronics , 2025. [20] Z. He, Q. Li, X. Zhao, J. Wang, H. Shen, S. Zhang, and J. Tan, “Contourpose: Monocular 6-d pose estimation method for reflective textureless metal parts,” IEEE Transactions on Robotics , vol. 39, no. 5, pp. 4037–4050, 2023. [21] Y. Chen, Y. Di, G. Zhai, F. Manhardt, C. Zhang, R. Zhang, F. Tombari, N. Navab, and B. Busam, “Secondpose: Se (3)-consistent dual-stream feature fusion for category-level pose estimation,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,2024, pp. 9959–9969. [22] M. Tian, M. H. Ang Jr, and G. H. Lee, “Shape prior deformation for categorical 6d object pose and size estimation,” in European Conference on Computer Vision . Springer, 2020, pp. 530–546. [23] W. Li, H. Xu, J. Huang, H. Jung, P. K. Yu, N. Navab, and B. Busam, “Gce-pose: Global context enhancement for category-level object pose estimation,” in Proceedings of the Computer Vision and Pattern Recog-nition Conference , 2025, pp. 27 154–27 165. [24] J. Liu, Y. Chen, X. Ye, and X. Qi, “Ist-net: Prior-free category-level pose estimation with implicit space transformation,” in Proceedings of the IEEE/CVF International Conference on Computer Vision , 2023, pp. 13 978–13 988. [25] X. Lin, W. Yang, Y. Gao, and T. Zhang, “Instance-adaptive and geometric-aware keypoint learning for category-level 6d object pose estimation,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2024, pp. 21 040–21 049. [26] J. Lin, Z. Wei, Z. Li, S. Xu, K. Jia, and Y. Li, “Dualposenet: Category-level 6d object pose and size estimation using dual pose network with refined learning of pose consistency,” in Proceedings of the IEEE/CVF international conference on computer vision , 2021, pp. 3560–3569. [27] Y. Di, R. Zhang, Z. Lou, F. Manhardt, X. Ji, N. Navab, and F. Tombari, “Gpv-pose: Category-level object pose estimation via geometry-guided point-wise voting,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2022, pp. 6781–6791. [28] L. Zheng, C. Wang, Y. Sun, E. Dasgupta, H. Chen, A. Leonardis, W. Zhang, and H. J. Chang, “Hs-pose: Hybrid scope feature extrac-tion for category-level object pose estimation,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 2023, pp. 17 163–17 173. [29] H. Ren, W. Yang, X. Liu, S. Zhang, and T. Zhang, “Learning shape-independent transformation via spherical representations for category-level object pose estimation,” arXiv preprint arXiv:2503.13926 , 2025. [30] J. Lin, Z. Wei, Y. Zhang, and K. Jia, “Vi-net: Boosting category-level 6d object pose estimation via learning decoupled rotations on the spherical representations,” in Proceedings of the IEEE/CVF international conference on computer vision , 2023, pp. 14 001–14 011. [31] M. Oquab, T. Darcet, T. Moutakanni, H. Vo, M. Szafraniec, V. Khalidov, P. Fernandez, D. Haziza, F. Massa, A. El-Nouby et al. , “Dinov2: Learning robust visual features without supervision,” arXiv preprint arXiv:2304.07193 , 2023. [32] C. R. Qi, L. Yi, H. Su, and L. J. Guibas, “Pointnet++: Deep hierarchical feature learning on point sets in a metric space,” Advances in neural information processing systems , vol. 30, 2017. [33] H. Lin, Z. Liu, C. Cheang, Y. Fu, G. Guo, and X. Xue, “Sar-net: Shape alignment and recovery network for category-level 6d object pose and size estimation,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 2022, pp. 6707–6717. [34] S. Umeyama, “Least-squares estimation of transformation parameters between two point patterns,” IEEE Transactions on pattern analysis and machine intelligence , vol. 13, no. 4, pp. 376–380, 2002. [35] M. Z. Irshad, T. Kollar, M. Laskey, K. Stone, and Z. Kira, “Centersnap: Single-shot multi-object 3d shape reconstruction and categorical 6d pose and size estimation,” in 2022 International Conference on Robotics and Automation (ICRA) . IEEE, 2022, pp. 10 632–10 640. [36] P. Liu, Q. Zhang, and J. Cheng, “Gsnet: Model reconstruction network for category-level 6d object pose and size estimation,” in 2023 IEEE International Conference on Robotics and Automation (ICRA) . IEEE, 2023, pp. 2898–2904. [37] Z.-H. Lin, S.-Y. Huang, and Y.-C. F. Wang, “Convolution in the cloud: Learning deformable kernels in 3d graph convolution networks for point cloud analysis,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 2020, pp. 1800–1809. [38] K. He, G. Gkioxari, P. Doll´ ar, and R. Girshick, “Mask r-cnn,” in 
+
+Proceedings of the IEEE international conference on computer vision ,2017, pp. 2961–2969. [39] F. M. Dekking, A Modern Introduction to Probability and Statistics: Understanding why and how . Springer Science & Business Media, 2005. [40] W. Yu, P. Zhou, S. Yan, and X. Wang, “Inceptionnext: When inception meets convnext,” in Proceedings of the IEEE/cvf conference on computer vision and pattern recognition , 2024, pp. 5672–5683. [41] X. Liu, G. Wang, Y. Li, and X. Ji, “Catre: Iterative point clouds align-ment for category-level object pose refinement,” in European Conference on Computer Vision . Springer, 2022, pp. 499–516. [42] L. Zou, Z. Huang, N. Gu, and G. Wang, “Gpt-cope: A graph-guided point transformer for category-level object pose estimation,” IEEE Transactions on Circuits and Systems for Video Technology , vol. 34, no. 4, pp. 2385–2398, 2023. [43] X. Lin, M. Zhu, R. Dang, G. Zhou, S. Shu, F. Lin, C. Liu, and Q. Chen, “Clipose: Category-level object pose estimation with pre-trained vision-language knowledge,” IEEE Transactions on Circuits and Systems for Video Technology , vol. 34, no. 10, pp. 9125–9138, 2024. [44] Y. Fu and X. Wang, “Category-level 6d object pose estimation in the wild: A semi-supervised learning approach and a new dataset,” Advances in Neural Information Processing Systems , vol. 35, pp. 27 469–27 483, 2022. [45] T. Ren, S. Liu, A. Zeng, J. Lin, K. Li, H. Cao, J. Chen, X. Huang, Y. Chen, F. Yan et al. , “Grounded sam: Assembling open-world models for diverse visual tasks,” arXiv preprint arXiv:2401.14159 , 2024. [46] C. Choy, J. Gwak, and S. Savarese, “4d spatio-temporal convnets: Minkowski convolutional neural networks,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 2019, pp. 3075–3084. [47] J. Liu, W. Sun, H. Yang, P. Deng, C. Liu, N. Sebe, H. Rahmani, and A. Mian, “Diff9d: Diffusion-based domain-generalized category-level 9-dof object pose estimation,” IEEE Transactions on Pattern Analysis and Machine Intelligence , 2025. 
+
+Panfei Cheng received the B.S. degree from Hu-nan University, Changsha, China, in 2022. He is currently working toward a Ph.D. degree with the National Engineering Laboratory for Robot Visual Perception and Control, College of Electrical And Information Engineering, Hunan University, China, under the supervision of Prof. Hongshan Yu. His research interests include object pose estimation, point cloud registration and robotic manipulation. 
+
+Hongshan Yu received the B.S., M.S., and Ph.D. de-grees in control science and technology in electrical and information engineering from Hunan University, Changsha, China in 2001, 2004, and 2007,respec-tively. From 2011 to 2012, he was a Post-Doctoral Researcher with the Laboratory for Computational Neuroscience, University of Pittsburgh, USA. He is currently a Professor and Associate Dean of the School of Robotics and Artificial Intelligence at Hunan University. Prof. Yu was the Associate Dean of the National Engineering Laboratory for Robot Visual Perception and Control during 2016-2020 and received two Second-Grade National Science and Technology Progress Awards of China in 2004 and 2006. His research interests include computer vision, robotics, and artificial intelligence, with over 50 related publications. 12 
+
+Wenrui Chen received the B.S. and Ph.D. degrees in mechanical engineering from the Huazhong Uni-versity of Science and Technology, Wuhan, China, in 2010 and 2017, respectively. In 2016, he was a Visiting Scholar with the University of Lincoln, Lincoln, U.K. Since 2017, he has been with the School of Artificial Intelligence and Robotics, Hunan University, Changsha, China, where he is currently an Associate Professor. His research interests include robotic multimodal percep-tion, dexterous manipulation, and skill learning. 
+
+Xiaojun Tang received the B.S. and Ph.D. degrees from Harbin Engineering University in 2010 and 2015, respectively. Now he is a researcher at China Academy of Space Technology. Dr. Tang has published over 70 refereed papers in journals and conferences. His research interests include the aerospace engineering, space environ-ment test, visual inspection and micro deformation measurement in complex environment. 
+
+Jian Liu received his Ph.D. degree at the National Engineering Research Center of Robot Visual Per-ception and Control Technology, College of Electri-cal and Information Engineering, Hunan University, Changsha, China, in 2025. From 2023 to 2024, he was a Visiting Scholar at the Department of Com-puter Science of the University of Western Australia, Perth, WA, Australia, under the supervision of Prof. Ajmal Mian. His current research interests include 3D computer vision, object pose estimation, and robotic manipulation. He served as a reviewer for more than 20 journals and conferences, including the IEEE TPAMI, IEEE TIP, IEEE TNNLS, IEEE TMECH, IEEE TII, and IEEE ICRA/IROS, etc. 
+
+Naveed Akhtar is currently an ARC DECRA Fel-low at the School of Computing and Information Systems, The University of Melbourne. He has pre-viously served as a Sr. Lecturer at the University of Western Australia and as a Research Fellow at the Australian National University. He has served as an Area Chair of prestigious conferences in computer vision, including IEEE CVPR, ECCV, IEEE WACV. He currently serves as an Associate Editor for IEEE Trans. on Neural Networks and Learning Systems. His research has contributed towards interpretability of deep learning visual models, adversarial attacks and defenses for deep learning, point cloud analysis, medical image analysis and hyper/multi-spectral image analysis. The outcomes have led to acknowledgements and honors such as Google Research Program Award, ACM Distinguished Speaker and Western Australia’s Early Career Scientist of the Year 2021 Finalist.

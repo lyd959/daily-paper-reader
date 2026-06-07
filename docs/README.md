@@ -6,50 +6,61 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-06
-- 运行时间：2026-06-06 20:19:16 UTC
+- 最新运行日期：2026-06-07
+- 运行时间：2026-06-07 21:10:08 UTC
 - 运行状态：成功
-- 本次总论文数：9
-- 精读区：0
-- 速读区：9
+- 本次总论文数：13
+- 精读区：2
+- 速读区：11
 
 ### 今日简报（AI）
-今日速读9篇论文，聚焦SLAM、单图3D场景重建及皮肤触觉机制三大方向。  
-最值得关注《Triangle Splatting SLAM》与《SimuScene》，分别提出高效SLAM框架和从单张图像生成仿真级3D场景的方法。  
-建议优先阅读这两篇速读论文，把握技术前沿。
-- 详情：[/202606/06/README](/202606/06/README)
+今天精读了两篇高分论文，聚焦对称感知的9D位姿估计和重力对齐的场景重建。
+最值得关注的是Sim(3)一致特征与球面卷积在复杂位姿估计中的突破，以及从RGB图像解耦环境的重建方法。
+建议关注视觉几何与3D重建结合的最新进展，特别是高斯溅射与Transformer的融合。
+- 详情：[/202606/07/README](/202606/07/README)
 
 ### 精读区论文标签
-- 本次无精读推荐。
+1. [Symmetry-Aware 9D Pose Estimation with Sim(3)-Consistent Feature and Spherical Inception Convolution](/202606/07/2606.02219v1-symmetry-aware-9d-pose-estimation-with-sim3-consistent-feature-and-spherical-inception-convolution)  
+   标签：评分：8.0/10、query:mdr
+   evidence：类别级物体位姿估计中包含平移/尺寸估计器，利用Sim(3)对称性
+2. [GARDEN: Gravity-Aligned Reconstruction of Disentangled ENvironments from RGB images](/202606/07/2606.03921v1-garden-gravity-aligned-reconstruction-of-disentangled-environments-from-rgb-images)  
+   标签：评分：8.0/10、query:mdr
+   evidence：重建具有显式物理结构和重力对齐的环境用于仿真
 
 ### 速读区论文标签
-1. [Triangle Splatting SLAM](/202606/06/2605.31419v1-triangle-splatting-slam)  
-   标签：评分：7.0/10、query:mdr
-   evidence：密集RGB-D SLAM提供公制三维地图，可用于尺寸测量
-2. [SimuScene: Simulation-Ready Compositional 3D Scene Reconstruction from a Single Image](/202606/06/2606.03994v1-simuscene-simulation-ready-compositional-3d-scene-reconstruction-from-a-single-image)  
+1. [$\text{VG}^2$GT: Voxel-Gaussian Splatting Visual Geometry Grounded Transformer](/202606/07/2606.01573v1-textvg2gt-voxel-gaussian-splatting-visual-geometry-grounded-transformer)  
    标签：评分：7.0/10、query:dr
-   evidence：单图像3D场景重建，将物理引擎融入形状和布局估计
-3. [Epidermal microstructure and tactile sensitivity in the glabrous skin of hands and feet](/202606/06/biorxiv-10-64898-2026-05-27-728083-v1-epidermal-microstructure-and-tactile-sensitivity-in-the-glabrous-skin-of-hands-and-feet)  
-   标签：评分：7.0/10、query:mdr
-   evidence：使用3D重建测量表皮微结构的物理尺寸
-4. [SurGe: Improved Surface Geometry in Point Maps](/202606/06/2605.31577v1-surge-improved-surface-geometry-in-point-maps)  
+   evidence：基于体素-高斯泼溅的几何驱动三维重建
+2. [Depth from Dual Differential Defocus and Stereo Consensus](/202606/07/2606.02906v1-depth-from-dual-differential-defocus-and-stereo-consensus)  
+   标签：评分：7.0/10、query:dr
+   evidence：结合散焦与立体信息的物理驱动深度估计方法，精度高
+3. [BA-T: An Iterative Transformer for Two-View Bundle Adjustment](/202606/07/2606.03287v1-ba-t-an-iterative-transformer-for-two-view-bundle-adjustment)  
+   标签：评分：7.0/10、query:dr
+   evidence：用于三维重建几何精度的束调整方法
+4. [FUSE-Flow: A Decoupled Framework for Calibration and Stateless Real-Time Multi-View Point Cloud Fusion](/202606/07/2606.04376v1-fuse-flow-a-decoupled-framework-for-calibration-and-stateless-real-time-multi-view-point-cloud-fusion)  
+   标签：评分：7.0/10、query:dr
+   evidence：实时多视角点云融合实现几何一致的三维重建
+5. [Recent Advances and Trends in Learning-based 3D Representations](/202606/07/2606.04871v1-recent-advances-and-trends-in-learning-based-3d-representations)  
+   标签：评分：7.0/10、query:dr
+   evidence：综述涵盖各种3D重建方法，包括最新的神经表示
+6. [Hierarchical Space Partition for Surface Reconstruction](/202606/07/2606.04891v1-hierarchical-space-partition-for-surface-reconstruction)  
+   标签：评分：7.0/10、query:dr
+   evidence：点云表面重建，提高重建精度
+7. [DeblurNVS: Geometric Latent Diffusion for Novel View Synthesis from Sparse Motion-Blurred Images](/202606/07/2606.01315v1-deblurnvs-geometric-latent-diffusion-for-novel-view-synthesis-from-sparse-motion-blurred-images)  
    标签：评分：6.0/10、query:dr
-   evidence：在前馈式3D点图重建中改进局部表面几何
-5. [TROPHIES: Temporal Reconstruction of Places, Humans, and Cameras from Multi-view Videos](/202606/06/2606.02350v1-trophies-temporal-reconstruction-of-places-humans-and-cameras-from-multi-view-videos)  
+   evidence：基于NeRF和3DGS的新视图合成，处理运动模糊的三维重建
+8. [Hierarchical Object Representation for Spatial Robot Perception: Points, Meshes, and Superquadrics](/202606/07/2606.01545v1-hierarchical-object-representation-for-spatial-robot-perception-points-meshes-and-superquadrics)  
    标签：评分：6.0/10、query:dr
-   evidence：多视角视频统一重建人、场景和相机
-6. [Depth from Dual Differential Defocus and Stereo Consensus](/202606/06/2606.02906v1-depth-from-dual-differential-defocus-and-stereo-consensus)  
+   evidence：包含度量、语义和拓扑信息的分层物体表示，用于3D重建
+9. [DisFlow: Scene Flow from Distance Field for Object Pose, Velocity Tracking, and Dynamic Object Reconstruction](/202606/07/2606.01824v1-disflow-scene-flow-from-distance-field-for-object-pose-velocity-tracking-and-dynamic-object-reconstruction)  
    标签：评分：6.0/10、query:dr
-   evidence：融合散焦和立体线索的高精度深度估计
-7. [GARDEN: Gravity-Aligned Reconstruction of Disentangled ENvironments from RGB images](/202606/06/2606.03921v1-garden-gravity-aligned-reconstruction-of-disentangled-environments-from-rgb-images)  
+   evidence：重建动态物体并估计场景流用于姿态和运动追踪，属于三维重建
+10. [Thinking in Blender: Staged Executable Inverse Graphics with Vision-Language Models](/202606/07/2606.02580v1-thinking-in-blender-staged-executable-inverse-graphics-with-vision-language-models)  
    标签：评分：6.0/10、query:dr
-   evidence：多视图RGB转可仿真3D环境，基于物理的场景分解
-8. [4D Reconstruction from Sparse Dynamic Cameras](/202606/06/2606.04593v1-4d-reconstruction-from-sparse-dynamic-cameras)  
+   evidence：利用视觉语言模型从单图像重建3D场景为可执行Blender程序，属于三维重建主题
+11. [KC-3DGS: Kurtosis-Constrained Gaussian Splatting for High-Fidelity View Synthesis](/202606/07/2606.03120v1-kc-3dgs-kurtosis-constrained-gaussian-splatting-for-high-fidelity-view-synthesis)  
    标签：评分：6.0/10、query:dr
-   evidence：面向稀疏动态摄像机的4D重建，引入多视图约束
-9. [Geometry Gaussians: Decoupling Appearance and Geometry in Gaussian Splatting](/202606/06/2606.05124v1-geometry-gaussians-decoupling-appearance-and-geometry-in-gaussian-splatting)  
-   标签：评分：6.0/10、query:dr
-   evidence：改进高斯溅射中的几何精度，用于三维重建
+   evidence：基于小波监督的3D高斯泼溅高保真视图合成
 
 
 <div class="dpr-home-promo-card">
