@@ -1,0 +1,362 @@
+Title: TROPHIES: Temporal Reconstruction of Places, Humans, and Cameras from Multi-view Videos
+
+URL Source: https://arxiv.org/pdf/2606.02350v1
+
+Published Time: Tue, 02 Jun 2026 03:19:42 GMT
+
+Number of Pages: 11
+
+Markdown Content:
+# Trophies : Temporal Reconstruction of Places, Humans, and Cameras from Multi-view Videos 
+
+## Jinpeng Liu Yukang Xu Yutong Li Xingyu Liu National University of Singapore 
+
+Figure 1. Overview of Trophies . Given temporally synchronized video streams, Trophies jointly reconstructs dynamic humans, static scene geometry, and camera trajectories within a globally consistent 4D space. Our method couples a human branch and a scene branch through a global alignment and optimization stage that enforces scale, contact, and gravity consistency. This unified reconstruction produces temporally stable and spatially coherent human–scene representations, where human motions, scenes, and camera viewpoints are all aligned in a shared world coordinate frame. 
+
+## Abstract 
+
+Reconstructing humans and their surrounding environments in a globally consistent 4D space is essential for compre-hensive perception. However, prior works typically assume single-view inputs or decouple humans, scenes, and cam-eras, making them unable to recover coherent geometry, stable motion, and physically aligned trajectories. These limitations motivate us to introduce a new task: unified hu-man–scene–camera reconstruction from multi-view videos, which aims to jointly estimate dynamic humans, static scenes, and camera poses in one global coordinate frame. We propose Trophies – Temporal Reconstruction of Places, Humans, and Cameras from Multi-view Videos – a unified framework tailored for this task. Trophies features a Hu-man Branch that models human through temporal and spa-tial reasoning, and a Scene Branch that reconstructs static geometry with human-aware attention. A global alignment and optimization module couples both branches by enforc-ing scale consistency, contact priors, and cross-view tempo-ral coherence. Experiments on EgoHuman and EgoExo4D demonstrate that Trophies achieves globally aligned, phys-ically plausible 4D reconstructions and consistently out-performs existing paradigms in both global fidelity and hu-man–scene consistency. 
+
+## 1. Introduction 
+
+Understanding how humans move and interact within complex 3D environments is a long-standing goal in com-puter vision and embodied AI [13, 16, 22, 24, 60]. Sig-nificant advances have been made in human motion mod-eling [15, 17, 24, 51, 52, 63, 64] and 3D scene reconstruc-tion [5, 32, 55, 58, 65], yet these developments largely re-1
+
+> arXiv:2606.02350v1 [cs.CV] 1 Jun 2026
+
+construct disconnected worlds . Human estimators predict articulated motion in local coordinate systems that drift over time, while scene reconstruction pipelines recover geometry only up to scale and often ignore dynamic subjects. This separation prevents a physically consistent understanding of human–scene interaction and limits downstream applica-tions in AR/VR, robotics, and embodied intelligence. Existing methods address only isolated aspects of the full challenge. Single-view human motion estimators [10, 48, 49, 59] excel at capturing articulated pose but lack aware-ness of the surrounding environment and camera motion. Geometry-based methods [32, 36, 53, 58] reconstruct scenes and camera trajectories but assume static environments, and typically fail in the presence of human motion. Efforts such as JOSH [33] and Human3R [6] jointly infer humans and scenes but remain limited to single-view inputs and rely heavily on priors, resulting in inconsistent scales and physically implausible interactions. Recent multi-view ap-proaches like HSfM [38] only operate per frame and yield inconsistent dynamics over time. These limitations high-light a core challenge: there is still no unified framework that reconstructs humans, scenes, and cameras together in a globally consistent 4D world. Such a task requires inte-grating signals across geometry, motion, and physical con-straints, while aligning multiple coordinate systems into a unified reference frame. In this paper, we adopt a multi-view formulation of this task because multi-view observations provide stronger geo-metric cues and reduce scale ambiguity. We emphasize that our formulation is view-agnostic: the architectural compo-nents of our approach do not rely on multi-view supervision. As a result, our framework seamlessly adapts to single-view videos. When only one view is available, it reduces to a temporally coherent and scale-stable human–scene–camera reconstruction system, maintaining its flexibility while pre-serving physical consistency. This generality allows our method to handle multi-camera systems, sparse camera ar-rays, and handheld monocular inputs. To tackle the challenge of unified reconstruction, we in-troduce a framework that jointly reasons about scene ge-ometry, human motion, and camera motion within a sin-gle optimization loop (Fig. 2). Our scene branch is de-signed as a plug-and-play module compatible with geom-etry estimators such as DUSt3R [58], MonST3R [65] and CUT3R [57]. It incorporates a human-aware attention mech-anism that suppresses dynamic regions by modulating atten-tion weights rather than relying on explicit segmentation [5]. For CUT3R, we further introduce a multi-memory design that disentangles static and dynamic elements across time and views, enabling robust recovery of scene geometry and camera trajectories even in the presence of substantial human motion. In parallel, our human branch leverages a multi-view transformer with symmetric and anchor-referenced at-
+
+Table 1. Comparison of methods across different features.                                                            
+
+> Places Human Pose Camera Temporal Multi-view Gravity-aware HMR2 [10, 25] ✗✓✗✓✗✗
+> TRAM [59] ✗✓✗✓✗✗
+> GVHMR [48] ✗✓✗✓-✓
+> DUSt3R [58] ✓✗✓-✓✗
+> CUT3R [57] ✓✗✓-✓✗
+> JOSH [33] ✓✓✓✓✗✗
+> Human3R [6] ✓✓✓✓✗✗
+> HSFM [38] ✓✓✓✗✓✗
+> Ours ✓✓✓✓✓✓
+
+tention to achieve cross-view consistent reconstruction of body pose and motion. Finally, the alignment and optimiza-tion module links both branches through Sim(3) alignment, scale calibration, and contact-aware optimization, produc-ing physically grounded reconstructions in a unified world coordinate system. In summary, these components establish a unified formu-lation for reconstructing humans, scenes, and cameras under a physical world temporally. By resolving long-standing in-consistencies in scale, dynamics, and coordinate alignment, our approach moves beyond fragmented pipelines toward holistic 4D understanding. 
+
+## 2. Related Work 
+
+Human Reconstruction and Motion Estimation. Early single-view methods such as HMR [25], SPIN [31], and PARE [29] estimate SMPL parameters from individual frames but suffer from scale ambiguity and temporal jit-ter. Temporal models like VIBE [28], TCMR [7], and TMR [40] improve motion smoothness via recurrent or transformer architectures, yet lack spatial grounding. Some works [6, 18, 33] predict contact labels for contact aware human reconstruction, yet remain monocular. Recent works, including TRAM [59], WHAM [49], SLAHMR [42], GVHMR [48], and VideoMimic [1] infer world-aligned hu-man trajectories from monocular inputs by jointly reason-ing about motion and implicit camera pose, but still cannot resolve cross-view ambiguities or guarantee multi-camera consistency. In contrast, our Human Branch is explicitly designed for true multi-view inputs, producing temporally stable and geometrically consistent SMPL [34, 39, 45]. 
+
+Scene Reconstruction and Multi-View Geometry. Par-allel to human motion estimation, reconstructing static scenes from multiple views has been a central problem in 3D vision. Traditional Structure-from-Motion (SfM)and Multi-View Stereo (MVS) pipelines [46, 47] recover accurate ge-ometry through feature matching and triangulation, but they typically fail under dynamic or low-texture conditions. Neu-ral implicit methods such as NeRF [37] and NeuS [56] im-prove robustness and surface quality by learning continu-ous volumetric fields, yet they require dense view sampling and struggle with moving humans. Recent transformer-based approaches, such as DUSt3R [58], MASt3R [32], and CUT3R [57], introduce dense feature matching to jointly estimate camera poses and scene depth. These methods provide strong geometric priors for multi-view reconstruc-2Figure 2. Pipeline Overview. Our framework consists of three components: a Scene Branch that reconstructs the static environ-ment with human-aware attention (implemented as a plug-and-play module applicable to DUSt3R, MonST3R, and CUT3R back-bones); a Human Branch that estimates temporally coherent body parameters from multi-view videos via symmetric and anchor-referenced attention; and a global Align and Optimization stage that unifies humans, scenes, and cameras under consistent geome-try and contact-aware constraints, producing a physically grounded reconstruction in a shared world coordinate system. 
+
+tion but assume static environments and thus deteriorate in the presence of dynamic human motion. Our Scene Branch introduces a human-aware attention mechanism that modu-lates cross-view interactions. This design enables the model to preserve static background consistency while filtering out dynamic human regions. 
+
+Joint Human–Scene Reconstruction. Jointly recover-ing humans and their environments is crucial for understand-ing dynamic scenes. Early works such as PROX [15] and BEHAVE [3] leverage scene geometry via contact or colli-sion priors but depend on pre-scanned static environments without reconstructing full scenes. Later approaches, in-cluding PHSP [14], HPS [12], and InterCap [19, 20], jointly optimize human models with reconstructed environments, yet typically rely on single-frame inputs or precomputed meshes, limiting temporal consistency. More recent meth-ods like HSC4D [8], H4D [23], JOSH [33], and HSFM [38] achieve more coherent 4D human–scene understanding by integrating motion cues, physical constraints, but still treat human and scene components in loosely coupled stages, resulting in scale drift and inconsistent global alignment. In contrast, our method introduces a globally aligned hu-man–scene optimization framework that tightly couples both reconstruction branches through Sim(3) alignment, contact-aware constraints, and bundle-adjustment refinement, en-abling globally consistent 4D reconstruction. 
+
+## 3. Preliminaries and Formulation 
+
+Setup. Our model takes a set of uncalibrated multi-view videos as input. We denote the N synchronized video streams as {V n}Nn=1 , where each video V n =
+
+{In 
+
+> 1
+
+, I n 
+
+> 2
+
+, . . . , I nT } contains T temporally ordered frames cap-tured by camera n. Given this input, our method jointly reconstructs humans, scenes, and cameras in a metric 3D world over time. The output consists of temporally coherent human reconstructions Hht , static scene representations Snt ,and camera parameters Rnt , t nt , α t, together forming a con-sistent 4D representation that serves as the foundation for our joint human–scene–camera optimization framework. 
+
+Human. We represent each human in the scene using the SMPL [34, 39] body model. For a human h at time t,the body parameters are defined as 
+
+Hht = {ϕht , θ ht , β h, γ ht }, (1) where ϕht ∈ SO (3) denotes the global orientation, θht ∈
+
+SO (3) J the articulated joint rotations, βh ∈ RB the shape coefficients, and γht ∈ R3 the global translation. Unlike single-frame or single-view methods, our multi-view video setup maintains a shared shape βh across all frames and enforces temporal smoothness on {ϕht , θ ht , γ ht }, yielding a temporally coherent 4D body trajectory. 
+
+Scene. We represent the static environment as a set of dense 3D point maps reconstructed from multi-view ge-ometry [57, 58, 65]. For view n and frame t, we define 
+
+Snt ∈ RH×W ×3, where each pixel corresponds to a 3D point in the world coordinate frame. Given the intrinsic matrix Kn and per-frame extrinsic matrix (Rnt , t nt ), a pixel 
+
+(i, j ) with depth value Dn,t i,j is unprojected to the world via 
+
+Sn,t i,j = αt(Rn⊤ 
+
+> t
+
+[( Kn)−1Dn,t i,j [i, j, 1] ⊤ − tnt ]) , (2) 
+
+αt is a scaling factor that aligns points in the metric space. 
+
+Cameras. Each camera n is modeled by intrinsic pa-rameters Kn and extrinsic matrix (Rnt , t nt ). We introduce a similarity scale αt that normalizes inter-camera distances across time. A 3D point x3D is projected to camera n at frame t as 
+
+xn,t  
+
+> 2D
+
+= Kn(Rnt x3D + αttnt ). (3) 
+
+## 4. Method 
+
+We propose a framework that decomposes the recon-struction into three collaborative components, as illustrated in Fig. 2. Scene Branch focuses on recovering the static background geometry and camera poses under a human-aware attention mechanism. Human Branch estimates body parameters from synchronized multi-view inputs through a symmetric and anchor-referenced attention design. The final module bridges both branches via alignment and contact-aware constraints, unifying humans, scenes, and cameras within a coherent world coordinate frame. 
+
+4.1. Scene Branch 
+
+To recover the surrounding static environment from hu-man videos, we design a plug-and-play module that can be seamlessly integrated into recent dense multi-view recon-struction frameworks such as DUSt3R [58], MonST3R [65] and CUT3R [57]. This module introduces human-aware attention, implemented through either mask-based attention 3Spatial 
+
+> Temporal
+> Info Share
+> No Info
+> Share
+> Non -human
+> Patches
+> Human
+> Patches
+
+Figure 3. Human-aware attention. Each frame is divided into human (colored) and non-human (transparent) patches. For views at the same time, all patches share information to enforce multi-view consistency. Across different time steps, only non-human patches exchange information, while human patches are masked in the attention layer to avoid motion-induced inconsistency. 
+
+reweighting [5, 58, 65] or multi-memory reasoning [57], de-pending on the backbone architecture as illustrated in Fig. 3. These mechanisms collectively enable stable scene recovery from dynamic multi-view videos by suppressing transient human motion while preserving consistent static geometry. For DUSt3R and MonST3R, given images Iat1 and Ibt1 from different perspectives ( a and b) at the same time t1, the un-derlying backbone B predicts dense 3D point maps Pa←bt1
+
+and camera parameters Cat1 :
+
+(Pa←bt1 , Cat1 ) = B(Iat1 , I bt1 ), (4) where all the tokens from view b contribute to view a. Given images Iat1 and Ibt2 from different viewpoints ( a and b) at dif-ferent times ( t1 and t2), the underlying backbone B predicts dense 3D point maps: 
+
+(Pa←bt1 , Cat1 ) = B(Iat1 , I bt2 , M a←bhuman ), (5) where M a←bhuman = (1 −M ahuman )⊗(M bhuman )T , ⊗ denotes the outer product and Mhuman is a binary mask indicating patches that contain human. This results in tokens from human regions from viewpoint b that do not contribute to static regions from viewpoint a. We implement it through attention reweighting to suppress human regions: 
+
+sof tmax a←b( ˆA) = 
+
+ 0 if M a←b
+
+> human
+
+softmax (Aa←b) otherwise  (6) where Aa←b denotes the attention matrix. Due to CUT3R’s memory mechanism, the idea of human-aware attention cannot be achieved through above methods. We adopt a multi-memory disentanglement strategy: one memory bank aggregates multi-view human and scene fea-tures at a single moment for spatial consistency, while an-other stores static scene features across time to maintain temporal stability. 
+
+4.2. Human Branch 
+
+Given synchronized video streams Int from different cam-era views n, our human branch predicts per-frame SMPL parameters and stationary probability maps indicating hu-man–scene contact as shown in Fig. 4. For each input view n, we employ a Human Video Trans-former backbone [59] that extracts spatio-temporal tokens from short frame sequences. The backbone operates on individual views but shares weights across all cameras to maintain view-consistent feature distributions. To exploit multi-view consistency, we introduce a two-step cross-view interaction module. Unlike previous single-view methods [42, 48, 49, 59, 63]) which only model tem-poral dependencies, our cross-view attention [50] explicitly aligns spatial features across cameras by allowing each patch token to attend to its counterparts in other views. This en-hances geometric awareness and implicitly enforces view-consistent body reconstruction, without relying on explicit 3D supervision. In the first step, all views interact symmet-rically, where each view’s tokens attend to those of every other view. This allows the network to capture geometric correspondences and complementary visibility cues across cameras. This operation yields multi-view contextualized features F ′ 
+
+> n
+
+for all views. Following this symmetric exchange, we perform an anchor-referenced cross-view fusion to consolidate informa-tion into a single representative view. A designated anchor view (typically the frontal or most stable camera) provides the queries (Q), while the remaining reference views provide the keys (K) and values (V): 
+
+F ′′  
+
+> anchor
+
+= softmax ( Qanchor KT
+
+> ref
+
+√d )Vref . (7) This fusion enriches the anchor view’s representation with complementary geometry and appearance cues from the reference views while preserving its spatial structure. During training, the anchor view is randomly sampled from the available views for generalization. For inference, we select the view with the highest human detection confi-dence. Only the anchor view’s 3D joints are used as the model output for inference, as they already integrate the fused multi-view information through this two-step atten-tion process. Together, the symmetric global interaction and anchor-referenced refinement provide a compact yet power-ful mechanism for multi-view feature integration, balancing geometric completeness and computational efficiency. The fused anchor features are then decoded by a Transformer De-coder and a Temporal Layer that captures short-term motion dynamics. The hierarchical modeling – first across views (symmetric + anchor fusion) and then across time – ensures stable and smooth pose reconstruction over sequences. Adual-head prediction module outputs: (1) SMPL Parameters 
+
+(ϕh
+
+> (n,t )
+
+, θ h
+
+> (n,t )
+
+, β hn ), representing orientation, pose, shape; 4Video Transformer Temporal Layer Transformer Decoder  
+
+> Head
+> Video Transformer Temporal Layer Transformer Decoder Head Shared Weights Cross-Attention
+> SMPL Parameters Stationary Probability SMPL Parameters Stationary Probability Cross-view Self-Attention Spatial
+
+Figure 4. Our method takes synchronized multi-view video frames as input and processes them with shared Human Video Transformers. A two-stage cross-view module first performs symmetric attention among all views to exchange global geometric information, and then applies an anchor-referenced fusion that aggregates features into the anchor view. The fused representation is decoded temporally and passed to dual heads predicting SMPL parameters (ϕh
+
+> (n,t )
+
+, θ h
+
+> (n,t )
+
+, β hn ) and stationary contact probabilities ph
+
+> (n,t )
+
+. During inference, the anchor view’s 3D joints are used as the final output, embedding multi-view consistency and contact awareness. 
+
+(2) Stationary Probability Maps ph 
+
+> (n,t )
+
+indicating per-region contact likelihood with the surrounding scene. These con-tact maps introduce physical constraints and later guide the optimization in Sec. 4.3. 
+
+4.3. Alignment and Optimization 
+
+The final stage of our framework performs a global align-ment and optimization that unifies human, scene, and cam-era representations within a consistent 3D space. We de-sign this process that successively enforces metric consis-tency [2, 53], scene refinement [57, 58, 65], physical ground-ing [9, 66], and multi-view coherence [50]. 
+
+4.3.1. Alignment 
+
+Given a set of camera poses {[Ri, Ti]} and image depth maps {Di}, our goal is to estimate a similarity transforma-tion Si = [ si, R′
+
+> i
+
+, T′
+
+> i
+
+] ∈ Sim(3) that brings each external estimate into the coordinate frame of the Scene Branch. For each view i, we solve: 
+
+Si = arg min 
+
+> S∈Sim(3)
+
+X
+
+> x∈Ωi
+
+S · K−1[x, D i(x)] − Pi(x) 22 , (8) where K−1[x, D i(x)] denotes the back-projection of pixel 
+
+x using its depth, and Pi(x) represents the corresponding 3D points reconstructed by the Scene Branch. For dynamic-camera sequences, we first estimate the relative camera motion using DROID-SLAM [53], which provides accurate frame-to-frame poses up to an unknown global scale. To recover the absolute metric scale, we em-ploy ZoeDepth [2] to predict depth maps Di for each frame. The resulting pair of relative poses and absolute depths al-lows us to optimize Eq. (8), aligning the DROID-SLAM trajectory with the Scene Branch reconstruction and resolv-ing the inherent scale ambiguity of monocular SLAM. For static-camera setups, where camera poses are fixed and relative motion is absent, we directly use ZoeDepth to estimate per-view metric depths. The same Sim(3) align-ment in Eq. (8) is then applied to register all static views with the Scene Branch, ensuring a consistent global scale and coordinate origin across all views. This unified alignment procedure handles both dynamic and static capture scenarios under a single optimization objective, producing a metrically consistent and globally aligned reference frame for subsequent joint optimization of human, scene, and camera parameters. 
+
+4.3.2. Optimization 
+
+After achieving global alignment across camera sources, we jointly refine the geometry and motion parameters through unified optimization that includes scene-human bundle adjustment and contact-aware optimization. 
+
+Bundle Adjustment. To reconcile dense scene geom-etry with articulated human motion, we perform a joint optimization that refines both the camera parameters and the human parameters. We extend the bundle adjustment formulation [38, 58] to minimize re-projection error and consistency losses over all frames and views: 
+
+LBA = 1
+
+N T 
+
+X
+
+> n,t
+
+LScene + 1
+
+N T H 
+
+X
+
+> n,t,h
+
+LHuman  (9) 
+
+LScene = ∥K(n,t )[R(n,t ), T(n,t )]Pscene − x(n,t ) 
+
+> scene
+
+∥22 (10) 5(c) Scene 2 - Initial           
+
+> (d) Scene 2 –After optimization
+> (a) Scene 1 -Initial
+> (b) Scene 1 –After optimization
+> (e) Scene 3 –HSfM
+> (f) Scene 3 –TROPHIES
+
+Figure 5. Qualitative results. Comparison of multi-view reconstructions before and after global optimization (Scenes 1–2) and against prior work (Scene 3). For Scenes 1 and 2, the initial results (a,c) exhibit misalignment between humans and scenes, leading to interpenetration, floating feet, and incorrect grounding (red boxes). Our global optimization (b,d) lead to physically coherent and well-grounded reconstruc-tions. Scene 3 compares HSfM (e) with our Trophies framework (f). Since HSfM performs frame-wise independent optimization, its per-frame scale drifts accumulate over time, causing noticeable spatial inconsistencies when the results are aggregated. In contrast, our 
+
+Trophies maintains a globally consistent scale across the entire sequence, producing stable and coherent human motion. 
+
+LHuman = ∥K(n,t )[R(n,t ), T(n,t )]SMPL (H(n,t,h )) − J(n,t,h )2D ∥22
+
+(11) where Jn,t,h  
+
+> 2D
+
+are 2D human joints from detection model [61, 62]. The optimization jointly updates camera extrinsics, scene geometry, and human poses to minimize cross-view reprojection errors, thereby achieving globally consistent re-construction under the unified coordinate system established in Eq. (8). 
+
+Contact-Aware Optimization. To further enforce real-istic physical grounding, we introduce a contact-aware term that aligns the reconstructed human motion with the under-lying scene geometry. Based on the aligned gravity direc-tion [30] and the estimated ground plane [9], we define a set of potential contact vertices C on the feet and hands of the SMPL mesh. We encourage these vertices to remain close to the scene surface while penalizing interpenetration: 
+
+Lcontact = X
+
+> v∈C
+
+ wc · dist (v, Ssurface )2+
+
+wp · max(0 , −n⊤S (v − pS )) 2,
+
+(12) where dist (v, Ssurface ) denotes the shortest distance from ver-tex v to the scene surface Ssurface , n S is the surface normal, and pS the nearest surface point. The first term enforces contact stability, while the second penalizes penetration be-low the ground plane. The final optimization objective combines both geomet-ric and physical consistency: 
+
+Lopt = LBA + λcLcontact , (13) where λc balances contact constraints against multi-view reprojection consistency. 
+
+## 5. Experiments 
+
+5.1. Dataset and Metrics 
+
+Datasets. We evaluate our framework on two large-scale multi-view datasets: EgoHumans [26] and EgoExo4D [11], which provide complementary coverage of human motion and scene diversity. EgoHumans captures dynamic indoor and outdoor activities from multiple moving cameras with synchronized inertial signals and dense 3D ground truth. EgoExo4D extends this setup to sequences involving com-plex human–object and human–environment interactions. 
+
+Evaluation Metrics. Human metrics include: (1) W-MPJPE and WA-MPJPE , which measure the mean per-joint position error in world coordinates after aligning the first two frames and entire sequence alignment, respec-tively [49, 59]; (2) PA-MPJPE , the Procrustes-aligned joint error capturing shape and pose accuracy; (3) Accel , the 6Table 2. Evaluation of Trophies on the EgoHumans [26] and EgoExo4D [11] datasets. Across all backbones and datasets, Trophies 
+
+consistently improves human accuracy (lower W-MPJPE, PA-MPJPE, Accel) and enhances scene–camera coherence (higher RRA, CCA, s-CCA), outperforming the original baselines by a large margin. These results demonstrate the generalization of our framework across architectures and domains, yielding globally aligned and physically coherent human–scene reconstructions.                                                                                                                                                                                            
+
+> Method Human Metrics Camera Metrics
+> W-MPJPE ↓WA-MPJPE ↓PA-MPJPE ↓Accel ↓TE ↓s-TE ↓RRA@50 ↑RRA@100 ↑CCA@50 ↑CCA@100 ↑s-CCA@50 ↑s-CCA@100 ↑
+> EgoHumans  DUSt3R [58] ----3.20 1.37 0.45 0.65 --0.22 0.49 MonST3R [65] ----3.17 1.47 0.44 0.66 --0.20 0.46 CUT3R [57] ----1.90 1.44 0.44 0.65 0.06 0.38 0.20 0.48 HSfM* [38] 227.82 163.97 21.93 57.89 1.79 1.23 0.49 0.70 0.12 0.42 0.26 0.52
+> Trophies (DUSt3R) 106.31 69.22 22.74 13.74 1.31 1.07 0.57 0.79 0.24 0.58 0.38 0.63
+> Trophies (MonST3R) 105.17 78.74 26.95 14.81 1.38 1.02 0.54 0.76 0.22 0.57 0.39 0.61
+> Trophies (CUT3R) 97.54 73.23 20.71 14.23 1.03 0.86 0.55 0.78 0.26 0.59 0.40 0.63
+> EgoExo4D  DUSt3R [58] ----4.84 1.22 0.86 0.92 --0.13 0.58 MonST3R [65] ----4.83 0.55 0.91 0.98 --0.78 0.90 CUT3R [57] ----1.93 0.21 0.92 0.95 0.05 0.12 0.91 0.96 HSfM* [38] 123.12 109.23 17.82 49.27 2.85 0.96 0.90 0.94 0.19 0.25 0.84 0.91
+> Trophies (DUSt3R) 112.78 72.41 15.31 16.12 2.37 0.92 0.90 0.96 0.17 0.25 0.67 0.73
+> Trophies (MonST3R) 97.13 76.16 14.23 15.17 2.61 0.55 0.97 1.00 0.19 0.26 0.81 0.93
+> Trophies (CUT3R) 91.7 70.29 16.92 16.72 1.38 0.18 0.97 0.98 0.24 0.29 0.97 0.99
+
+mean acceleration error reflecting temporal smoothness of the recovered motion. Camera metrics include: (1) TE 
+
+and s-TE , trajectory errors computed before and after scale normalization to evaluate global motion coherence; (2) 
+
+RRA@ {50,100 } measures the fraction of view pairs whose relative pose; (3) CCA@ {50,100 } quantifies the alignment accuracy between estimated camera centers and scene ge-ometry; and (4) s-CCA@ {50,100 } extends this metric after normalization to evaluate scale-invariant consistency. 
+
+5.2. Implementation Details 
+
+Scene Branch . Our Scene Branch is fully training-free: we keep the backbone [57, 58, 65] frozen and modify only the inference procedure. We apply the special softmax func-tion in human-region attention weights [58, 65] to suppress dynamic interference and adopt a lightweight dual-memory update mechanism [57] that disentangles same-frame multi-view fusion from cross-time background accumulation. These inference-only changes stabilize static-scene recon-struction without retraining. For human masking, we adopt the original annotations in EgoHumans [26] and apply Grounded SAM 2 [27, 41, 43, 44] for EgoExo4D [11]. 
+
+Human Branch . We train this module on 2 NVIDIA A800 GPUs using AdamW [35] and a batch size of 16 sequences, each with a 16-frame window. The training consists of three stages. We adopt the weight of TRAM [59] as the initial weight. In the first stage, we froze the initial weights and only trained the contact head for 10K steps on 3DPW [54], BEDLAM [4] and Human3.6M [21]. In the second stage, we train only the anchor-aware cross-view attention module and freeze the other weights for 20K steps on EgoHumans [26]. Finally, we fine-tune all the weights on all datasets [4, 21, 26, 54] for an additional 2K steps. 
+
+5.3. Results 
+
+Quantitative results. We evaluate the proposed Tro-phies framework on the EgoHumans and EgoExo4D bench-marks, comparing it against state-of-the-art methods for human, camera and scene reconstruction. Trophies is built upon three transformer-based dense multi-view back-bones [57, 58, 65] and extends them with a unified hu-man–scene optimization and global alignment strategy. As reported in Tab. 2, Trophies consistently improves perfor-mance across all metrics, demonstrating strong generaliza-tion across both architectures and datasets. Compared to HSfM [38], which performs human and scene reconstruc-tion per-frame, Trophies reduces W-MPJPE by over 50% and PA-MPJPE by more than 1.5 ×, while also achieving the lowest acceleration error, indicating smoother and phys-ically coherent human motion. In addition, Trophies im-proves trajectory error and relative reconstruction accuracy, confirming better spatial alignment between cameras and the static environment. The consistent gains in CCA and s-CCA further highlight improved global geometric coher-ence among humans, scenes, and cameras. Importantly, all three backbones benefit consistently from our framework, validating Trophies as a backbone-agnostic and plug-and-play solution for globally consistent human–scene recon-struction. It is also worth noting that camera-related metrics on EgoExo4D are higher than those on EgoHumans. This difference stems from the data characteristics: as of EgoHu-mans, we adopt the ego-view cameras mounted on moving subjects, resulting in dynamically changing viewpoints with frequent motion blur and occlusion. In contrast, EgoExo4D provides more stable third-person camera settings. Hence, while Trophies achieves strong results on both datasets, the EgoHumans benchmark presents a substantially more challenging setting that requires handling dynamic and un-calibrated egocentric motion. 
+
+Qualitative Results. Figure 5 visualizes three repre-sentative scenes using our DUSt3R-based integration. For Scenes 1 and 2, the initial reconstructions (Fig. 5 a, c) exhibit misalignments between humans, scenes, and cameras, lead-ing to physical violations such as interpenetration, floating feet, and incorrect grounding (highlighted in red boxes). Af-ter applying our global optimization (Fig. 5 b, d), Trophies 
+
+7Table 3. Evaluation results of human branch on the EgoHu-man dataset. We compare it with recent human reconstruction approaches under both the All Views and Anchor View . Across all metrics, Trophies (human branch) outperforms prior methods.                                                          
+
+> Method PA-MPJPE ↓MPJPE ↓PVE ↓Accel ↓
+> All Views  HMR2.0 [10, 25] 57.6 107.6 121.2 46.5 GVHMR [48] 58.7 108.5 125.6 44.7 VIMO [59] (w/o finetuning) 46.3 89.8 112.3 19.8 VIMO [59] (with finetuning) 41.4 81.2 108.2 17.9
+> Trophies (human branch, w/o gravity) 39.2 79.1 99.7 17.6
+> Trophies (human branch, with gravity) 38.8 77.7 98.1 16.8
+> Anchor View  HMR2.0 [10, 25] 58.2 109.4 125.3 47.3 GVHMR [48] 57.9 109.1 124.3 45.2 VIMO [59] (w/o finetuning) 47.7 91.4 116.3 20.1 VIMO ‡[59] (with finetuning) 42.3 81.9 109.7 18.3
+> Trophies (human branch, w/o gravity) 37.9 77.3 97.4 17.3
+> Trophies (human branch, with gravity) 36.2 75.7 94.9 13.6
+
+jointly refines human motion, camera poses, and scene ge-ometry through contact-aware constraints, producing phys-ically plausible, globally aligned reconstructions with accu-rate human-ground contact and consistent spatial placement across all views. Scene 3 presents a direct comparison be-tween HSfM and our Trophies framework. Since HSfM per-forms frame-wise independent optimization, its per-frame scale estimates are not temporally harmonized, causing scale drift across time. When aggregated, these scale inconsisten-cies manifest as spatial shifts and misaligned human–scene geometry (Fig. 5 e). In contrast, Trophies enforces a uni-fied global scale and jointly optimizes all components across the entire sequence, yielding stable and temporally coherent reconstructions that preserve consistent human placement relative to the static environment (Fig. 5 f). Overall, these results demonstrate that Trophies ad-vances multi-view human–scene understanding by integrat-ing cross-view feature interaction, human-aware attention and physically grounded global optimization. The method delivers both numerical gains and significantly improved visual fidelity, and generalizes robustly across different ar-chitectures and dataset domains without additional training. 
+
+5.4. Ablation Study 
+
+Human Branch . To evaluate the effectiveness of the proposed Human Branch, we conduct ablation studies on the Multi-View dataset, as shown in Tab. 3. We compare our method with several state-of-the-art video-based pose estimators, including HMR2.0 [10, 25], GVHMR [48], and VIMO [59]. All baselines are trained on monocular inputs and do not explicitly enforce multi-view geometric consis-tency. Even without gravity-aware alignment, our model out-performs all baselines across all metrics, reducing MPJPE from 81 .2 (VIMO ft) to 79 .1 and improving acceleration smoothness from 17 .9 to 17 .6. When incorporating the gravity constraint, performance further improves to 77 .7
+
+MPJPE and 16 .8 accel, achieving the best accuracy and temporal stability among all methods. These results demon-
+
+Table 4. Ablation Study on the human-aware attention. Across all backbones [57, 58, 65], introducing human-aware attention to the scene branch consistently improves TE, AE and RRA, indicat-ing more stable and geometrically consistent reconstruction. TE ↓ s-TE ↓ AE ↓ RRA@100 ↑ s-CCA@100 ↑                              
+
+> DUSt3R [58] 3.20 1.37 107.21 0.65 0.49 + human-aware attention 3.05 1.32 104.93 0.69 0.52
+> MonST3R [65] 3.17 1.47 108.82 0.66 0.46 + human-aware attention 3.06 1.36 101.71 0.67 0.51
+> CUT3R [57] 1.90 1.44 106.92 0.65 0.48 + human-aware attention 1.83 1.33 103.34 0.68 0.52
+
+strate that our symmetric and anchor-referenced cross-view attention effectively fuses geometric cues across synchro-nized views, leading to more consistent pose estimation. The gravity-aware term further enhances physical plausi-bility by stabilizing vertical motion and suppressing drift. Overall, our Human Branch enables globally consistent, physically grounded human motion reconstruction that com-plements the static scene geometry estimated by the Scene Branch. Scene Branch . We evaluate the effectiveness of our plug-and-play human-aware attention module across three representative transformer-based reconstruction back-bones: DUSt3R [58], MonST3R [65], and CUT3R [57]. As shown in Tab. 4, integrating our module consistently improves geometric stability and reconstruction accuracy under dynamic scenes. For DUSt3R and MonST3R, we adopt a masked attention strategy that suppresses the influ-ence of dynamic human regions during feature aggregation. For CUT3R, the same concept is realized through a multi-memory disentanglement mechanism that separates static and dynamic information across time and views. Across all backbones, introducing human awareness yields a no-ticeable reduction in Trajectory Error (TE) and Alignment Error (AE), with average improvements of 4–6% over the baseline models. The RRA@100 and s-CCA@100 metrics also increase consistently, demonstrating enhanced spatial alignment and temporal coherence of reconstructed geom-etry. Notably, CUT3R benefits the most from our module (TE from 1.90 to 1.83; s-CCA from 0.48 to 0.52), reflecting its strong synergy with our multi-memory design. These re-sults confirm that the proposed module serves as a universal enhancement for transformer-based multi-view reconstruc-tion frameworks. By implicitly suppressing human-induced inconsistencies without requiring training, it enables more stable, physically consistent, and human-aware scene recon-structions across diverse backbone architectures. 
+
+## 6. Conclusion 
+
+We present Trophies , a unified framework for consis-tent human-scene reconstruction from multi-view inputs. By jointly leveraging dense geometric reasoning and articu-lated human modeling, Trophies bridges scene and motion estimation through a shared optimization backbone. 8Acknowledgment 
+
+This work is partially supported by the Ministry of Edu-cation, Singapore, under the Academic Research Fund Tier 1 (FY 2025), National University of Singapore Robotics Seed Grant, and by a research gift from Futurewei Technologies Inc. 
+
+## References 
+
+[1] Arthur Allshire, Hongsuk Choi, Junyi Zhang, David McAllis-ter, Anthony Zhang, Chung Min Kim, Trevor Darrell, Pieter Abbeel, Jitendra Malik, and Angjoo Kanazawa. Visual imi-tation enables contextual humanoid control. In CoRL , 2025. 2[2] Shariq Farooq Bhat, Reiner Birkl, Diana Wofk, Peter Wonka, and Matthias M¨ uller. Zoedepth: Zero-shot trans-fer by combining relative and metric depth. arXiv preprint arXiv:2302.12288 , 2023. 5 [3] Bharat Lal Bhatnagar, Xianghui Xie, Ilya Petrov, Cristian Sminchisescu, Christian Theobalt, and Gerard Pons-Moll. Behave: Dataset and method for tracking human object in-teractions. In CVPR , 2022. 3 [4] Michael J Black, Priyanka Patel, Joachim Tesch, and Jinlong Yang. Bedlam: A synthetic dataset of bodies exhibiting detailed lifelike animated motion. In CVPR , 2023. 7 [5] Xingyu Chen, Yue Chen, Yuliang Xiu, Andreas Geiger, and Anpei Chen. Easi3r: Estimating disentangled motion from dust3r without training. arXiv preprint arXiv:2503.24391 ,2025. 1, 2, 4 [6] Yue Chen, Xingyu Chen, Yuxuan Xue, Anpei Chen, Yuliang Xiu, and Pons-Moll Gerard. Human3r: Everyone everywhere all at once. arXiv preprint arXiv:2510.06219 , 2025. 2 [7] Hongsuk Choi, Gyeongsik Moon, Ju Yong Chang, and Ky-oung Mu Lee. Beyond static features for temporally consistent 3d human pose and shape from a video. In CVPR , 2021. 2 [8] Yudi Dai, Yitai Lin, Chenglu Wen, Siqi Shen, Lan Xu, Jingyi Yu, Yuexin Ma, and Cheng Wang. Hsc4d: Human-centered 4d scene capture in large-scale indoor-outdoor space using wearable imus and lidar. In CVPR , 2022. 3 [9] Martin A Fischler and Robert C Bolles. Random sample consensus: a paradigm for model fitting with applications to image analysis and automated cartography. Communications of the ACM , 1981. 5, 6 [10] Shubham Goel, Georgios Pavlakos, Jathushan Rajasegaran, Angjoo Kanazawa, and Jitendra Malik. Humans in 4D: Reconstructing and tracking humans with transformers. In 
+
+ICCV , 2023. 2, 8 [11] Kristen Grauman, Andrew Westbury, Lorenzo Torresani, Kris Kitani, Jitendra Malik, Triantafyllos Afouras, Kumar Ashutosh, Vijay Baiyya, Siddhant Bansal, Bikram Boote, et al. Ego-exo4d: Understanding skilled human activity from first-and third-person perspectives. In CVPR , 2024. 6, 7 [12] Vladimir Guzov, Aymen Mir, Torsten Sattler, and Gerard Pons-Moll. Human poseitioning system (hps): 3d human pose estimation and self-localization in large scenes from body-mounted sensors. In CVPR , 2021. 3 [13] Marc Habermann and et al. Real-time deep dynamic charac-ters. In SIGGRAPH , 2021. 1 [14] Mohamed Hassan, Partha Ghosh, Joachim Tesch, Dimitrios Tzionas, and Michael J Black. Populating 3d scenes by learn-ing human-scene interaction. In CVPR , 2021. 3 [15] Mohamed Hassan, Partha Ghosh, Joachim Tesch, Dimitrios Tzionas, and Michael J Black. Populating 3d scenes by learn-ing human-scene interaction. In CVPR , 2021. 1, 3 [16] Daniel Holden and et al. Deep learning for character motion synthesis. In SIGGRAPH , 2016. 1 [17] Buzhen Huang, Jingyi Ju, Zhihao Li, and Yangang Wang. Reconstructing groups of people with hypergraph relational reasoning. In ICCV , 2023. 1 [18] Chun-Hao P. Huang, Hongwei Yi, Markus H¨ oschle, Matvey Safroshkin, Tsvetelina Alexiadis, Senya Polikovsky, Daniel Scharstein, and Michael J. Black. Capturing and inferring dense full-body human-scene contact. In CVPR , 2022. 2 [19] Yinghao Huang, Omid Taheri, Michael J. Black, and Dim-itrios Tzionas. InterCap: Joint markerless 3D tracking of humans and objects in interaction. In GCPR , 2022. 3 [20] Yinghao Huang, Omid Taheri, Michael J. Black, and Dim-itrios Tzionas. InterCap: Joint markerless 3D tracking of humans and objects in interaction from multi-view RGB-D images. IJCV , 2024. 3 [21] Catalin Ionescu, Dragos Papava, Vlad Olaru, and Cristian Sminchisescu. Human3. 6m: Large scale datasets and predic-tive methods for 3d human sensing in natural environments. 
+
+PAMI , 2013. 7 [22] Kaiyang Ji, Ye Shi, Zichen Jin, Kangyi Chen, Lan Xu, Yuexin Ma, Jingyi Yu, and Jingya Wang. Towards immersive human-x interaction: A real-time framework for physically plausible motion synthesis. arXiv preprint arXiv:2508.02106 , 2025. 1 [23] Boyan Jiang, Yinda Zhang, Xingkui Wei, Xiangyang Xue, and Yanwei Fu. H4d: Human 4d modeling by learning neural compositional representation. In CVPR , 2022. 3 [24] Nan Jiang, Zhiyuan Zhang, Hongjie Li, Xiaoxuan Ma, Zan Wang, Yixin Chen, Tengyu Liu, Yixin Zhu, and Siyuan Huang. Scaling up dynamic human-scene interaction mod-eling. In CVPR , 2024. 1 [25] Angjoo Kanazawa, Michael J. Black, David W. Jacobs, and Jitendra Malik. End-to-end recovery of human shape and pose. In CVPR , 2018. 2, 8 [26] Rawal Khirodkar, Aayush Bansal, Lingni Ma, Richard New-combe, Minh Vo, and Kris Kitani. Ego-humans: An ego-centric 3d multi-human benchmark. In ICCV , 2023. 6, 7 [27] Alexander Kirillov, Eric Mintun, Nikhila Ravi, Hanzi Mao, Chloe Rolland, Laura Gustafson, Tete Xiao, Spencer White-head, Alexander C. Berg, Wan-Yen Lo, Piotr Doll´ ar, and Ross Girshick. Segment anything. arXiv:2304.02643 , 2023. 7 [28] Muhammed Kocabas, Nikos Athanasiou, and Michael J. Black. Vibe: Video inference for human body pose and shape estimation. In CVPR , 2020. 2 [29] Muhammed Kocabas, Chun-Hao P. Huang, Otmar Hilliges, and Michael J. Black. PARE: Part attention regressor for 3D human body estimation. In ICCV , 2021. 2 [30] Muhammed Kocabas, Chun-Hao P. Huang, Joachim Tesch, Lea M¨ uller, Otmar Hilliges, and Michael J. Black. SPEC: 
+
+9Seeing people in the wild with an estimated camera. In 
+
+ICCV , 2021. 6 [31] Nikos Kolotouros, Georgios Pavlakos, Michael J Black, and Kostas Daniilidis. Learning to reconstruct 3d human pose and shape via model-fitting in the loop. In ICCV , 2019. 2 [32] Vincent Leroy, Yohann Cabon, and J´ erˆ ome Revaud. Ground-ing image matching in 3d with mast3r. In ECCV , 2024. 1, 2[33] Zhizheng Liu, Joe Lin, Wayne Wu, and Bolei Zhou. Joint optimization for 4d human-scene reconstruction in the wild. 
+
+arXiv preprint arXiv:2501.02158 , 2025. 2, 3 [34] Matthew Loper, Naureen Mahmood, Javier Romero, Gerard Pons-Moll, and Michael J. Black. SMPL: A skinned multi-person linear model. SIGGRAPH Asia , 2015. 2, 3 [35] Ilya Loshchilov and Frank Hutter. Decoupled weight decay regularization. arXiv preprint arXiv:1711.05101 , 2017. 7 [36] Dominic Maggio, Hyungtae Lim, and Luca Carlone. Vggt-slam: Dense rgb slam optimized on the sl (4) manifold. arXiv preprint arXiv:2505.12549 , 2025. 2 [37] Ben Mildenhall, Pratul P. Srinivasan, Matthew Tancik, Jonathan T. Barron, Ravi Ramamoorthi, and Ren Ng. Nerf: Representing scenes as neural radiance fields for view syn-thesis. In ECCV , 2020. 2 [38] Lea M¨ uller, Hongsuk Choi, Anthony Zhang, Brent Yi, Jiten-dra Malik, and Angjoo Kanazawa. Reconstructing people, places, and cameras. arXiv:2412.17806 , 2024. 2, 3, 5, 7 [39] Georgios Pavlakos, Vasileios Choutas, Nima Ghorbani, Timo Bolkart, Ahmed A. A. Osman, Dimitrios Tzionas, and Michael J. Black. Expressive body capture: 3d hands, face, and body from a single image. In CVPR , 2019. 2, 3 [40] Mathis Petrovich, Michael J. Black, and G¨ ul Varol. TMR: Text-to-motion retrieval using contrastive 3D human motion synthesis. In ICCV , 2023. 2 [41] Nikhila Ravi, Valentin Gabeur, Yuan-Ting Hu, Ronghang Hu, Chaitanya Ryali, Tengyu Ma, Haitham Khedr, Roman R¨ adle, Chloe Rolland, Laura Gustafson, Eric Mintun, Junting Pan, Kalyan Vasudev Alwala, Nicolas Carion, Chao-Yuan Wu, Ross Girshick, Piotr Doll´ ar, and Christoph Feichtenhofer. Sam 2: Segment anything in images and videos, 2024. 7 [42] Davis Rempe and et al. Slahmr: Scale-aware human motion recovery from monocular videos. In CVPR , 2023. 2, 4 [43] Tianhe Ren, Qing Jiang, Shilong Liu, Zhaoyang Zeng, Wen-long Liu, Han Gao, Hongjie Huang, Zhengyu Ma, Xiaoke Jiang, Yihao Chen, Yuda Xiong, Hao Zhang, Feng Li, Peijun Tang, Kent Yu, and Lei Zhang. Grounding dino 1.5: Advance the ”edge” of open-set object detection, 2024. 7 [44] Tianhe Ren, Shilong Liu, Ailing Zeng, Jing Lin, Kun-chang Li, He Cao, Jiayu Chen, Xinyu Huang, Yukang Chen, Feng Yan, Zhaoyang Zeng, Hao Zhang, Feng Li, Jie Yang, Hongyang Li, Qing Jiang, and Lei Zhang. Grounded sam: Assembling open-world models for diverse visual tasks, 2024. 7 [45] Javier Romero, Dimitrios Tzionas, and Michael J. Black. Embodied hands: Modeling and capturing hands and bodies together. SIGGRAPH Asia , 2017. 2 [46] Johannes L. Schonberger and Jan-Michael Frahm. Structure-from-motion revisited. In CVPR , 2016. 2 [47] Thomas Schops, Johannes L Schonberger, Silvano Galliani, Torsten Sattler, Konrad Schindler, Marc Pollefeys, and An-dreas Geiger. A multi-view stereo benchmark with high-resolution images and multi-camera videos. In CVPR , 2017. 2[48] Zehong Shen, Huaijin Pi, Yan Xia, Zhi Cen, Sida Peng, Zechen Hu, Hujun Bao, Ruizhen Hu, and Xiaowei Zhou. World-grounded human motion recovery via gravity-view co-ordinates. In SIGGRAPH Asia , 2024. 2, 4, 8 [49] Soyong Shin, Juyong Kim, Eni Halilaj, and Michael J. Black. WHAM: Reconstructing world-grounded humans with accu-rate 3D motion. In CVPR , 2024. 2, 4, 6 [50] Jiaxiang Tang, Zhaoxi Chen, Xiaokang Chen, Tengfei Wang, Gang Zeng, and Ziwei Liu. Lgm: Large multi-view gaussian model for high-resolution 3d content creation. In ECCV ,2024. 4, 5 [51] Yansong Tang, Jinpeng Liu, Aoyang Liu, Bin Yang, Wenxun Dai, Yongming Rao, Jiwen Lu, Jie Zhou, and Xiu Li. Flag3d: A 3d fitness activity dataset with language instruction. In 
+
+CVPR , 2023. 1 [52] Yansong Tang, Aoyang Liu, Jinpeng Liu, Shiyi Zhang, Wenxun Dai, Jie Zhou, Xiu Li, and Jiwen Lu. Flag3d++: A benchmark for 3d fitness activity comprehension with lan-guage instruction. PAMI , 2025. 1 [53] Zachary Teed and Jia Deng. Droid-slam: Deep visual slam for monocular, stereo, and rgb-d cameras. NIPS , 2021. 2, 5 [54] Timo Von Marcard, Roberto Henschel, Michael J Black, Bodo Rosenhahn, and Gerard Pons-Moll. Recovering ac-curate 3d human pose in the wild using imus and a moving camera. In ECCV , 2018. 7 [55] Jianyuan Wang, Minghao Chen, Nikita Karaev, Andrea Vedaldi, Christian Rupprecht, and David Novotny. Vggt: Visual geometry grounded transformer. In CVPR , 2025. 1 [56] Peng Wang, Lingjie Liu, Yuan Liu, Christian Theobalt, Taku Komura, and Wenping Wang. Neus: Learning neural implicit surfaces by volume rendering for multi-view reconstruction. In NIPS , 2021. 2 [57] Qianqian Wang, Yifei Zhang, Aleksander Holynski, Alexei A Efros, and Angjoo Kanazawa. Continuous 3d perception model with persistent state. In CVPR , 2025. 2, 3, 4, 5, 7, 8 [58] Shuzhe Wang, Vincent Leroy, Yohann Cabon, Boris Chidlovskii, and Jerome Revaud. Dust3r: Geometric 3d vision made easy. In CVPR , 2024. 1, 2, 3, 4, 5, 7, 8 [59] Yufu Wang, Ziyun Wang, Lingjie Liu, and Kostas Daniilidis. Tram: Global trajectory and motion of 3d humans from in-the-wild videos. In ECCV , 2024. 2, 4, 6, 7, 8 [60] Zeqi Xiao, Tai Wang, Jingbo Wang, Jinkun Cao, Wenwei Zhang, Bo Dai, Dahua Lin, and Jiangmiao Pang. Uni-fied human-scene interaction via prompted chain-of-contacts. 
+
+arXiv preprint arXiv:2309.07918 , 2023. 1 [61] Yufei Xu, Jing Zhang, Qiming Zhang, and Dacheng Tao. ViT-Pose: Simple vision transformer baselines for human pose estimation. In Advances in Neural Information Processing Systems , 2022. 6 [62] Yufei Xu, Jing Zhang, Qiming Zhang, and Dacheng Tao. Vit-pose+: Vision transformer foundation model for generic body pose estimation. arXiv preprint arXiv:2212.04246 , 2022. 6 
+
+10 [63] Wei Yao, Hongwen Zhang, Yunlian Sun, and Jinhui Tang. Staf: 3d human mesh recovery from video with spatio-temporal alignment fusion. TCSVT , 2024. 1, 4 [64] Hongwei Yi, Chun-Hao P Huang, Dimitrios Tzionas, Muhammed Kocabas, Mohamed Hassan, Siyu Tang, Justus Thies, and Michael J Black. Human-aware object placement for visual environment reconstruction. In CVPR , 2022. 1 [65] Junyi Zhang, Charles Herrmann, Junhwa Hur, Varun Jam-pani, Trevor Darrell, Forrester Cole, Deqing Sun, and Ming-Hsuan Yang. Monst3r: A simple approach for estimating geometry in the presence of motion. ICLR , 2025. 1, 2, 3, 4, 5, 7, 8 [66] Yi Zhou, Connelly Barnes, Lu Jingwan, Yang Jimei, and Li Hao. On the continuity of rotation representations in neural networks. In CVPR , 2019. 5 
+
+11

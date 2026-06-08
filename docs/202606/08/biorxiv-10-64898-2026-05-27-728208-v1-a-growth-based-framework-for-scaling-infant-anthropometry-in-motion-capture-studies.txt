@@ -1,0 +1,158 @@
+Title: A Growth-Based Framework for Scaling Infant Anthropometry in Motion Capture Studies
+
+URL Source: https://www.biorxiv.org/content/10.64898/2026.05.27.728208v1.full.pdf
+
+Number of Pages: 5
+
+Markdown Content:
+# A Growth-Based Framework for Scaling Infant Anthropometry in Motion Capture Studies 
+
+Ketaki Inamdar 
+
+Human Performace 
+
+West Virginia University 
+
+Morgantown, WV, USA 0000-0003-2773-7718 Nishat Tasnim Koli 
+
+Human Performace 
+
+West Virginia University 
+
+Morgantown, WV, USA 0009-0003-9312-2647 Sara Gamal 
+
+Human Performace 
+
+West Virginia University 
+
+Morgantown, WV, USA 0009-0004-4688-737X Valeriya Gritsenko 
+
+Human Performace 
+
+West Virginia University 
+
+Morgantown, WV, USA 0000-0002-6408-9433 
+
+Abstract — Biomechanical analysis of infant motor behavior is complicated by rapid growth and large inter-subject variability in body size and segment proportions. We present a growth-adjusted anthropometric scaling framework that integrates Centers for Disease Control and Prevention (CDC) growth charts with three-dimensional motion capture to estimate subject-specific infant biomechanics during prone play. Nineteen infants aged 2–6 months were recorded during spontaneous prone movement. Weight-for-age percentiles were computed using CDC LMS parameters and used to infer body length from length-for-age references, ensuring internal consistency between weight and length estimates. Body segments were scaled using published infant proportions and validated against head and shoulder widths measured from motion capture. Infant head and trunk proportions were substantially larger than adult values, whereas limb proportions were similar. Estimated and measured dimensions of head and trunk width showed good agreement, with mean root mean squared errors of approximately 3 cm. Adult-based scaling produced head and trunk length errors of up to 6 cm. This growth-adjusted framework improves anatomical fidelity and enables normalization of biomechanical measures across infants with differing growth trajectories. 
+
+Keywords—subject-specific modeling, inverse kinematics, Biomechanical modeling, segment parameter estimation, body segment parameters, kinematic normalization 
+
+I. INTRODUCTION 
+
+Early infancy is characterized by rapid changes in body mass, length, and segment proportions, occurring concurrently with the emergence of foundational motor skills such as head control, trunk stabilization, and upper-limb support. Prone play, commonly referred to as tummy time, provides a critical context for observing and quantifying these early motor behaviors [1]. Quantitative analysis of motor behavior during early infancy presents unique challenges due to rapid and highly variable growth. In contrast to adult populations, for which extensive anthropometric databases exist [2], infant body dimensions change substantially over short time scales, and considerable variability persists even among infants of the same chronological age. Consequently, biomechanical analyses that rely solely on age-based grouping risk conflating differences in neuromuscular control with differences in growth status and body proportions. Although standardized growth charts from the Centers for Disease Control and Prevention (CDC) and World Health Organization (WHO) are widely used in clinical settings to characterize infant growth, these tools are not routinely integrated into biomechanical data processing pipelines. The objective of this study is to develop a growth-adjusted scaling framework that explicitly integrates CDC growth chart data into infant biomechanical analysis and to estimate subject-specific growth percentiles and body length using the LMS statistical method. In this method, L denotes the Box–Cox power accounting for distribution skewness, M denotes the median value at a given age, and S denotes the coefficient of variation. II. METHODS 
+
+A. Participants and Experimental Protocol 
+
+Nineteen infants (age range: 2–6 months) participated in the study; demographic characteristics are summarized in Table I. Six participants were born preterm, with gestational ages ranging from 23 to 36 weeks. All experimental procedures were approved by the Institutional Review Board of West Virginia University (protocol #2306804216), and written informed consent was obtained from a parent or legal guardian prior to participation. 
+
+Fig. 1. Position of participant and marker placement. 
+
+Infants were positioned prone on a padded surface and allowed to engage in spontaneous movements during free play. Motion was recorded using an active-marker motion capture system (Impulse, PhaseSpace Inc., San Leandro, CA, USA). Markers were placed on predefined anatomical landmarks of the head and trunk (Fig. 1). Marker trajectories were sampled at 480 Hz. Recording sessions lasted between 1.5 and 8.8 minutes. Data Funding for this research has been provided in part by the WV Clinical 
+
+and Translational Sciences Institute supported by NIH, Academy of Pediatric 
+
+Physical Therapy Research Grant FWA00005078, and Department of Defense 
+
+grant FA9550 -24 -1-0214 .
+
+.CC-BY-ND 4.0 International license available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is made The copyright holder for this preprint this version posted June 1, 2026. ;https://doi.org/10.64898/2026.05.27.728208 doi: bioRxiv preprint acquisition was paused whenever an infant exhibited signs of discomfort, at which point the caregiver provided soothing. Recording resumed once the infant was calm; if distress persisted, the session was terminated. Additionally, participant’s weight, sex assigned at birth, and gestational age was recorded.    
+
+> TABLE I. PARTICIPANT DEMOGRAPHICS AND ANTHOPOMETRIC MEASUREMENTS
+> a. Incorrect marker placement.
+
+The motion analysis relies on inverse kinematics. However, accurate joint angle calculations rely on anthropometry (segment lengths of thigh, trunk, etc.) usually inferred from height. Since it is difficult to estimate infant true height, we used data from the CDC to infer height from weight. We used the CDC-provided growth chart data files for weight-for-age and length-for-age. These data sets include age-specific LMS parameters, where L represents the Box–Cox power accounting for distribution skewness, M represents the median value at a given age, and S represents the coefficient of variation [3], [4]. The LMS formulation is useful for continuous conversion between raw anthropometric measurements, z-scores, and percentiles. Age in the CDC growth charts is reported at half-month intervals representing the midpoint of each month. For each subject, recorded age was mapped to the appropriate half-month age prior to interpolation of LMS parameters. 
+
+B. Anthropometric Estimation and Inverse Kinematics Scaling 
+
+Inverse kinematics requires subject-specific anthropometric parameters to compute joint angles accurately [5]. While infant body length is commonly obtained in clinical settings, direct measurements can be affected by posture, soft tissue compression, and examiner-dependent variability, which may introduce error when used for biomechanical scaling. Therefore, body length was estimated indirectly from body weight using normative growth data. Specifically, CDC growth chart data files for weight-for-age and length-for-age were used, which provide age- and sex-specific LMS parameters describing the distribution of anthropometric measures [3], [4]. Subject-specific weight percentiles were computed from measured body weight, age in months, and sex. LMS parameters (L, M, S) were linearly interpolated from the CDC weight-for-age tables at the mapped age. The measured weight (X) was converted to a z-score (Z) using the standard LMS transformation: 
+
+𝑍 =
+
+⎩⎨⎧ ("/$)!&' 
+
+> ()
+
+, 𝐿 ≠ 0  
+
+> *+ ("/$)
+> )
+
+, 𝐿 = 0 
+
+(1) where X denotes the observed measurement and L, M, and S are the interpolated LMS parameters. The corresponding percentile was obtained by evaluating the cumulative distribution function of the standard normal distribution at Z. This procedure yields percentile estimates consistent with CDC growth standards. Estimated body length was obtained by applying the subject’s weight percentile to the CDC length-for-age distribution for the same age and sex. LMS parameters for length-for-age were interpolated at the mapped age. The percentile was converted to a z-score and then transformed to an estimated body length using the inverse LMS equation. This approach ensures that the estimated length corresponds to the same relative position within the growth distribution as the subject’s body weight, thereby maintaining internal consistency across anthropometric measures. 
+
+C. Body Segment Scaling 
+
+Estimated total body length was used to scale individual body segments according to published anthropometric proportions for infants < 6 months old [2]. Segment geometries were modeled as rectangular prisms (chest, pelvis, hands, and feet), an ellipsoid (head), and cylinders (upper and lower arm and leg segments) (Fig. 2). The distal forearm segments were split using 2/3 and 1/3 fractions to accurately represent pronation/supination degrees of freedom [6]. Similarly, the distal leg segments were split to represent internal/external rotation of the foot using ½ fractions. Segment lengths were defined as fixed fractions of total body length based on reported proportional data. The trunk and pelvis girth was estimated from the published infant chest circumference measurements [7]. Cylinder diameters and hand and feet prism girth dimensions were estimated empirically.                                                                                                                    
+
+> ID
+> Sex Age (adjusted age, mo)
+> Measured weight (kg)
+> Inferred height (m)
+> Shoulder width (m)
+> Head width (m)
+> C1 m69.98 0.723 0.179 0.149
+> C2 f46.8 0.63 -a. 0.15
+> C3 m46.8 0.632 0.161 0.146
+> C4 m46.28 0.617 0.141 0.143
+> C5 f35.1 0.577 0.169 0.148
+> C6 m67.7 0.667 0.176 0.161
+> C7 m57.6 0.659 0.161 0.152
+> C8 f67.26 0.653 0.182 0.144
+> C9 m35.5 0.588 0.148 0.12
+> C10 m76.68 0.649 0.174 0.148
+> C11 m35.55 0.592 0.152 0.121
+> C12 m44.35 0.554 0.176 0.103
+> C13 m64.68 0.578 0.189 0.152
+> P1 f5 (4) 5.08 0.578 0.121 0.144
+> P2 m7 (3) 6.12 0.637 0.149 0.149
+> P3 f8 (7) 9.53 0.713 0.187 0.145
+> P4 f5 (5) 4.99 0.581 0.193 0.141
+> P5 f7 (5) 4.99 0.581 0.173 0.139
+> P6 f10 (7) 5.52 0.607 0.137 0.133
+> .CC-BY-ND 4.0 International license available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is made The copyright holder for this preprint this version posted June 1, 2026. ;https://doi.org/10.64898/2026.05.27.728208 doi: bioRxiv preprint
+
+Validation of inferred segment dimensions was performed using head width and shoulder width measurements extracted from the motion capture recordings. Estimated and measured dimensions were compared using the root mean squared error (RMSE) metric.  
+
+> Fig. 2. 3D model illustrating segment shapes and proportions. H denotes total height top of the head to bottom of feet.
+
+III. RESULTS 
+
+The CDC–WHO growth curves for male and female infants begin to diverge at approximately 6 months of age (Fig. 3).  
+
+> Fig. 3. Example of CDC grouth charts for average (50%) males and females over the first 24 months of life.
+
+Accordingly, a single set of anthropometric segment proportions was applied to all infants younger than 6 months, independent of sex. The resulting proportions are summarized in Table II.                                            
+
+> TABLE II. HEIGHT -N ORMALIZED BODY SEGMENT PROPORTIONS FOR
+> INFANTS (<6 MONTHS ,50 TH PERCENTILE )
+> Segment Shape Length / Height
+> Width / Height
+> Girth / Height
+> Head ellipsoid 0.233 0.183 0.183
+> Trunk box 0.225 0.3 0.1198
+> Pelvis box 0.225 0.233 0.1198
+> Humerus (upper arm)
+> cylinder 0.192 0.066 0
+> Radius/Ulna (forearm)
+> cylinder 0.15 0.0594 0
+> Hand box 0.117 0.067 0.0033
+> Femur (thigh)
+> cylinder 0.25 0.117 0
+> Tibia (shank) cylinder 0.25 0.0932 0
+> Foot box 0.142 0.067 0.0158229
+
+Fig. 2 illustrates the three-dimensional infant body model at the 50th percentile body length (0.60 m), scaled using the inferred segment proportions. The head height proportion in infants (0.23 of total body length) was nearly twice the corresponding adult proportion (0.13) [8]. Similarly, the trunk length proportion (0.45) was substantially larger than the adult value (0.29) [8]. Consequently, scaling based on adult segment proportions produced mismatches in head and chest (upper body only) lengths ranging from 3 to 6 cm (Fig. 4A). The remaining segment proportions were comparable to adult values. These proportions reflect characteristic infant morphology, with a relatively large head and trunk and proportionally shorter limb segments. Agreement between estimated and measured segment dimensions obtained from three-dimensional motion capture was high (Fig. 4B). For infants born at 39 or 40 weeks of gestation, the mean root mean squared error (RMSE) between estimated and measured shoulder width was 2.7 cm, and the RMSE for head width was 3.2 cm. For infants born preterm, the mean RMSE values were similar, 3.1 cm for shoulder width, and 2.8 cm for head width. Together, these results validate the proposed scaling approach and establish a reference anthropometric model for estimating subject-specific segment dimensions in early-infant biomechanical analyses. IV. DISCUSSION 
+
+This study developed and validated a growth-adjusted anthropometric scaling framework for biomechanical analysis of infants during prone play by integrating CDC growth chart data with motion capture–based kinematics. Subject-specific weight percentiles were first estimated using CDC LMS parameters, and these percentiles were subsequently used to  
+
+> .CC-BY-ND 4.0 International license available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is made The copyright holder for this preprint this version posted June 1, 2026. ;https://doi.org/10.64898/2026.05.27.728208 doi: bioRxiv preprint Fig. 4. Errors in estimating segment lengths from adult proportions (A) and from CDC growth charts (B). Thick lines show median values of absolute differences, boxes show quartile ranges, dashed lines show full range of errors, red crosses show outliers.
+
+infer body length from length-for-age growth distributions, ensuring internal consistency between weight and length estimates. The proposed framework enables consistent, subject-specific scaling of body segments while accounting for the unique morphological characteristics of early infancy. The CDC–WHO growth curves show that male and female growth trajectories diverge only after approximately 6 months of age. Accordingly, a single set of infant anthropometric proportions was applied to all participants younger than 6 months. The resulting segment proportions reflected characteristic infant morphology. The head height proportion was nearly twice the adult value, while the trunk length proportion exceeded the adult proportion by more than 50%. These findings align with established principles of cephalocaudal development, where growth proceeds from head to toe, with the head representing a disproportionately large fraction of total body length during infancy [9]. Validation against motion capture–derived measurements showed good agreement between estimated and measured segment dimensions. The mean RMSE values were about 3 cm for shoulder and head width across all participants. Consequently, scaling based on adult segment proportions for head and trunk produced mismatches, with errors reaching up to 6 cm. Such errors would propagate through subsequent biomechanical calculations, including joint center estimation, segment mass distribution, and moment arm calculations, potentially compromising the validity of kinematic and kinetic analyses. These results demonstrate that growth-adjusted scaling improves anatomical fidelity relative to conventional adult-based scaling and provides a feasible approach for estimating subject-specific infant anthropometry when direct length measurements are unavailable. Several limitations should be noted. First, body length was not measured directly but inferred from weight percentiles using population-level growth references. This approach assumes that individual infants follow typical CDC growth trajectories and may be less accurate for infants with atypical growth patterns, including preterm infants or those with growth restrictions. Although, the mean errors for both groups of our participants were similar. Second, segment girths and some geometric dimensions were estimated empirically rather than measured directly, introducing potential systematic uncertainty in segment mass and inertia estimates. Validation was limited to head width and shoulder width, which represent only a subset of segment dimensions and do not directly assess the accuracy of limb lengths, segment masses, or inertial properties critical for inverse dynamics. The sample size was modest (n = 19), and six participants were born preterm, which may introduce additional heterogeneity not explicitly modeled by the scaling procedure. Finally, the framework assumes fixed segment proportions within the 2–6 month age range and does not capture nonlinear changes in body proportions that may occur in early infancy. Despite these limitations, the proposed growth-adjusted scaling framework provides a principled and reproducible method for incorporating standardized growth information into infant biomechanical analyses. By explicitly integrating CDC growth charts with inverse kinematics scaling, this approach enables normalization of kinematic and neuromuscular measures across infants with different growth trajectories and reduces confounding between motor control development and body size. This framework facilitates quantitative comparisons of infant motor behavior during prone play and may improve the interpretation of developmental changes in posture, head control, and upper-limb support. More broadly, the method establishes a foundation for longitudinal studies of early motor development and for future integration of growth-adjusted biomechanical modeling into clinical assessments of neuromotor risk and developmental delay. REFERENCES              
+
+> [1] K. Inamdar, T. Tripathi, R. M. Molinini, W. Fang, A. Salgaonkar, and S. C. Dusing, “Relationship Between Prone Skills and Motor‐Based Problem‐Solving Abilities in Full‐Term and Preterm Infants During the First 6 Months of Life,” Developmental Psychobiology, vol. 66, no. 6, p. e22525, Sep. 2024, doi: 10.1002/dev.22525. [2] S. Pheasant, Bodyspace: anthropometry, ergonomics and the design of work, 2nd ed. 325 Chestnut Street, 8th Floor, Philadelphia, PA 19106: Taylor & Francis, 2003. [3] C. Fryar, Q. Gu, J. Afful, M. Carroll, and C. Ogden, “Anthropometric Reference Data for Children and Adults: United States, August 2021–August 2023,” National Center for Health Statistics (U.S.), Jun. 2025. doi: 10.15620/cdc/174595.
+> .CC-BY-ND 4.0 International license available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is made The copyright holder for this preprint this version posted June 1, 2026. ;https://doi.org/10.64898/2026.05.27.728208 doi: bioRxiv preprint
+
+[4] Centers for Disease Control and Prevention and National Center for Health Statistics, “WHO Growth Charts Data files.” 2024. [Online]. Available: https://www.cdc.gov/growthcharts/who-data-files.htm [5] R. I. Taitano and V. Gritsenko, “Joint angle trajectories are Robust to segment length estimation methods in human reaching,” PLoS One, vol. 20, no. 11, p. e0310475, 2025, doi: 10.1371/journal.pone.0310475. [6] M. G. Yough, R. L. Hardesty, S. Yakovenko, and V. Gritsenko, “A segmented forearm model of hand pronation-supination approximates joint moments for real time applications,” in 2021 10th International IEEE/EMBS Conference on Neural Engineering (NER), Italy, 2021, pp. 751–754. doi: 10.1109/NER49283.2021.9441405. [7] M. Y. Hadush, A. H. Berhe, and A. A. Medhanyie, “Foot length, chest and head circumference measurements in detection of Low birth weight neonates in Mekelle, Ethiopia: a hospital based cross sectional study,” BMC Pediatr, vol. 17, no. 1, p. 111, Dec. 2017, doi: 10.1186/s12887-017-0866-0. [8] D. A. Winter, Biomechanics and Motor Control of Human Movement, 4th ed. Wiley, 2009. Accessed: Jan. 02, 2020. [Online]. Available: https://www.wiley.com/en-us/Biomechanics+and+Motor+Control+of+Human+Movement%2C+4th+Edit ion-p-9780470398180 [9] E. Pelletier, “Typical development.,” in Tecklin’s pediatric physical therapy, Sixth edition., E. M. Spearing and M. Drnach, Eds., Philadelphia: Wolters Kluwer Health, 2022, pp. 3–24. 
+
+.CC-BY-ND 4.0 International license available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is made The copyright holder for this preprint this version posted June 1, 2026. ;https://doi.org/10.64898/2026.05.27.728208 doi: bioRxiv preprint
