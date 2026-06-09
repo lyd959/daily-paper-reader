@@ -1,0 +1,353 @@
+Title: 4D Reconstruction from Sparse Dynamic Cameras
+
+URL Source: https://arxiv.org/pdf/2606.04593v1
+
+Published Time: Thu, 04 Jun 2026 01:30:11 GMT
+
+Number of Pages: 12
+
+Markdown Content:
+# 4D Reconstruction from Sparse Dynamic Cameras 
+
+## Kazuki Ozeki 1 Shun Kenney 1 Yuto Shibata 1 Eisuke Takeuchi 1 Takuya Narihira 2
+
+## Kazumi Fukuda 2 Ryosuke Sawata 2 Yuki Mitsufuji 2,3 Yoshimitsu Aoki 11Keio University 2Sony AI 3Sony Group Corporation Ground Truth      
+
+> (LPIPS↓)
+> Ours
+> (0.101)
+> FTGS* [60]
+> (0.215)
+> MoSca [20 ]
+> (0.281)
+> MoSca [20 ](1 cam.)
+> (0.234)
+> D3DGS* [69 ]
+> (0.361) Walking
+
+: Camera position & direction 
+
+Figure 1. Overview. We introduce the task of 4D reconstruction from sparse dynamic cameras , a versatile and depth ambiguity-free con-figuration of multiple, independently moving cameras prevalent in real-world video production. Our framework resolves the fundamental spatiotemporal inconsistencies that typically undermine naive adaptations of methods designed for monocular or dense-fixed camera se-tups [20, 59, 68]. Furthermore, we introduce LetCamsGo , a new benchmark to promote 4D reconstruction research in this camera setup. 
+
+## Abstract 
+
+Although dynamic 3D (i.e., 4D) reconstruction from a monocular dynamic camera has recently advanced, it re-mains fundamentally limited by depth ambiguity. In this pa-per, we focus on an alternative practical way, i.e., sparse dynamic camera setup, where a handful of independently moving cameras capture the same subjects. While keep-ing capture costs low, this setup introduces multi-view con-straints and remains practical for real-world video produc-tion such as sports, concerts, and TV shows. Despite its potential, our experiments show that naive extensions of existing monocular or dense-fixed camera-based methods are insufficient since they fail to resolve the complex spa-tiotemporal inconsistencies across views and time. To fill this gap, we propose a simple yet effective 3D track ini-tialization method designed to ensure spatiotemporal con-sistency by integrating inter-camera feature matching with intra-camera point tracking. Additionally, we incorporate a noise-robust depth-ordering regularization loss and a spa-tiotemporally diverse batch sampling strategy to enhance optimization stability and cross-view generalization. Fur-thermore, to address the lack of standardized benchmarks for this task, we introduce LetCamsGo, a new real-world video dataset with 5 sequences across 4 diverse environ-ments, recorded by three independently moving cameras and one fixed camera. Comprehensive benchmarking on LetCamsGo demonstrated that our proposed framework im-proves 4D reconstruction quality in dynamic regions com-pared with baselines, paving the way for a low-cost 4D re-construction paradigm in the wild. 
+
+> arXiv:2606.04593v1 [cs.CV] 3 Jun 2026
+
+## 1. Introduction 
+
+Dynamic 3D (i.e., 4D) reconstruction from a monocular dy-namic RGB video has become increasingly viable with the progress of 3D representations [18, 39] and 2D foundation models [32, 41, 45]. Compared with the traditional dense fixed camera setup, this setup greatly simplifies data cap-ture, as it only requires a single camera to move around the scene. However, it inherently suffers from depth ambigu-ity due to the absence of multi-view constraints, even when state-of-the-art methods [20, 29, 43] are applied. To achieve high-fidelity reconstruction while minimiz-ing deployment complexity and capture costs, we focus on the sparse dynamic camera setup, where a handful of inde-pendently moving cameras capture the same subjects. It can resolve depth ambiguity with multi-view constraints while remaining easier to set up than dense fixed cameras (often exceeding 20 units). Additionally, this setup is practical and commonly seen in real-world video production, including live concerts, TV show productions, and casual recordings captured by multiple smartphones. By reconstructing 4D scenes from these recordings, creators can generate free-viewpoint videos that offer more immersive viewing expe-riences and enable efficient post-production editing. Despite these potentials, 4D reconstruction under the sparse dynamic camera setup has remained underexplored. We hypothesize that this is mainly due to two reasons: (i) Spatiotemporal inconsistencies in reconstruction. As demonstrated by our experiments, naive extensions of exist-ing methods tailored for monocular dynamic cameras, such as MoSca [20], significantly degrade reconstruction quality. This degradation stems from spatiotemporal inconsistencies in estimated geometry and correspondences, which persist even when incorporating multi-view depth estimators [32] and 3D point trackers [44]. (ii) The absence of standardized benchmarks. While the setup offers immense flexibility, its unconstrained nature—characterized by arbitrary cam-era orientations and complex baseline dynamics—makes it difficult to establish a rigorous evaluation protocol. Motivated by the aforementioned discussion, this paper presents the effective 4D reconstruction framework for the sparse dynamic camera setup. Specifically, we propose a simple yet effective 3D track initialization method that com-bines inter-camera feature matching with intra-camera point tracking by leveraging pre-trained vision foundation mod-els [21, 41, 51]. This integration establishes dense spa-tiotemporal 2D correspondences across dynamic regions. By subsequently applying epipolar filtering and per-frame triangulation, our method derives 3D tracks that maintain strict multi-view consistency, providing a reliable motion-scaffold initialization. Furthermore, to stabilize optimiza-tion in this unconstrained setup, we incorporate a depth order regularization loss and introduce a spatio-temporal batch sampling strategy designed to capture cross-view and cross-temporal variations. In addition, we introduce LetCamsGo , a new real-world video dataset capturing dynamic scenes with three inde-pendently moving cameras and one fixed camera for this novel task (see Fig. 1). LetCamsGo comprises 5 sequences across 4 diverse indoor and outdoor environments, featuring multiple subjects performing everyday activities with non-human object interactions, complex non-rigid motions, and frequent occlusions to provide realistic and challenging 4D reconstruction scenarios. To facilitate a rigorous and sys-tematic evaluation, we establish a comprehensive taxonomy for LetCamsGo based on four critical axes: the spatial ex-tent of subject motion, camera orientation, motion direction, and the temporal dynamics of camera baselines. This struc-tured classification ensures that our benchmark provides a granular look at how different capture conditions impact 4D reconstruction fidelity. To analyze the unique features and challenges of the sparse dynamic camera setup, we compare our method not only with a naive extension of MoSca but also with var-ious baselines including FreetimeGS [59], a state-of-the-art method for dense fixed cameras. Through benchmark-ing on LetCamsGo, we demonstrate that our approach sig-nificantly outperforms the naive MoSca-based extension in most scenes and achieves superior temporal consistency in dynamic regions compared with FreetimeGS. Comprehen-sive experiments, including ablation studies, reveal the po-tential of the sparse dynamic camera setup, and we believe that LetCamsGo and our method will facilitate future re-search in this direction. In summary, our contributions are as follows: (1) We present a unified framework for the sparse dynamic camera setup. It integrates a spatiotemporally consistent 3D track initialization, a robust depth regularization loss, and a spa-tiotemporal batch sampling strategy. (2) We introduce Let-CamsGo, a real-world dataset for 4D reconstruction in the sparse dynamic camera setup. (3) We provide comprehen-sive benchmarking and analysis on LetCamsGo, showing the effectiveness of our method and highlighting the chal-lenges and potential of the sparse dynamic camera setup. 
+
+## 2. Related Work 
+
+2.1. 4D Reconstruction 
+
+Before extending to 4D, there are various 3D representa-tion methods; classic and widely used representations in-clude point clouds, meshes, and voxels. With the recent rise of Neural Radiance Fields (NeRF) [39] and 3D Gaus-sian Splatting (3DGS) [18], end-to-end differentiable op-timization of spatial representations has become possible. In particular, 3DGS has attracted attention as a tool that achieves both fast optimization and rendering while main-taining high fidelity. More recently, applying 3DGS to 4D scenes containing dynamic objects has been a hot research topic, and thus many methods have been proposed. The temporal representation of Gaussians for reconstructing 4D scenes includes: methods [2, 8, 11, 22, 33, 35, 36, 38, 43, 55, 58, 62, 66, 68, 72, 73, 75] that model temporal defor-mation from Gaussians defined in a canonical space, meth-ods [27, 29, 59, 69, 70] that place Gaussians in a shared spacetime and model time-varying opacity to capture scene dynamics, and hybrid approaches [13, 20, 37, 61, 76] that combine these ideas. Meanwhile, feed-forward approaches [15, 28, 30, 46, 66, 77] have emerged that directly output Gaussian parameters using learned deep learning models. While these methods enable instant reconstruction, many still fall short in accuracy compared to meticulous optimization. Moreover, most existing work targets scenes captured by monocular video, and there are relatively few attempts to reconstruct dynamically captured multi-camera scenes. Concurrent work [10] also tackle with the sparse dynamic camera setup, yet it only focuses reconstruct human mesh. 
+
+2.2. Datasets for 4D Reconstruction 
+
+Existing real-world video datasets for 4D reconstruction can be broadly categorized by camera setup, namely the number of cameras and their motion patterns. Dynamic-camera datasets [6, 7, 14, 34, 48, 56] are generally lim-ited to a single moving camera. In contrast, multi-camera datasets [4, 16, 17, 22–24, 26, 31, 49, 57, 64, 65, 71] mostly use fixed cameras. Some datasets [3, 3, 5, 9, 9, 54, 71] in-clude multiple dynamic cameras, but they differ from our setting because the cameras are rig-mounted, capture dif-ferent subjects, or are simulated. A detailed comparison is provided in the supplementary material. The closest cam-era setup to ours is used in [40], which features five inde-pendently moving cameras; however, each camera is quasi-static, making the setup closer to sparse fixed-camera cap-ture. By contrast, our dataset contains widely moving cam-eras that cover larger scenes with fewer cameras (see Fig. 4). This setting provides more immersive experiences and is more practical for real-world applications, while also intro-ducing greater spatiotemporal inconsistencies due to large viewpoint changes. 
+
+## 3. Method 
+
+Our goal is to recover a high-fidelity 4D representation from time-synchronized RGB videos captured by multi-ple independently moving cameras. Each camera # c (= 1, 2, · · · , C ; C is the number of cameras ) has a known in-trinsic matrix Kc and time-varying extrinsic parameters 
+
+{Rc,t , tc,t }Tt=1 . To apply our frameworks to the sparse dy-namic camera setup, we employ MoSca [20] as the back-bone model due to its strong reconstruction quality in the    
+
+> (a) Naive Approach (b) Ours
+> Figure 2. Initial dynamic points. Pose-conditioned metric multi-view depth estimation [32] and multi-view 3D point tracking [44] produce noisy and inconsistent dynamic points across times and views (a). In contrast, our multi-view consistent 3D track initial-ization produces more accurate and consistent dynamic points (b).
+
+monocular dynamic camera setup. On the basis of MosCa, we focus on improving its motion-scaffold initialization for the sparse dynamic camera setup. We first review MoSca in Sec. 3.1 and Sec. 3.2 discusses a naive multi-view extension of MoSca and its limitations. Sec. 3.3 then presents our multi-view consistent 3D track initialization, and Sec. 3.4 introduces additional effective optimization strategies. 
+
+3.1. Preliminary 
+
+We build on MoSca [20], which augments 3DGS [18] with sparse motion-scaffold nodes. A scene is repre-sented by Gaussians {G i} with mean μi, covariance Σi =
+
+RiSiS⊤ 
+
+> i
+
+R⊤ 
+
+> i
+
+(where Si is a diagonal scale matrix and Ri aunit-quaternion rotation), opacity αi, and SH color hi. Af-ter projecting to 2D and depth sorting, pixel color is com-posited by 
+
+I(u, v ) = 
+
+> N
+
+X
+
+> i=1
+
+αi cii−1Y
+
+> j=1
+
+(1 − αj )
+
+ . (1) Scaffold nodes V = {v(m)}Nm 
+
+> m=1
+
+carry time-varying trans-forms Q(m) 
+
+> t
+
+∈ SE (3) , connected in a KNN graph with motions blended by dual-quaternion blending (DQB). For query point x and times (ts, t d), the warp is 
+
+W(x, t s → td) = DQB 
+
+n
+
+∆Q(m) 
+
+> ts→td
+
+, w m(x)
+
+o 
+
+> m∈N K(x)
+
+
+
+,
+
+(2) where ∆Q(m) 
+
+> ts→td
+
+= Q(m) 
+
+> td
+
+(Q(m) 
+
+> ts
+
+)−1 and wm(x) is a distance-based weight. Canonical dynamic Gaussians gn =(xn, Rn, sn, o n, cn, τ n) are warped by W(·, τ n → t) and rendered by splatting. Parameters are optimized using a photometric loss, depth and track regularization terms, and geometric losses such as an as-rigid-as-possible scaffold loss, together with densification and pruning. …    
+
+> …
+> ……Epipolar
+> Filtering
+> Intra -Camera Point Tracking
+> Inter -Camera Feature Matching
+> …
+> …
+> Multi -View Consistent
+> 3D Tracks
+> Spatiotemporal 2D correspondences
+> Per -Frame Triangulation Figure 3. Proposed multi-view consistent 3D track initialization. We combine inter-camera feature matching and intra-camera point tracking, followed by epipolar filtering and triangulation to produce spatiotemporally consistent 3D tracks for motion-scaffold initialization.
+
+3.2. Naive Approach 
+
+Since monocular 4D reconstruction is highly ill-posed, MoSca [20] relies on 2D foundation models for initializa-tion and supervision. In particular, the motion scaffold is initialized leveraging monocular depth estimators [12, 42, 67] and point trackers [41, 63]. A direct multi-camera ex-tension is to run this monocular initialization independently on each camera stream and then jointly optimize all streams. In practice, this naive strategy introduces severe cross-view inconsistencies that degrade dynamic-object recon-struction quality. We observe this issue even when replac-ing the initialization with state-of-the-art pose-conditioned metric multi-view depth estimation [32] and multi-view 3D point tracking [44], likely due to the domain gap between their training data and our sparse dynamic camera setting (see Fig. 2). 
+
+3.3. Multi-View Consistent 3D Track Initialization 
+
+To address the above failure mode, we propose a multi-view consistent 3D track initialization that provides stronger pri-ors for the motion scaffold. Our key idea is to com-bine inter-camera feature matching and intra-camera point tracking to propagate cross-view correspondences over time. Figure 3 shows the overall pipeline. We first perform inter-camera feature matching frame by frame. Specifically, for each frame t, we extract 2D correspondences (Mct , Mc′ 
+
+> t
+
+) between camera pairs (c, c ′),where Nt is the number of matches at frame t. To maximize the number of reliable correspondences, we merge outputs from two pairwise dense matchers with different architectures and training data, GIM-DKM [51] and MASt3R [21]. Repeating this process over all frames yields temporally indexed cross-view correspon-dences {(Mct , Mc′ 
+
+> t
+
+)}Tt=0 . These matches are spatially con-sistent within each frame, but they do not provide tempo-ral linkage across frames, which is required for motion-scaffold initialization. To establish this temporal linkage, we then perform intra-camera point tracking. For each camera c and query frame t, we use the matched points as seeds, track them forward and backward, and merge both directions into a single trajectory over the sequence. We use CoTracker3-Online [41], a 2D point tracker robust to non-rigid motion, dynamic camera motion, and long-range tracking. This pro-cess produces a set of 2D tracks Tc,t for queries from frame 
+
+t. Aggregating tracks from all query frames yields a semi-dense 2D track set Tc for each camera c, where each track stores 2D locations and visibility across all frames. Given these 2D spatiotemporal correspondences, we ob-tain spatiotemporal 3D tracks using two additional steps, unlike the naive approach. First, we apply epipolar-geometry-based filtering to remove geometrically inconsis-tent cross-view correspondences. Since per-camera track-ing can be noisy, mismatched cross-view pairs for the same 3D point can hinder convergence of the track regularization loss [20]. For each tracked point and each time step, we evaluate whether its cross-view correspondence satisfies the epipolar constraint, and set its visibility to zero ( νi,c,t = 0 )when the constraint is violated. We use the Sampson er-ror as the epipolar consistency metric. Given a fundamental matrix F, we keep pairs satisfying 
+
+dS(u, u′) = (u′⊤ Fu )2
+
+(Fu )21 + ( Fu )22 + ( F⊤u′)21 + ( F⊤u′)22
+
+< τ epi .
+
+(3) Second, we perform frame-by-frame triangulation. For each trajectory i at time t, we estimate its 3D position by triangulating all visible observations at that frame: 
+
+Xi,t = arg min 
+
+> X
+
+X
+
+> c∈C t(i)
+
+∥π(Pc,t X) − ui,c,t ∥22 , (4) where Ct(i) denotes the set of cameras observing trajec-tory i at time t, π(·) is perspective projection, and Pc,t =Lunch Blackboard Bench Play Figure 4. Visualization of estimated camera trajectories. The estimated trajectories of the three dynamic cameras are shown in red, green, and blue, and the fixed evaluation camera is shown in pink. For visual clarity, the frame rate is reduced to 6 FPS. 
+
+Kc [Rc,t | tc,t ] is the projection matrix. In contrast to back-projecting noisy depth estimates, this step directly produces multi-view consistent 3D points at each frame. Repeating it over all frames yields spatiotemporal 3D tracks, which are used to initialize the motion scaffold. 
+
+3.4. Optimization 
+
+Depth Regularization. Vanilla MoSca [20] applies depth regularization by minimizing the L2 distance between the normalized estimated and rendered depth maps. However, this approach is suboptimal when the depth estimates are noisy, which is often the case in the sparse dynamic camera setup, even when using pose-conditioned metric multi-view depth estimation [32]. Instead, following [25, 34], we regu-larize depth by correcting the ordering of depth values based on the estimated depth map. This strategy is more robust to depth estimation noise and yields better reconstruction quality in our setting. 
+
+Batch Sampling. In 3DGS-based 4D representation, batch-based optimization is often effective for improving conver-gence and generalization [43, 60, 62]. We find that opti-mization generalizes best when each batch consists of sam-ples from different cameras and different frames . Compared to same-camera or temporally local batching, this strategy reduces short-range correlation in the supervision signal and introduces stronger cross-view and cross-temporal vari-ation per update. Empirically, this approach achieves the highest reconstruction quality and best generalization in our setting. 
+
+## 4. LetCamsGo Dataset 
+
+To the best of our knowledge, there is no publicly available real-world video dataset under the sparse dynamic cam-era setup. Thus, we introduce LetCamsGo , comprising 5 sequences of realistic everyday activities across 4 diverse environments (classroom, lounge, bench, and road), each recorded with three independently moving cameras and one fixed evaluation camera. All cameras record Full HD videos at 60 FPS, time-synchronized using UltraSync devices [1]. Camera poses are estimated using COLMAP [50], and dy-namic object masks are generated semi-automatically us-                      
+
+> Table 1. Characteristics of each scene on LetCamsGo.
+> Scene Subject Motion Camera Orientation Camera Motion Baseline Dynamics Lunch Local Forward-Facing Sideways High Blackboard Local Forward-Facing Sideways Low Play Local Outside-In Sideways High Bench Global Forward-Facing Sideways Low Walking Global Forward-Facing Backward Low
+
+ing [45, 47]. Obtained camera poses for each scene are vi-sualized in Fig. 4. To enable comprehensive performance analysis, we systematically categorize the 5 scenes (detailed in Table 1) along four dimensions: (1) spatial extent of sub-ject motion, (2) camera orientation, (3) camera motion, and (4) temporal dynamics of camera baselines. Further details on data acquisition, characteristics, and annotation proce-dures are provided in the supplementary material. 
+
+## 5. Experimental Settings 
+
+5.1. Implementation Details 
+
+We set the Sampson error threshold τepi to 0.1 px. For depth regularization, we use depth maps estimated by Depth Anything 3 [32]. For simplicity, we use the dynamic mask from Sec. 4. Static points are initialized from off-the-shelf multi-view stereo depth maps [50] for all scenes except 
+
+Play , where they are initialized from depth maps estimated by Depth Anything 3 [32]. Static Gaussians use the orig-inal 3DGS scale activation [18]. We disable camera pose optimization. All other settings follow MoSca [20]. All ex-periments are conducted on an NVIDIA RTX A6000 GPU. 
+
+5.2. Baselines 
+
+We benchmark our method against various 3DGS-based baselines: D3DGS [68], FTGS [59], and MoSca [20]. To isolate the contribution of our multi-view consistent 3D track initialization, we construct naive multi-view ex-tensions of MoSca, a state-of-the-art method for monoc-ular dynamic scene reconstruction. These extensions fol-low the approach described in Sec. 3.2 and use the same tracker [41], query density, regularization losses, and opti-mization settings as our method, differing only in 3D track Table 2. Benchmarking on LetCamsGo . Each entry reports PSNR / SSIM / LPIPS. Higher is better for PSNR and SSIM, while lower is better for LPIPS. For each scene, the best and second-best values for each metric are highlighted in red and yellow, respectively.                                                                                       
+
+> Lunch Blackboard Play Full Dynamic Full Dynamic Full Dynamic D3DGS* [68] 19.44 / 0.826 / 0.133 20.75 / 0.994 / 0.115 18.16 / 0.805 / 0.306 16.13 / 0.973 / 0.286 14.70 / 0.685 / 0.347 15.45 / 0.979 / 0.267 FTGS [59] 17.20 / 0.790 / 0.187 18.99 / 0.992 / 0.171 18.74 / 0.819 / 0.298 16.62 / 0.976 / 0.285 16.09 / 0.725 / 0.312 15.22 / 0.979 / 0.335 FTGS* [59] 20.12 / 0.833 / 0.131 19.78 / 0.993 / 0.154 18.60 / 0.812 / 0.290 16.83 / 0.976 / 0.277 15.90 / 0.723 / 0.278 14.87 / 0.979 / 0.362 MoSca [20, 41] 20.40 / 0.811 / 0.201 18.32 / 0.992 / 0.216 18.86 / 0.843 / 0.293 16.05 / 0.971 / 0.356 16.08 / 0.749 / 0.328 15.43 / 0.981 / 0.329 MoSca-M [20, 44] 20.20 / 0.808 / 0.204 17.83 / 0.991 / 0.214 18.76 / 0.840 / 0.301 15.87 / 0.971 / 0.375 16.68 / 0.750 / 0.323 16.21 / 0.981 / 0.347 Ours 21.07 / 0.829 / 0.131 22.07 / 0.995 / 0.091 19.23 / 0.845 / 0.277 16.83 / 0.973 / 0.259 16.85 / 0.744 / 0.285 16.86 / 0.980 / 0.237
+> Walking Bench Average Full Dynamic Full Dynamic Full Dynamic D3DGS* [68] 12.57 / 0.659 / 0.642 11.07 / 0.989 / 0.361 16.71 / 0.675 / 0.506 14.17 / 0.991 / 0.224 16.32 / 0.730 / 0.387 15.51 / 0.985 / 0.251 FTGS [59] 14.40 / 0.675 / 0.555 13.71 / 0.991 / 0.278 18.14 / 0.693 / 0.460 17.14 / 0.994 / 0.168 16.91 / 0.740 / 0.362 16.34 / 0.986 / 0.247 FTGS* [59] 18.66 / 0.758 / 0.372 16.65 / 0.993 / 0.215 16.76 / 0.709 / 0.398 17.12 / 0.993 / 0.170 18.01 / 0.767 / 0.294 17.05 / 0.987 / 0.236 MoSca [20, 41] 17.23 / 0.751 / 0.481 12.87 / 0.990 / 0.281 18.82 / 0.733 / 0.394 15.33 / 0.991 / 0.195 18.28 / 0.777 / 0.339 15.60 / 0.985 / 0.274 MoSca-M [20, 44] 17.05 / 0.743 / 0.498 12.09 / 0.990 / 0.330 19.26 / 0.735 / 0.401 15.80 / 0.991 / 0.201 18.39 / 0.775 / 0.345 15.56 / 0.985 / 0.293 Ours 18.45 / 0.766 / 0.360 17.71 / 0.995 / 0.101 19.69 / 0.733 / 0.353 16.80 / 0.992 / 0.147 19.06 / 0.783 / 0.281 18.05 / 0.987 / 0.167
+
+initialization. Additionally, we construct MoSca-M, which uses MVTracker [44] for multi-view 3D point tracking. To validate the necessity of our initialization strategy, we compare against D3DGS [68], a prior-free method for monocular dynamic-camera 4D reconstruction. D3DGS warps canonical Gaussians over time with a deformation MLP and is optimized using only photometric losses. Since our sparse dynamic-camera setup has camera counts comparable to dense fixed-camera settings, we also compare against FTGS [59], a state-of-the-art method for dense fixed-camera 4D reconstruction that models complex motion by varying Gaussian positions and opacities. For fair comparison, we prepare D3DGS* and FTGS* variants that use the same static/dynamic Gaussian separa-tion as our method, with both variants using the original 3DGS [18] for static Gaussians. 
+
+5.3. Metrics 
+
+We evaluate reconstruction quality via novel-view synthe-sis. Specifically, we train with three dynamic cameras and render the held-out fixed-camera view. We then compare rendered images with ground truth using PSNR, SSIM, and LPIPS [74]. We report each metric on the full image (Full) and on dynamic regions (Dynamic). Dynamic regions are defined as the union of the dynamic object mask from Sec. 4 and an optical-flow-magnitude mask obtained by threshold-ing flow magnitude between adjacent frames. 
+
+Co-visibility mask. To evaluate only regions co-visible in the training and evaluation views, we apply a co-visibility mask to both rendered and ground-truth images before met-ric computation. Unlike [7], which estimates co-visibility using forward-backward optical-flow consistency, we com-pute co-visibility by back-projecting points from training views into the evaluation view and checking visibility. This is important in our setting because the evaluation camera is farther from the training cameras, where flow-based checks tend to underestimate co-visible regions. Although this method can produce sparse masks in some cases, it more accurately identifies truly co-visible regions and therefore yields a more meaningful evaluation. Metric computation with masks otherwise follows [7]. We additionally apply several morphological opening and closing operations to obtain denser co-visibility masks. Following [29], we com-pute metrics under the assumption that dynamic regions are always visible. 
+
+Cameraman exclusion. While cameramans are rarely seen in the training views, they are visible in the evaluation view. To assess the reconstruction quality of the target dynamic objects without bias from the cameraman, we exclude cam-eraman regions from metric computation. We use the dy-namic object mask from Sec. 4 to exclude cameraman re-gions. 
+
+## 6. Experiments and Results 
+
+6.1. Benchmarking on LetCamsGo 
+
+All experiments are conducted at 30 FPS and at half FHD resolution. Quantitative and qualitative results on the Let-CamsGo benchmark are shown in Table 2, Fig. 1, and Fig. 5, respectively. Additional visualizations are provided in the supplementary videos. D3DGS is not included since it runs out of memory due to the significant increase in the number of Gaussians. Compared to naive MoSca baselines, our method im-proves almost all metrics across scenes, with only a few SSIM exceptions. Gains are largest in difficult cases such as Lunch (independent camera motion with large baselines) and Walking /Bench (large global motion of both cameras and subjects). We attribute this to our multi-view-consistent 3D track initialization: intra-camera tracking propagates correspondences over time and aggregates evidence from all frames, even when per-timestep multi-view cues are sparse. Although MVTracker is robust to noisy depth, it is trained mainly on fixed-camera datasets, so it generalizes poorly MoSca -M
+
+MoSca 
+
+Ground Truth 
+
+D3DGS* Ours 
+
+FTGS* 
+
+MoSca 
+
+MoSca -MGround Truth 
+
+D3DGS* Ours 
+
+FTGS* 
+
+MoSca 
+
+MoSca -MGround Truth 
+
+D3DGS* Ours 
+
+FTGS* 
+
+MoSca 
+
+MoSca -MGround Truth 
+
+D3DGS* Ours 
+
+FTGS* Figure 5. Qualitative Results on LetCamsGo . Excluded regions from quantitative evaluation are masked in white. when both cameras and subjects move substantially. This is consistent with our quantitative results, where MoSca-M yields worse LPIPS than MoSca under dynamic settings. FTGS* is competitive when baseline dynamics are small and initial correspondences are stable. Its flexible Gaus-sian deformation achieves strong pixel-level alignment, re-flected by relatively high PSNR/SSIM in scenes such as 
+
+Blackboard and Bench . However, because FTGS* does not explicitly leverage long-range temporal information, it struggles with fast motion and produces blurrier, less tem-porally consistent reconstructions (Fig. 5), along with con-sistently higher LPIPS than ours. By integrating visual in-formation over all timesteps, our method produces sharper and more coherent results, especially under large baseline changes (e.g., Lunch , Play ) and challenging camera trajec-tories (e.g., backward motion in Walking ), where it achieves higher PSNR and markedly lower LPIPS. D3DGS* is robust to local motion but misses fine-grained dynamics. In Lunch , our reconstruction better preserves the right-hand details of the central and right-most subjects. In Play , D3DGS* reconstructs torso ap-pearance reasonably well but suppresses motion, resulting in near-static behavior. More importantly, D3DGS* signif-icantly degrades reconstruction quality when subjects un-dergo large global motion. These results suggest that, in sparse dynamic-camera settings, having many viewpoints across time is still insufficient when warp-based optimiza-tion relies only on photometric loss and a simple motion field (e.g., an MLP). A flexible motion field (e.g., MoSca) and a strong initialization prior are both critical, and our framework with spatiotemporally consistent 3D-track ini-tialization provides this prior effectively. 
+
+6.2. Ablation Study 
+
+All quantitative results in this section are averaged across all scenes. 
+
+3D Track Initialization. We ablate our spatiotemporal 3D track initialization: epipolar constrain check (Epi) and tri-angulation (Tri). Results are shown in Table 3. The ta-ble shows that the proposed epipolar constraint check and triangulation-based depth estimation are effective. 
+
+Depth Loss. We further ablate the depth loss design, as shown in Table 4. The results show that the ordinal depth loss is more effective than the normalized depth loss, and both are better than not using depth loss. 
+
+Batch Sampling. We further ablate the batch sampling strategy. Table 5 shows that sampling from different views and different timesteps yields the best overall performance. We hypothesize that this setting generalizes best during op-timization because it exposes the model to broader spa-tiotemporal variation. 
+
+Camera Setup. We validate the effectiveness of the sparse dynamic camera setup by comparing it with a monocular 
+
+Table 3. Ablation on 3D track initialization. Epi denotes epipo-lar constraint check, and Tri denotes triangulation. ✓/✗indicate whether each process is enabled.                                     
+
+> Full Dynamic Epi Tri PSNR ↑SSIM ↑LPIPS ↓PSNR ↑SSIM ↑LPIPS ↓
+> ✗✗18.46 0.773 0.297 15.40 0.984 0.246
+> ✓✗18.42 0.772 0.299 15.51 0.984 0.252
+> ✗✓18.71 0.777 0.292 17.65 0.987 0.184
+> ✓✓19.06 0.783 0.281 18.05 0.987 0.167
+
+Table 4. Ablation on depth loss.                         
+
+> Full Dynamic PSNR ↑SSIM ↑LPIPS ↓PSNR ↑SSIM ↑LPIPS ↓
+> W/o Depth Loss 18.95 0.766 0.285 18.25 0.990 0.148 Normalized Depth Loss 18.97 0.767 0.288 18.27 0.990 0.147 Ordinal Depth Loss 19.02 0.768 0.282 18.36 0.990 0.144
+
+Table 5. Ablation of batch sampling strategies. S/D denote sampling from the same/different view and the same/different timestep, respectively.                              
+
+> Full Dynamic View Time PSNR ↑SSIM ↑LPIPS ↓PSNR ↑SSIM ↑LPIPS ↓
+> SD18.92 0.767 0.290 18.31 0.990 0.146 DS18.86 0.767 0.286 18.33 0.990 0.148 DD19.02 0.768 0.282 18.36 0.990 0.144
+
+dynamic-camera setup, where training uses the single cam-era that has the largest overlap with the evaluation camera among the three dynamic cameras. As shown in Fig. 1, the monocular setup suffers from depth ambiguity whereas the sparse dynamic camera setup alleviates these issues by providing additional viewpoints. Notably, a direct multi-view extension of MoSca performs qualitatively worse than the monocular baseline. In contrast, our method with spatiotemporally consistent 3D track initialization achieves substantially better results than both baselines. 
+
+## 7. Conclusion 
+
+This paper introduces 4D reconstruction from sparse dy-namic cameras, a practical yet underexplored setup where a small number of independently moving cameras capture the same dynamic scene. To address the spatiotemporal incon-sistencies that limit naive extensions of existing methods, we proposed a unified framework with three key compo-nents: multi-view consistent 3D track initialization, noise-robust depth-order regularization, and spatiotemporally di-verse batch sampling. To support rigorous evaluation in this setting, we presented LetCamsGo, a real-world bench-mark with five sequences across four diverse environments, captured by three dynamic cameras and one fixed evalua-tion camera. Comprehensive experiments showed that our method consistently improves reconstruction quality, espe-cially in dynamic regions and challenging motion scenarios, compared with representative baselines. Acknowledgements. We would like to thank Yuki Asukabe, Ryosuke Yokoya, Kanae Hirao, Kohei Kawanishi, Tomoyuki Minani, Tomoaki Satsuka, and Hiroshi Arai for their assistance with dataset collection. 
+
+## References 
+
+[1] ATOMOS. UltraSync. https://www.atomos.com/ wireless-sync/ , 2025. 5, 1 [2] Jeongmin Bae, Seoha Kim, Youngsik Yun, Hahyun Lee, Gun Bang, and Youngjung Uh. Per-Gaussian Embedding-Based Deformation for Deformable 3D Gaussian Splatting. In ECCV , 2024. 3 [3] Jianhong Bai, Menghan Xia, Xiao Fu, Xintao Wang, Lianrui Mu, Jinwen Cao, Zuozhu Liu, Haoji Hu, Xiang Bai, Pengfei Wan, and Di Zhang. Recammaster: Camera-controlled gen-erative rendering from a single video. In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) , pages 14834–14844, 2025. 3, 1 [4] Michael Broxton, John Flynn, Ryan Overbeck, Daniel Erick-son, Peter Hedman, Matthew Duvall, Jason Dourgarian, Jay Busch, Matt Whalen, and Paul Debevec. Immersive light field video with a layered mesh representation, 2020. 3 [5] Holger Caesar, Varun Bankiti, Alex H. Lang, Sourabh Vora, Venice Erin Liong, Qiang Xu, Anush Krishnan, Yu Pan, Gi-ancarlo Baldan, and Oscar Beijbom. nuscenes: A multi-modal dataset for autonomous driving. In CVPR , 2020. 3, 1[6] Perazzi Federico, Jordi Pont-Tuset, Brian McWilliams, Luc Van Gool, Markus Gross, and Alexander Sorkine-Hornung. A benchmark dataset and evaluation methodology for video object segmentation. In CVPR , 2016. 3 [7] Hang Gao, Ruilong Li, Shubham Tulsiani, Bryan Russell, and Angjoo Kanazawa. Monocular dynamic view synthesis: A reality check. In NeurIPS , pages 33768–33780, 2022. 3, 6, 1 [8] Sharath Girish, Tianye Li, Amrita Mazumdar, Abhinav Shri-vastava, David Luebke, and Shalini De Mello. QUEEN: QUantized efficient ENcoding for streaming free-viewpoint videos. In NeurIPS , 2024. 3 [9] Kristen Grauman, Andrew Westbury, Eugene Byrne, Zachary Chavis, Antonino Furnari, Rohit Girdhar, Jackson Hamburger, Hao Jiang, Miao Liu, Xingyu Liu, Miguel Mar-tin, Tushar Nagarajan, Ilija Radosavovic, Santhosh Kumar Ramakrishnan, Fiona Ryan, Jayant Sharma, Michael Wray, Mengmeng Xu, Eric Zhongcong Xu, Chen Zhao, Siddhant Bansal, Dhruv Batra, Vincent Cartillier, Sean Crane, Tien Do, Morrie Doulaty, Akshay Erapalli, Christoph Feichten-hofer, Adriano Fragomeni, Qichen Fu, Abrham Gebrese-lasie, Cristina Gonz´ alez, James Hillis, Xuhua Huang, Yifei Huang, Wenqi Jia, Weslie Khoo, J´ achym Kol´ aˇ r, Satwik Kot-tur, Anurag Kumar, Federico Landini, Chao Li, Yanghao Li, Zhenqiang Li, Karttikeya Mangalam, Raghava Modhugu, Jonathan Munro, Tullie Murrell, Takumi Nishiyasu, Will Price, Paola Ruiz, Merey Ramazanova, Leda Sari, Kiran Somasundaram, Audrey Southerland, Yusuke Sugano, Rui-jie Tao, Minh Vo, Yuchen Wang, Xindi Wu, Takuma Yagi, Ziwei Zhao, Yunyi Zhu, Pablo Arbel´ aez, David Crandall, Dima Damen, Giovanni Maria Farinella, Christian Fuegen, Bernard Ghanem, Vamsi Krishna Ithapu, C. V. Jawahar, Han-byul Joo, Kris Kitani, Haizhou Li, Richard Newcombe, Aude Oliva, Hyun Soo Park, James M. Rehg, Yoichi Sato, Jianbo Shi, Mike Zheng Shou, Antonio Torralba, Lorenzo Torre-sani, Mingfei Yan, and Jitendra Malik. Ego4d: Around the world in 3,000 hours of egocentric video. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 18995–19012, 2022. 3, 1 [10] Yamato Hokari, Ryosuke Hori, and Hideo Saito. Human Mesh Reconstruction of Sports Players with Multiple Dy-namic Cameras. In CVPRW , pages 6039–6049, 2025. 3 [11] Qiang Hu, Zihan Zheng, Houqiang Zhong, Sihua Fu, Li Song, Xiaoyun Zhang, Guangtao Zhai, and Yanfeng Wang. 4DGC: Rate-Aware 4D Gaussian Compression for Efficient Streamable Free-Viewpoint Video. In CVPR , pages 875– 885, 2025. 3 [12] Wenbo Hu, Xiangjun Gao, Xiaoyu Li, Sijie Zhao, Xiaodong Cun, Yong Zhang, Long Quan, and Ying Shan. Depthcrafter: Generating consistent long depth sequences for open-world videos. In CVPR , 2025. 4 [13] Yi-Hua Huang, Yang-Tian Sun, Ziyi Yang, Xiaoyang Lyu, Yan-Pei Cao, and Xiaojuan Qi. SC-GS: Sparse-Controlled Gaussian Splatting for Editable Dynamic Scenes. In CVPR ,pages 4220–4230, 2024. 3 [14] Zihao Huang, Shoukang Hu, Guangcong Wang, Tianqi Liu, Yuhang Zang, Zhiguo Cao, Wei Li, and Ziwei Liu. Wil-davatar: Learning in-the-wild 3d avatars from the web. In 
+
+CVPR , 2025. 3 [15] Zeren Jiang, Chuanxia Zheng, Iro Laina, Diane Larlus, and Andrea Vedaldi. Geo4D: Leveraging Video Generators for Geometric 4D Scene Reconstruction. In ICCV , pages 20658–20671, 2025. 3 [16] Lin Jing, Ailing Zeng, Shunlin Lu, Yuanhao Cai, Ruimao Zhang, Haoqian Wang, and Lei Zhang. Motion-x: A large-scale 3d expressive whole-body human motion dataset. In 
+
+NeurIPS , 2023. 3 [17] Hanbyul Joo, Hao Liu, Lei Tan, Lin Gui, Bart Nabbe, Iain Matthews, Takeo Kanade, Shohei Nobuhara, , and Yaser Sheikh. Panoptic studio: A massively multiview system for social motion capture. In ICCV , 2015. 3 [18] Bernhard Kerbl, Georgios Kopanas, Thomas Leimk¨ uhler, and George Drettakis. 3d gaussian splatting for real-time radiance field rendering. ACM Transactions on Graphics , 42 (4), 2023. 2, 3, 5, 6 [19] Bernhard Kerbl, Andreas Meuleman, Georgios Kopanas, Michael Wimmer, Alexandre Lanvin, and George Drettakis. A hierarchical 3d gaussian representation for real-time ren-dering of very large datasets. ACM Transactions on Graph-ics , 43(4), 2024. 1 [20] Jiahui Lei, Yijia Weng, Adam Harley, Leonidas Guibas, and Kostas Daniilidis. Mosca: Dynamic gaussian fusion from casual videos via 4d motion scaffolds. In CVPR , pages 6165– 6177, 2025. 1, 2, 3, 4, 5, 6 [21] Vincent Leroy, Yohann Cabon, and Jerome Revaud. Ground-ing Image Matching in 3D with MASt3R. In ECCV , 2024. 2, 4 [22] Hao Li, Sicheng Li, Xiang Gao, Abudouaihati Batuer, Lu Yu, and Yiyi Liao. Gifstream: 4d gaussian-based immersive video with feature stream. In CVPR , pages 21761–21770, 2025. 3 [23] Lingzhi Li, Zhen Shen, Zhongshu Wang, Li Shen, and Ping Tan. Streaming radiance fields for 3d video synthesis. In 
+
+NeurIPS , 2022. [24] Tianye Li, Mira Slavcheva, Michael Zollhoefer, Simon Green, Christoph Lassner, Changil Kim, Tanner Schmidt, Steven Lovegrove1 Michael Goesele, Richard Newcombe, and Zhaoyang Lv. Neural 3d video synthesis from multi-view video. In CVPR , 2022. 3, 1 [25] Yiwei Li, Jiannong Cao, Penghui Ruan, Divya Saxena, Songye Zhu, and Yinfeng Cao. Geometry-consistent 4d gaussian splatting for sparse-input dynamic view synthesis. 
+
+arXiv preprint arXiv:2511.23044 , 2025. 5 [26] Zhengqi Li, Simon Niklaus, Noah Snavely, and Oliver Wang. Neural scene flow fields for space-time view synthesis of dy-namic scenes. In CVPR , 2021. 3, 1 [27] Zhan Li, Zhang Chen, Zhong Li, and Yi Xu. Spacetime gaus-sian feature splatting for real-time dynamic view synthesis. In CVPR , pages 8508–8520, 2024. 3 [28] Hanxue Liang, Jiawei Ren, Ashkan Mirzaei, Antonio Tor-ralba, Ziwei Liu, Igor Gilitschenski, Sanja Fidler, Cengiz Oztireli, Huan Ling, Zan Gojcic, and Jiahui Huang. Feed-Forward Bullet-Time Reconstruction of Dynamic Scenes from Monocular Videos. arXiv preprint arXiv:2412.03526 ,2024. 3 [29] Yiming Liang, Tianhan Xu, and Yuta Kikuchi. HiMoR: Monocular deformable gaussian reconstruction with hierar-chical motion representation. In CVPR , 2025. 2, 3, 6 [30] Chenguo Lin, Yuchen Lin, Panwang Pan, Yifan Yu, Hon-glei Yan, Katerina Fragkiadaki, and Yadong Mu. MoVieS: Motion-Aware 4D Dynamic View Synthesis in One Second. 
+
+arXiv preprint arXiv:2507.10065 , 2025. 3 [31] Haotong Lin, Sida Peng, Zhen Xu, Yunzhi Yan, Qing Shuai, Hujun Bao, and Xiaowei Zhou. Efficient neural radiance fields for interactive free-viewpoint video. In SIGGRAPH Asia , 2022. 3 [32] Haotong Lin, Sili Chen, Jun Hao Liew, Donny Y. Chen, Zhenyu Li, Guang Shi, Jiashi Feng, and Bingyi Kang. Depth anything 3: recovering the visual space from any views. 
+
+arXiv preprint arXiv:2511.10647 , 2025. 2, 3, 4, 5 [33] Mufan Liu, Qi Yang, Miaoran Zhao, He Huang, Le Yang, Zhu Li, and Yiling Xu. D2GV: Deformable 2D Gaus-sian Splatting for Video Representation in 400FPS. arXiv preprint arXiv:2503.05600 , 2025. 3 [34] Qingming LIU, Yuan Liu, Jiepeng Wang, Xianqiang Lyu, Peng Wang, Wenping Wang, and Junhui Hou. MoDGS: Dy-namic gaussian splatting from casually-captured monocular videos with depth priors. In The Thirteenth International Conference on Learning Representations , 2025. 3, 5 [35] Zhicheng Lu, Xiang Guo, Le Hui, Tianrui Chen, Ming Yang, Xiao Tang, Feng Zhu, and Yuchao Dai. 3D Geometry-aware Deformable Gaussian Splatting for Dynamic View Synthe-sis. In CVPR , 2024. 3 [36] Jonathon Luiten, Georgios Kopanas, Bastian Leibe, and Deva Ramanan. Dynamic 3D Gaussians: Tracking by Per-sistent Dynamic View Synthesis. In 3DV , 2024. 3 [37] Hidenobu Matsuki, Gwangbin Bae, and Andrew Davison. 4DTAM: Non-Rigid Tracking and Mapping via Dynamic Surface Gaussians. In CVPR , 2025. 3 [38] Marko Mihajlovic, Sergey Prokudin, Siyu Tang, Robert Maier, Federica Bogo, Tony Tung, and Edmond Boyer. SplatFields: Neural gaussian splats for sparse 3d and 4d re-construction. In ECCV . Springer, 2024. 3 [39] Ben Mildenhall, Pratul P. Srinivasan, Matthew Tancik, Jonathan T. Barron, Ravi Ramamoorthi, and Ren Ng. Nerf: Representing scenes as neural radiance fields for view syn-thesis. In ECCV , 2020. 2 [40] A. Mustafa, H. Kim, J-Y. Guillemaut, and A. Hilton. Tempo-rally coherent 4d reconstruction of complex dynamic scenes. In CVPR , 2016. 3 [41] Nikita Karaev and Iurii Makarov and Jianyuan Wang and Na-talia Neverova and Andrea Vedaldi and Christian Rupprecht. CoTracker3: Simpler and Better Point Tracking by Pseudo-Labelling Real Videos. arXiv preprint arXiv:2410.11831 ,2024. 2, 4, 5, 6 [42] Luigi Piccinelli, Yung-Hsu Yang, Christos Sakaridis, Mattia Segu, Siyuan Li, Luc Van Gool, and Fisher Yu. UniDepth: Universal monocular metric depth estimation. In Proceed-ings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2024. 4 [43] Wang Qianqian, Vickie Ye, Hang Gao, Jake Austin, Zhengqi Li, and Angjoo Kanazawa. Shape of motion: 4d reconstruc-tion from a single video. In ICCV , 2025. 2, 3, 5 [44] Frano Rajiˇ c, Haofei Xu, Marko Mihajlovic, Siyuan Li, Irem Demir, Emircan G¨ undo˘ gdu, Lei Ke, Sergey Prokudin, Marc Pollefeys, and Siyu Tang. Multi-view 3d point tracking. In 
+
+Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) , 2025. 2, 3, 4, 6 [45] Nikhila Ravi, Valentin Gabeur, Yuan-Ting Hu, Ronghang Hu, Chaitanya Ryali, Tengyu Ma, Haitham Khedr, Roman R¨ adle, Chloe Rolland, Laura Gustafson, Eric Mintun, Junt-ing Pan, Kalyan Vasudev Alwala, Nicolas Carion, Chao-Yuan Wu, Ross Girshick, Piotr Doll´ ar, and Christoph Feicht-enhofer. Sam 2: Segment anything in images and videos. In 
+
+ICLR , 2025. 2, 5, 1 [46] Jiawei Ren, Kevin Xie, Ashkan Mirzaei, Hanxue Liang, Xi-aohui Zeng, Karsten Kreis, Ziwei Liu, Antonio Torralba, Sanja Fidler, Seung Wook Kim, and Huan Ling. L4GM: Large 4D Gaussian Reconstruction Model. In NeurIPS ,2024. 3 [47] Tianhe Ren, Shilong Liu, Ailing Zeng, Jing Lin, Kun-chang Li, He Cao, Jiayu Chen, Xinyu Huang, Yukang Chen, Feng Yan, Zhaoyang Zeng, Hao Zhang, Feng Li, Jie Yang, Hongyang Li, Qing Jiang, and Lei Zhang. Grounded sam: Assembling open-world models for diverse visual tasks, 2024. 5 [48] Chris Rockwell, Joseph Tung, Tsung-Yi Lin, Ming-Yu Liu, David F. Fouhey, and Chen-Hsuan Lin. Dynamic camera poses and where to find them. In CVPR , 2025. 3 [49] Neus Sabater, Guillaume Boisson, Benoit Vandame, Paul Kerbiriou, Frederic Babon, Matthieu Hog, Tristan Langlois, Remy Gendrot, Olivier Bureller, Arno Schubert, and Valerie Allie. Dataset and pipeline for multi-view light-field video. In CVPRW , 2017. 3 [50] Johannes Lutz Sch¨ onberger and Jan-Michael Frahm. Structure-from-motion revisited. In CVPR , pages 4104– 4113, 2016. 5, 1 [51] Xuelun Shen, Zhipeng Cai, Wei Yin, Matthias M¨ uller, Zijun Li, Kaixuan Wang, Xiaozhi Chen, and Cheng Wang. Gim: Learning generalizable image matcher from internet videos. In ICLR , 2024. 2, 4 [52] SONY. α7S III. https://www.sony.jp/ichigan/ products/ILCE-7SM3/ , 2025. 1 [53] SONY. FX3. https://www.sony.jp/pro- cam/ products/ILME-FX3A/ , 2025. 1 [54] Pei Sun, Henrik Kretzschmar, Xerxes Dotiwalla, Aurelien Chouard, Vijaysai Patnaik, Paul Tsui, James Guo, Yin Zhou, Yuning Chai, Benjamin Caine, Vijay Vasudevan, Wei Han, Jiquan Ngiam, Hang Zhao, Aleksei Timofeev, Scott Et-tinger, Maxim Krivokon, Amy Gao, Aditya Joshi, Yu Zhang, Jonathon Shlens, Zhifeng Chen, and Dragomir Anguelov. Scalability in perception for autonomous driving: Waymo open dataset. In CVPR , 2020. 3 [55] Yang-Tian Sun, Yi-Hua Huang, Lin Ma, Xiaoyang Lyu, Yan-Pei Cao, and Xiaojuan Qi. Splatter a Video: Video Gaussian Representation for Versatile Processing. In NeurIPS , pages 50401–50425, 2024. 3 [56] Timo von Marcard, Roberto Henschel, Michael Black, Bodo Rosenhahn, and Gerard Pons-Moll. Recovering accurate 3d human pose in the wild using imus and a moving camera. In 
+
+ECCV , 2018. 3 [57] Jiong Wang, Fengyu Yang, Bingliang Li, Wenbo Gou, Danqi Yan, Ailing Zeng, Yijun Gao, Junle Wang, Yanqing Jing, and Ruimao Zhang. Freeman: Towards benchmarking 3d human pose estimation under real-world conditions. In CVPR , 2024. 3[58] Yiming Wang, Lucy Chai, Xuan Luo, Michael Niemeyer, Manuel Lagunas, Stephen Lombardi, Siyu Tang, and Tiancheng Sun. SplatVoxel: History-Aware Novel View Streaming without Temporal Training. arXiv preprint arXiv:2503.14698 , 2025. 3 [59] Yifan Wang, Peishan Yang, Zhen Xu, Jiaming Sun, Zhan-hua Zhang, Yong Chen, Hujun Bao, Sida Peng, and Xiaowei Zhou. FreeTimeGS: Free Gaussian Primitives at Anytime Anywhere for Dynamic Scene Reconstruction. In CVPR ,2025. 1, 2, 3, 5, 6 [60] Zihan Wang, Jeff Tan, Tarasha Khurana, Neehar Peri, and Deva Ramanan. Monofusion: Sparse-view 4d reconstruction via monocular fusion. In ICCV , 2025. 5 [61] Diankun Wu, Fangfu Liu, Yi-Hsin Hung, Yue Qian, Xi-aohang Zhan, and Yueqi Duan. 4D-Fly: Fast 4D Recon-struction from a Single Monocular Video. In CVPR , pages 16663–16673, 2025. 3 [62] Guanjun Wu, Taoran Yi, Jiemin Fang, Lingxi Xie, Xiaopeng Zhang, Wei Wei, Wenyu Liu, Qi Tian, and Xinggang Wang. 4D Gaussian Splatting for Real-Time Dynamic Scene Ren-dering. In CVPR , pages 20310–20320, 2024. 3, 5 [63] Yuxi Xiao, Qianqian Wang, Shangzhan Zhang, Nan Xue, Sida Peng, Yujun Shen, and Xiaowei Zhou. Spatialtracker: Tracking any 2d pixels in 3d space. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , 2024. 4 [64] Mengjie Xu, Yitao Zhu, Haotian Jiang, Jiaming Li, Zhen-rong Shen, Sheng Wang, Haolin Huang, Xinyu Wang, Qing Yang, Han Zhang, and Qian Wang. Mitracker: Multi-view integration for visual object tracking. In CVPR , 2025. 3 [65] Zhen Xu, Yinghao Xu, Zhiyuan Yu, Sida Peng, Jiaming Sun, Hujun Bao, and Xiaowei Zhou. Representing long volumet-ric video with temporal gaussian hierarchy. ACM TOG , 43 (6):1–18, 2024. 3 [66] Jinbo Yan, Rui Peng, Zhiyan Wang, Luyang Tang, Jiayu Yang, Jie Liang, Jiahao Wu, and Ronggang Wang. In-stant Gaussian Stream: Fast and Generalizable Streaming of Dynamic Scene Reconstruction via Gaussian Splatting. In 
+
+CVPR , pages 16520–16531, 2025. 3 [67] Lihe Yang, Bingyi Kang, Zilong Huang, Zhen Zhao, Xiao-gang Xu, Jiashi Feng, and Hengshuang Zhao. Depth any-thing v2. arXiv:2406.09414 , 2024. 4 [68] Ziyi Yang, Xinyu Gao, Wen Zhou, Shaohui Jiao, Yuqing Zhang, and Xiaogang Jin. Deformable 3d gaussians for high-fidelity monocular dynamic scene reconstruction. In CVPR ,pages 20331–20341, 2024. 1, 3, 5, 6 [69] Zeyu Yang, Zijie Pan, Xiatian Zhu, Li Zhang, Jianfeng Feng, Yu-Gang Jiang, and Philip HS Torr. 4d gaussian splatting: Modeling dynamic scenes with native 4d primitives. arXiv preprint , 2024. 3 [70] Zeyu Yang, Hongye Yang, Zijie Pan, and Li Zhang. Real-time Photorealistic Dynamic Scene Representation and Ren-dering with 4D Gaussian Splatting. In ICLR , 2024. 3 [71] Zhengxian Yang, Shi Pan, Shengqi Wang, Haoxiang Wang, Li Lin, Guanjun Li, Zhengqi Wen, Borong Lin, Jianhua Tao, and Tao Yu. Imvid: Immersive volumetric videos for en-hanced vr engagement. In CVPR , 2025. 3, 1 [72] Jihwan Yoon, Sangbeom Han, Jaeseok Oh, and Minsik Lee. SplineGS: Learning smooth trajectories in gaussian splatting for dynamic scene reconstruction. In ICLR poster , 2025. 3 [73] Chao Zhang, Yifeng Zhou, Shuheng Wang, Wenfa Li, Degang Wang, Yi Xu, and Shaohui Jiao. EvolvingGS: High-Fidelity Streamable Volumetric Video via Evolving 3D Gaussian Representation. arXiv preprint arXiv:2503.05162 ,2025. 3 [74] Richard Zhang, Phillip Isola, Alexei A Efros, Eli Shechtman, and Oliver Wang. The unreasonable effectiveness of deep features as a perceptual metric. In CVPR , 2018. 6 [75] Zetong Zhang, Manuel Kaufmann, Lixin Xue, Jie Song, and Martin R. Oswald. ODHSR: Online Dense 3D Reconstruc-tion of Humans and Scenes from Monocular Videos. In 
+
+CVPR , pages 21824–21835, 2025. 3 [76] Chengwei Zheng, Lixin Xue, Juan Zarate, and Jie Song. GauSTAR: Gaussian Surface Tracking and Reconstruction. In CVPR , pages 16543–16553, 2025. 3 [77] Shunyuan Zheng, Boyao Zhou, Ruizhi Shao, Boning Liu, Shengping Zhang, Liqiang Nie, and Yebin Liu. GPS-Gaussian: Generalizable Pixel-wise 3D Gaussian Splatting for Real-time Human Novel View Synthesis. In CVPR , 2024. 34D Reconstruction from Sparse Dynamic Cameras 
+
+# Supplementary Material 
+
+## 8. Details of LetCamsGo 
+
+8.1. Data Acquisition 
+
+LetCamsGo is captured using three independently moving cameras that follow the subjects during recording, mim-icking realistic handheld or operator-driven capture scenar-ios. We use two Sony FX3 cameras [53] and two Sony 
+
+α7S III cameras [52], where three cameras act as dynamic cameras and one α7S III serves as a evaluation camera for benchmark. To ensure accurate camera intrinsics, we dis-able in-body image stabilization, which otherwise alters the effective optical center. Temporal synchronization across all cameras is achieved using UltraSync devices [1], which transmit a shared timecode via Bluetooth and embed iden-tical timestamps into each recording. 
+
+8.2. Dataset Characteristics 
+
+LetCamsGo features five sequences of realistic and chal-lenging everyday activities across four diverse environ-ments (classroom, lounge, bench, and road), producing a broad range of camera trajectories, viewpoints, and scene layouts. Table 6 summarizes the key characteristics of Let-CamsGo and major existing dynamic scene video datasets. Similar to [7], each sequence is relatively long (from 8 to 15 seconds), enabling long-term non-rigid motion and sus-tained interactions rather than short isolated actions [24, 26]. The scenes cover motion from subtle behaviors (e.g., eating lunch or discussing at a blackboard) to dynamic ac-tions (e.g., walking), and include 11 subjects interacting with each other and surrounding objects, yielding complex multi-object dynamics and frequent severe occlusions that highlight the importance of multi-view consistency. 
+
+8.3. Annotaion details 
+
+Camera poses. Accurate camera pose estimation is a crit-ical prerequisite for high-quality 4D reconstruction. To allow full reproducibility, we use the standard Structure-from-Motion (SfM) pipeline, e.g., COLMAP [50]. The problem under the sparse dynamic camera setup is the large number of images. Specifically, the total number of im-ages whose poses must be estimated scales as Ncam × Ntime ,where Ncam is the number of cameras and Ntime is the num-ber of time steps. In contrast, dense or sparse fixed-camera setups require estimating only Ncam poses, while monocular dynamic setups require estimating only Ntime poses. In our dataset, with three cameras recording at 60 FPS for 23 sec-onds, each sequence contains approximately 4,000 images. Estimating camera poses for such a large number of images, with exhaustive image matching quickly becomes computa-Dataset Multiple Dynamic? Independently Moving? Common Targets? Real? N3DV [24] ✗ - ✓ ✓                            
+
+> DyCheck [7] ✗-✓✓
+> nuScenes [5] ✓✗✗✓
+> ImVid [71] ✓✗✓✓
+> Ego4D [9] ✓✓✗✓
+> Multi-Cam Video [3] ✓✓✓✗
+> LetCamsGo (ours) ✓✓✓✓
+> Table 6. Comparison with major publicly available dynamic scene video datasets. Most datasets feature either multiple fixed cameras or a single dynamic camera. When multiple dynamic cameras are present, they are typically rig-mounted, which lim-its camera motion independence; moreover, some datasets lack common targets across cameras or are not captured in real-world settings. LetCamsGo uniquely provides multiple independently moving cameras that share common targets in real-world scenar-ios.
+
+tionally prohibitive and often leads to CPU memory exhaus-tion. Hence, we exploit the known temporal ordering of the images and adopt a temporal locality-aware matching strat-egy inspired by [19]. Specifically, instead of exhaustively matching all image pairs, we restrict feature matching to temporally nearby frames across cameras. For each im-age captured at time step i, we only match it to images at time steps i + 2 k, where k ∈ [0 , 10] , effectively covering both short- and long-range temporal correspondences while keeping the number of candidate pairs tractable. This tem-porally structured matching strategy substantially reduces computational cost while preserving sufficient multi-view geometric constraints for robust camera pose estimation. Obtained camera poses are visualized in Figure Fig. 4. 
+
+Dynamic object masks. In addition to camera poses, we provide semi-automatically extracted dynamic object masks for all sequences. We generate these masks us-ing SAM2 [45] by manually specifying prompt points for each dynamic object in a reference frame and automatically propagating the masks temporally across the sequence. This process is performed independently for each camera. The resulting dynamic masks serve two purposes. First, they are used to exclude dynamic regions during cam-era pose estimation, improving the robustness of structure-from-motion. Second, they enable explicit static/dynamic separation during 4D reconstruction, which is essential for accurately modeling dynamic scenes.
