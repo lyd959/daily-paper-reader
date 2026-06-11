@@ -1,0 +1,532 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-11T22:21:32.313375+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 2,
+    "deep_cap": 6,
+    "deep_selected": 2,
+    "quick_candidates": 15,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2606.12368v1",
+      "source": "arxiv",
+      "title": "DepthMaster: Unified Monocular Depth Estimation for Perspective and Panoramic Images",
+      "abstract": "While monocular depth estimation has achieved significant progress, achieving generalized metric depth estimation for both narrow field-of-view (FoV) perspectives and $360^\\circ$ panoramas remains an unsolved challenge. Existing methods are often tailored to specific camera types and struggle to produce accurate metric depth that generalizes across diverse settings. This limitation stems from two key challenges: the inherent geometric discrepancy between perspective and panoramic cameras, and the scarcity of panoramic training data with metric annotations. In this work, we introduce DepthMaster, a unified metric depth estimation framework. Rather than employing specialized networks to learn spherical distortions, we reformulate the problem by decomposing panoramic images into overlapping perspective patches. Crucially, distinct from prior projection-based methods that rely on ad-hoc architectural modifications to handle boundaries, we introduce a novel Correspondence Consistency Loss (CCL) and inject virtual projection cameras as geometric priors, allowing us to seamlessly stitch the patches while avoiding specialized operators and keeping the backbone largely compatible with standard Transformer designs. This strategy also resolves the geometric differences by unifying all inputs into a canonical perspective representation, and effectively circumvents data scarcity by directly unlocking powerful metric priors from vast perspective datasets. Trained on a mixed dataset that contains only one panorama dataset, DepthMaster achieves state-of-the-art zero-shot performance on 13 diverse datasets, outperforming not only universal methods but also leading specialist models in both perspective and panoramic domains.",
+      "authors": [
+        "Pengfei Wang",
+        "Shihao Wang",
+        "Liyi Chen",
+        "Zhiyuan Ma",
+        "Guowen Zhang",
+        "Lei Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-10T17:35:23+00:00",
+      "link": "https://arxiv.org/pdf/2606.12368v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Metric depth estimation for physical size measurement",
+      "llm_evidence_cn": "度量深度估计用于物理尺寸测量",
+      "llm_evidence": "度量深度估计用于物理尺寸测量",
+      "canonical_evidence": "度量深度估计用于物理尺寸测量",
+      "llm_tldr_en": "DepthMaster proposes a unified metric depth estimation framework for both perspective and panoramic images, addressing the challenge of generalized metric depth without specialized networks, enabling accurate physical scale recovery from diverse camera inputs.",
+      "llm_tldr_cn": "单眼深度估计在窄视场和全景相机上难以获得统一的度量深度。本文提出DepthMaster框架，通过重新公式化问题而非引入专用网络，统一处理透视和全景图像的度量深度估计。实验表明该方法在多种设置下均能输出准确的度量深度，为需要物理尺寸的三维重建任务提供了关键基础，可广泛应用于机器人、自动驾驶和增强现实等领域。",
+      "llm_tldr": "单眼深度估计在窄视场和全景相机上难以获得统一的度量深度。本文提出DepthMaster框架，通过重新公式化问题而非引入专用网络，统一处理透视和全景图像的度量深度估计。实验表明该方法在多种设置下均能输出准确的度量深度，为需要物理尺寸的三维重建任务提供了关键基础，可广泛应用于机器人、自动驾驶和增强现实等领域。",
+      "llm_tags": [
+        "query:mdr"
+      ],
+      "matched_query_tag": "query:mdr",
+      "matched_query_text": "metric 3D reconstruction estimating physical size",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.11601v1",
+      "source": "arxiv",
+      "title": "Spatially Coupled Phase-to-Depth Calibration for Fringe Projection Profilometry",
+      "abstract": "In fringe projection profilometry (FPP), depth is commonly recovered by fitting a phase-to-depth relation independently at each camera pixel. Although such pixel-wise calibration achieves high local accuracy, neighboring pixels can acquire markedly different calibration functions even when they observe the same smooth surface, producing spatially inconsistent geometry and structured surface artifacts. We propose a spatially coupled phase-depth transformation in which all pixels share a single low-dimensional mapping-global phase scalars combined with affine spatial terms on the undistorted reference-camera grid-rather than independent per-pixel fits, optionally augmented by a bounded, spatially smooth correction field. We further introduce a native-grid pairing scheme that constructs phase-depth calibration pairs directly on the reference-camera grid: when depth supervision comes from a rectified active-stereo pipeline, planes are fitted in stereo 3D and sampled back onto the camera grid along native rays, so the phase maps are never rectified. On a dental target with high-resolution scanner ground truth, the proposed model attains point-to-surface RMSE comparable to an active-stereo reference (about 12μm aggregate) while substantially improving spatial coherence over pixel-wise polynomial and rational calibration, and reduces the runtime mapping to a few element-wise operations per pixel with negligible parameter storage.",
+      "authors": [
+        "Sehoon Tak",
+        "Jae-Sang Hyun"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-10T02:58:37+00:00",
+      "link": "https://arxiv.org/pdf/2606.11601v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "phase-to-depth calibration for accurate 3D measurement",
+      "llm_evidence_cn": "相位-深度校准用于精确三维测量",
+      "llm_evidence": "相位-深度校准用于精确三维测量",
+      "canonical_evidence": "相位-深度校准用于精确三维测量",
+      "llm_tldr_en": "Spatially coupled phase-to-depth calibration improves consistency and accuracy in fringe projection profilometry.",
+      "llm_tldr_cn": "条纹投影轮廓术的逐像素相位-深度校准会导致空间不一致和伪影，本文提出空间耦合相位-深度变换，所有像素共享低维映射（全局相位标量与仿射空间项），可选的平滑校正场进一步减少残差，在保持局部精度的同时消除结构伪影，提升三维测量的几何一致性和精度。",
+      "llm_tldr": "条纹投影轮廓术的逐像素相位-深度校准会导致空间不一致和伪影，本文提出空间耦合相位-深度变换，所有像素共享低维映射（全局相位标量与仿射空间项），可选的平滑校正场进一步减少残差，在保持局部精度的同时消除结构伪影，提升三维测量的几何一致性和精度。",
+      "llm_tags": [
+        "query:mdr"
+      ],
+      "matched_query_tag": "query:mdr",
+      "matched_query_text": "accuracy of 3D reconstruction in physical units",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.07932v1",
+      "source": "arxiv",
+      "title": "LEGS: Laplacian-Enhanced Gaussian Splatting with a Nonlinear Weighted Loss",
+      "abstract": "3D Gaussian Splatting (3DGS) has become an efficient explicit representation for radiance field reconstruction and real-time novel view synthesis. However, its standard photometric loss treats flat and structure-rich regions similarly, which may limit the recovery of sharp contours and fine details. Edge-Guided Gaussian Splatting (EGGS) improves structure awareness through edge-guided weighting, but mainly relies on first-order gradient responses and linear weighting. In this paper, we propose LEGS, a Laplacian-Enhanced Gaussian Splatting method with a nonlinearly weighted loss. LEGS replaces first-order gradient guidance with second-order Laplacian structural guidance and maps the normalized Laplacian response into pixel-wise weights through nonlinear response-to-weight functions. The proposed loss improves structure-aware Gaussian optimization while keeping the original 3DGS rendering pipeline unchanged. Experiments on the full Tanks\\&Temples and Mip-NeRF360 datasets show that LEGS improves peak signal-to-noise ratio (PSNR) by up to 1.68 dB over 3DGS and up to 0.52 dB over EGGS. Incorporating the proposed second-order nonlinear weighting strategy into FastGS and FasterGS further improves PSNR by up to 1.69 dB, demonstrating its effectiveness as a general loss-level extension for Gaussian Splatting pipelines with potential applications in AR/VR, immersive visualization, and real-time 3D content generation.",
+      "authors": [
+        "Yongfei Guo",
+        "Qizhou Huo",
+        "Xuan Sun",
+        "Yuanhao Gong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR",
+        "cs.MM",
+        "eess.IV",
+        "math.OC"
+      ],
+      "published": "2026-06-06T01:50:14+00:00",
+      "link": "https://arxiv.org/pdf/2606.07932v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Laplacian-Enhanced Gaussian Splatting for radiance field reconstruction",
+      "llm_evidence_cn": "拉普拉斯增强的高斯溅射辐射场重建",
+      "llm_evidence": "拉普拉斯增强的高斯溅射辐射场重建",
+      "canonical_evidence": "拉普拉斯增强的高斯溅射辐射场重建",
+      "llm_tldr_en": "LEGS improves 3DGS by replacing first-order edge guidance with second-order Laplacian structural guidance and nonlinear weighting for better detail recovery.",
+      "llm_tldr_cn": "针对高斯溅射对细节恢复不足的问题，论文提出LEGS方法，用二阶拉普拉斯结构引导取代一阶梯度响应，并通过非线性映射生成像素权重。该方法增强了锐利轮廓和精细结构的重建能力，同时保持了实时渲染效率。实验表明，LEGS在多个基准上优于现有高斯溅射变体，为辐射场重建提供了新的结构感知优化途径。",
+      "llm_tldr": "针对高斯溅射对细节恢复不足的问题，论文提出LEGS方法，用二阶拉普拉斯结构引导取代一阶梯度响应，并通过非线性映射生成像素权重。该方法增强了锐利轮廓和精细结构的重建能力，同时保持了实时渲染效率。实验表明，LEGS在多个基准上优于现有高斯溅射变体，为辐射场重建提供了新的结构感知优化途径。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.04376v1",
+      "source": "arxiv",
+      "title": "FUSE-Flow: A Decoupled Framework for Calibration and Stateless Real-Time Multi-View Point Cloud Fusion",
+      "abstract": "Real-time multi-camera 3D reconstruction is a key foundation for immersive media, remote interaction and spatial computing. While synchronized camera arrays are widely adopted, achieving geometrically consistent and scalable real-time reconstruction remains challenging. A key challenge is the close linkage among extrinsic calibration, multi-view fusion and global optimization, which causes fluctuating reconstruction results, cumulative errors and poor system expandability. We propose a decoupled framework for calibration and stateless real-time multi-view point cloud fusion (FUSE-Flow), a framework with two collaborative components: geometry-aligned multi-view extrinsic calibration (GMAC) and reliability-guided multi-view point cloud fusion (FUSE). This split design avoids conflicting optimization objectives for targeted improvement. The GMAC module refines camera extrinsics via geometric constraints and multi-view reconstruction transformers, enabling accurate sparse-view calibration without calibration targets, dense images or global bundle adjustment. The FUSE module integrates confidence weighting and adaptive spatial hashing for stateless fusion, ensuring linear time and memory consumption. The two modules mutually reinforce each other: accurate camera poses boost fusion accuracy, and confidence-aware fusion corrects calibration biases. Validated on public datasets and real camera setups, FUSE-Flow outperforms mainstream real-time reconstruction methods in visual effect, dynamic stability and scalability, providing a practical solution for large-scale real-time 3D reconstruction.",
+      "authors": [
+        "Chentian Sun"
+      ],
+      "primary_category": "eess.IV",
+      "categories": [
+        "eess.IV",
+        "cs.MM"
+      ],
+      "published": "2026-06-03T02:46:25+00:00",
+      "link": "https://arxiv.org/pdf/2606.04376v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "real-time multi-view point cloud fusion for 3D reconstruction",
+      "llm_evidence_cn": "实时多视角点云融合三维重建",
+      "llm_evidence": "实时多视角点云融合三维重建",
+      "canonical_evidence": "实时多视角点云融合三维重建",
+      "llm_tldr_en": "FUSE-Flow decouples calibration and fusion for stateless real-time multi-view point cloud reconstruction.",
+      "llm_tldr_cn": "针对实时多相机三维重建中标定与融合紧密耦合导致的累积误差和扩展性差问题，FUSE-Flow提出解耦框架，包含几何对齐多视图标定和可靠性引导多视图融合两个组件，实现了几何一致且可扩展的实时点云重建，支持沉浸式媒体和空间计算应用。",
+      "llm_tldr": "针对实时多相机三维重建中标定与融合紧密耦合导致的累积误差和扩展性差问题，FUSE-Flow提出解耦框架，包含几何对齐多视图标定和可靠性引导多视图融合两个组件，实现了几何一致且可扩展的实时点云重建，支持沉浸式媒体和空间计算应用。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "biorxiv-10-64898-2026-06-07-730757-v1",
+      "source": "biorxiv",
+      "title": "A multimodal dataset for reconstructing common marmoset body-environment interactions in a 3D digital-twin framework",
+      "abstract": "The common marmoset (Callithrix jacchus) is an important non-human primate model in neuroscience and biomedical research. However, existing 3D resources for this species have mainly focused on brain atlases or keypoint-based pose estimation, and reusable data resources that jointly describe the body surface, fur, articulated structure, and experimental environment remain limited. Here, we present a multimodal dataset designed to reconstruct body-environment interactions of common marmosets in three dimensions. The dataset includes a whole-body surface mesh derived from computed tomography (CT) images, fur representations based on photographic references, a rigged 3D model for pose-driven animation, synchronized behavioral videos from three individuals recorded for approximately 90 hours from eight view-points, 2D and 3D keypoint estimation data, 3D models of the experimental environment constructed from blueprint information, and rendered pseudo-egocentric views generated by integrating pose estimation results with the 3D body and environment models. Technical validation assessed the geometric agreement between the CT-derived mesh and the surface model, the accuracy of 2D and 3D keypoint estimation, the dimensional accuracy of the environment model, and the structural similarity between real and rendered images. This dataset provides a foundation for treating marmoset natural behavior not only as point trajectories but also as a three-dimensional phenomenon involving body shape and its spatial relationship with the environment, thereby enabling applications in behavioral analysis, visualization, synthetic-data generation, and future digital-twin studies.",
+      "authors": [
+        "Iwata, K.",
+        "Kaneko, T.",
+        "Caeiro, C. C.",
+        "Thomas, D.",
+        "Koketsu, D.",
+        "Nambu, A.",
+        "Miyabe-Nishiwaki, T.",
+        "Hata, J.",
+        "Nakae, K."
+      ],
+      "primary_category": "animal behavior and cognition",
+      "categories": [
+        "animal behavior and cognition"
+      ],
+      "published": "2026-06-11T00:00:00+00:00",
+      "link": "https://www.biorxiv.org/content/10.64898/2026.06.07.730757v1.full.pdf",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "multimodal dataset with CT-derived whole-body surface mesh for physical 3D reconstruction",
+      "llm_evidence_cn": "包含CT全身表面网格的多模态数据集，支持物理3D重建",
+      "llm_evidence": "包含CT全身表面网格的多模态数据集，支持物理3D重建",
+      "canonical_evidence": "包含CT全身表面网格的多模态数据集，支持物理3D重建",
+      "llm_tldr_en": "A dataset providing CT-derived mesh, fur, rigged model, and environment data for reconstructing marmoset body-environment interactions in 3D.",
+      "llm_tldr_cn": "该论文为普通狨猴的身体-环境交互重建提供了一个多模态数据集，包括基于CT的全身表面网格、毛皮表示、可驱动3D模型和同步环境数据。CT图像天然具有物理尺度，可直接用于度量3D重建评估。数据集填补了现有资源在体表、皮毛和可动结构联合描述方面的空白，为研究动物行为与神经科学的物理尺寸测量提供了基础。",
+      "llm_tldr": "该论文为普通狨猴的身体-环境交互重建提供了一个多模态数据集，包括基于CT的全身表面网格、毛皮表示、可驱动3D模型和同步环境数据。CT图像天然具有物理尺度，可直接用于度量3D重建评估。数据集填补了现有资源在体表、皮毛和可动结构联合描述方面的空白，为研究动物行为与神经科学的物理尺寸测量提供了基础。",
+      "llm_tags": [
+        "query:mdr:composite"
+      ],
+      "matched_query_tag": "query:mdr:composite",
+      "matched_query_text": "Papers central to 帮我查找三维重建方面的论文，需要的是能评估实际物理尺寸的，需要用于实际物理尺寸评估而不是为了重建更好看的论文, especially work that connects or combines: metric 3D reconstruction estimating physical size; absolute scale recovery in 3D reconstruction for physical measurement; physical size estimation from 3D reconstruction; real-world dimension measurement using 3D reconstruction; structure from motion with metric scale for size measurement; accuracy of 3D reconstruction in physical units; 3D reconstruction that recovers absolute physical dimensions for measurement purposes; metric 3D reconstruction methods focused on evaluating real world sizes rather than visual quality; physical scale estimation from images or video using 3D reconstruction techniques.",
+      "matched_requirement_id": "req-composite-mdr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.04593v1",
+      "source": "arxiv",
+      "title": "4D Reconstruction from Sparse Dynamic Cameras",
+      "abstract": "Although dynamic 3D (i.e., 4D) reconstruction from a monocular dynamic camera has recently advanced, it remains fundamentally limited by depth ambiguity. In this paper, we focus on an alternative practical way, i.e., sparse dynamic camera setup, where a handful of independently moving cameras capture the same subjects. While keeping capture costs low, this setup introduces multi-view constraints and remains practical for real-world video production such as sports, concerts, and TV shows. Despite its potential, our experiments show that naive extensions of existing monocular or dense-fixed camera-based methods are insufficient since they fail to resolve the complex spatiotemporal inconsistencies across views and time. To fill this gap, we propose a simple yet effective 3D track initialization method designed to ensure spatiotemporal consistency by integrating inter-camera feature matching with intra-camera point tracking. Additionally, we incorporate a noise-robust depth-ordering regularization loss and a spatiotemporally diverse batch sampling strategy to enhance optimization stability and cross-view generalization. Furthermore, to address the lack of standardized benchmarks for this task, we introduce LetCamsGo, a new real-world video dataset with 5 sequences across 4 diverse environments, recorded by three independently moving cameras and one fixed camera. Comprehensive benchmarking on LetCamsGo demonstrated that our proposed framework improves 4D reconstruction quality in dynamic regions compared with baselines, paving the way for a low-cost 4D reconstruction paradigm in the wild.",
+      "authors": [
+        "Kazuki Ozeki",
+        "Shun Kenney",
+        "Yuto Shibata",
+        "Eisuke Takeuchi",
+        "Takuya Narihira",
+        "Kazumi Fukuda",
+        "Ryosuke Sawata",
+        "Yuki Mitsufuji",
+        "Yoshimitsu Aoki"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-03T08:31:43+00:00",
+      "link": "https://arxiv.org/pdf/2606.04593v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "4D reconstruction from sparse dynamic cameras",
+      "llm_evidence_cn": "稀疏动态相机的4D重建",
+      "llm_evidence": "稀疏动态相机的4D重建",
+      "canonical_evidence": "稀疏动态相机的4D重建",
+      "llm_tldr_en": "This paper presents a 4D reconstruction method for sparse dynamic cameras, tackling complex spatiotemporal inconsistencies across independently moving views, enabling practical 3D video production for sports and concerts.",
+      "llm_tldr_cn": "虽然单目动态3D重建取得了进展，但深度模糊仍限制其应用。本文针对稀疏动态相机设置（如多台独立运动相机），提出一种有效方法解决视间和时间上的时空不一致性。通过3D轨迹优化实现4D重建。实验表明该方法优于现有扩展方案。该工作为低成本的动态场景3D重构提供了实用方案，适用于体育、演出等应用。",
+      "llm_tldr": "虽然单目动态3D重建取得了进展，但深度模糊仍限制其应用。本文针对稀疏动态相机设置（如多台独立运动相机），提出一种有效方法解决视间和时间上的时空不一致性。通过3D轨迹优化实现4D重建。实验表明该方法优于现有扩展方案。该工作为低成本的动态场景3D重构提供了实用方案，适用于体育、演出等应用。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.04891v1",
+      "source": "arxiv",
+      "title": "Hierarchical Space Partition for Surface Reconstruction",
+      "abstract": "Generating compact polygonal models from point clouds is a key problem in 3D vision and computer graphics. However, due to inherent limitations of LiDAR scanning (e.g. range constraints and occlusions), critical scene information is often missing, leading to degraded reconstruction accuracy. To address this, we propose a plane assembling strategy that effectively recovers missing details while maintaining model compactness. We classify all the planes extracted from the scene into three categories: highly visible, barely visible, and invisible. The invisible planes, which are recovered by scene structure analysis, indicate the missing details. The three types of planes correspond to the three growth priorities. Each plane grows according to the priority level, and the space is partitioned progressively, namely, the hierarchical partition. Subsequently, we generate a watertight polygonal mesh from the partition via a min-cut-based optimization. Finally, comparisons on public datasets show the effectiveness and superiority of our method against mainstream approaches. The project page is available at https://hsr-3dv.github.io/.",
+      "authors": [
+        "Minjie Tang",
+        "Xiangfei Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CG"
+      ],
+      "published": "2026-06-03T13:52:36+00:00",
+      "link": "https://arxiv.org/pdf/2606.04891v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Surface reconstruction from point clouds",
+      "llm_evidence_cn": "从点云进行表面重建",
+      "llm_evidence": "从点云进行表面重建",
+      "canonical_evidence": "从点云进行表面重建",
+      "llm_tldr_en": "Proposes a plane assembling strategy for surface reconstruction from point clouds, recovering missing details via scene structure analysis and hierarchical growth.",
+      "llm_tldr_cn": "激光雷达点云因扫描限制常缺失重要信息。本文提出一种平面组装策略，将场景中的平面分为高度可见、几乎不可见和不可见三类，通过场景结构分析恢复不可见平面。每种平面按优先级生长，生成紧凑的多边形模型。实验表明该方法能有效恢复缺失细节，提高重建精度。该工作为点云表面重建提供了更鲁棒的细节恢复方法。",
+      "llm_tldr": "激光雷达点云因扫描限制常缺失重要信息。本文提出一种平面组装策略，将场景中的平面分为高度可见、几乎不可见和不可见三类，通过场景结构分析恢复不可见平面。每种平面按优先级生长，生成紧凑的多边形模型。实验表明该方法能有效恢复缺失细节，提高重建精度。该工作为点云表面重建提供了更鲁棒的细节恢复方法。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.05035v1",
+      "source": "arxiv",
+      "title": "Anchor3R: Streaming 3D Reconstruction with Transient Anchors for Long-Horizon Visual Mapping",
+      "abstract": "Long-horizon online visual mapping is a core capability for robot perception, requiring continuous camera-motion and scene-geometry estimation from visual streams under bounded memory and computation. Recent feed-forward 3D reconstruction models provide strong geometric priors, but their streaming variants often predict poses in a fixed coordinate system tied to the first frame or a persistent scene memory. This fixed-gauge design leads to train--test mismatch, attention bias toward early anchors, and accumulated drift on sequences much longer than those seen during training. We propose \\emph{Anchor3R}, a streaming 3D reconstruction framework that treats feed-forward reconstruction as current-centric local measurement prediction rather than persistent global-gauge regression. At each time step, Anchor3R predicts window-relative poses and a local pointmap in the current-frame coordinate system, turning streaming reconstruction into relative-pose measurement generation. These measurements support online pose updates, while loop-closure reinsertion and motion averaging align the trajectory and transform local pointmaps into a coherent global reconstruction. Experiments on indoor, outdoor, driving, and RGB-D benchmarks show that Anchor3R improves long-horizon pose accuracy and dense reconstruction quality over existing streaming baselines, while supporting bounded-memory online inference.",
+      "authors": [
+        "Peilin Tao",
+        "Chong Cheng",
+        "Yuansen Du",
+        "Caiwei Song",
+        "Zhengqing Chen",
+        "Xiaoyang Guo",
+        "Wei Yin",
+        "Weiqiang Ren",
+        "Qian Zhang",
+        "Hainan Cui",
+        "Shuhan Shen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-03T16:00:13+00:00",
+      "link": "https://arxiv.org/pdf/2606.05035v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Streaming 3D reconstruction for visual mapping",
+      "llm_evidence_cn": "流式三维重建用于视觉映射",
+      "llm_evidence": "流式三维重建用于视觉映射",
+      "canonical_evidence": "流式三维重建用于视觉映射",
+      "llm_tldr_en": "Anchor3R proposes a streaming 3D reconstruction framework using transient anchors to avoid drift in long-horizon visual mapping, treating reconstruction as current-centric local measurement prediction.",
+      "llm_tldr_cn": "机器人长时域视觉映射需要连续估计相机运动和场景几何。现有流式3D重建方法因固定坐标系导致漂移。本文提出Anchor3R，将重建视为当前为中心的局部测量预测，引入瞬态锚点避免对早期帧的依赖。实验表明该方法在延长序列上显著减少漂移，实现稳定的在线映射。该框架适用于需要持续3D感知的机器人应用。",
+      "llm_tldr": "机器人长时域视觉映射需要连续估计相机运动和场景几何。现有流式3D重建方法因固定坐标系导致漂移。本文提出Anchor3R，将重建视为当前为中心的局部测量预测，引入瞬态锚点避免对早期帧的依赖。实验表明该方法在延长序列上显著减少漂移，实现稳定的在线映射。该框架适用于需要持续3D感知的机器人应用。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.05124v1",
+      "source": "arxiv",
+      "title": "Geometry Gaussians: Decoupling Appearance and Geometry in Gaussian Splatting",
+      "abstract": "After the success of 3D Gaussian Splatting (3DGS) for novel view synthesis, many works have explored how to also use it for geometric surface representation. However, extracting accurate geometric information directly from 3DGS remains challenging and can often reduce the appearance rendering quality. In this work, we show that 3DGS in its default form is inheritedly unsuited to represent texture and geometry at the same time, by training with complete ground-truth texture and geometry information. We also propose a simple solution by applying a single additional geometry opacity parameter to each splat, together with an optional transparency-curated optimization pipeline. Our experiments, both with ground-truth and vision foundation model geometric input, show that this change leads to improved rendering and geometry performance on a wide variety of dataset, and especially complex scenes with transparent objects benefit significantly from our method.",
+      "authors": [
+        "Hongyu Zhou",
+        "Zorah Lähner"
+      ],
+      "primary_category": "cs.GR",
+      "categories": [
+        "cs.GR",
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-06-03T17:29:36+00:00",
+      "link": "https://arxiv.org/pdf/2606.05124v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Improves geometric surface extraction in 3D Gaussian Splatting",
+      "llm_evidence_cn": "改进3D高斯泼溅中的几何表面提取",
+      "llm_evidence": "改进3D高斯泼溅中的几何表面提取",
+      "canonical_evidence": "改进3D高斯泼溅中的几何表面提取",
+      "llm_tldr_en": "Geometry Gaussians decouples appearance and geometry in 3DGS by adding a geometry opacity parameter, improving geometric surface extraction while maintaining rendering quality.",
+      "llm_tldr_cn": "该论文指出3D高斯泼溅（3DGS）在默认设置下无法同时表示纹理和几何，提出通过为每个高斯基元附加一个额外的几何不透明度参数，并配合透明度优化流程，实现外观与几何的解耦，从而在保持渲染质量的同时提取更准确的几何表面。实验表明该方法在真实数据上有效，属于3D重建领域的几何改进工作，但未涉及物理尺度估计。",
+      "llm_tldr": "该论文指出3D高斯泼溅（3DGS）在默认设置下无法同时表示纹理和几何，提出通过为每个高斯基元附加一个额外的几何不透明度参数，并配合透明度优化流程，实现外观与几何的解耦，从而在保持渲染质量的同时提取更准确的几何表面。实验表明该方法在真实数据上有效，属于3D重建领域的几何改进工作，但未涉及物理尺度估计。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.06695v1",
+      "source": "arxiv",
+      "title": "S23DR 2026 Winning Solution",
+      "abstract": "This text presents the winning solution to the S23DR 2026 challenge for structured 3D wireframe reconstruction from sparse SfM, fitted depth, and semantic segmentations. The method treats vertices as a conditional set and denoises 64 vertex tokens with a flow-matching DiT conditioned on Perceiver-style scene tokens. A global pass predicts the coarse structure, a hull-cropped second pass refines it, and a small multi-sample consensus step keeps the stochastic sampler well behaved. The final system ranked first on the private leaderboard, achievingHSS = 0.654.",
+      "authors": [
+        "Jan Skvrna",
+        "Miroslav Purkrabek",
+        "Lukas Neumann"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-04T20:19:59+00:00",
+      "link": "https://arxiv.org/pdf/2606.06695v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "structured 3D wireframe reconstruction from sparse SfM and depth",
+      "llm_evidence_cn": "基于稀疏SfM和深度的结构化3D线框重建",
+      "llm_evidence": "基于稀疏SfM和深度的结构化3D线框重建",
+      "canonical_evidence": "基于稀疏SfM和深度的结构化3D线框重建",
+      "llm_tldr_en": "Winning solution for S23DR 2026: flow-matching denoising of vertex tokens conditioned on scene tokens for wireframe reconstruction.",
+      "llm_tldr_cn": "该论文提出S23DR 2026挑战赛的获胜方案，利用流匹配扩散模型从稀疏SfM、拟合深度和语义分割中重建结构化3D线框。方法将顶点视为条件集，通过全局-局部两阶段细化及多采样共识策略，在私有排行榜上取得HSS 0.654。该方案可直接用于从真实图像恢复三维结构，但未明确强调物理尺度的精确性。",
+      "llm_tldr": "该论文提出S23DR 2026挑战赛的获胜方案，利用流匹配扩散模型从稀疏SfM、拟合深度和语义分割中重建结构化3D线框。方法将顶点视为条件集，通过全局-局部两阶段细化及多采样共识策略，在私有排行榜上取得HSS 0.654。该方案可直接用于从真实图像恢复三维结构，但未明确强调物理尺度的精确性。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.07078v1",
+      "source": "arxiv",
+      "title": "HRsR: Hierarchical Rotation System Reconstruction",
+      "abstract": "Surface reconstruction from point clouds remains challenging when both geometric fidelity and topology control are required. Rotation System Reconstruction (RsR) reconstructs triangle meshes from point clouds while explicitly controlling topology through the Euler characteristic, but its sequential edge insertion limits scalability. We present Hierarchical Rotation System Reconstruction (HRsR), which accelerates RsR through a hierarchical pipeline of edge collapses and vertex splits. HRsR first simplifies the input using a $k$-nearest neighbor graph, performs reconstruction on the reduced structure, and then restores geometric detail while preserving topology. To maintain geometric consistency, we incorporate intersection handling and quality-driven vertex split selection. Experiments demonstrate up to a $6\\times$ speedup and more than $8\\times$ reduction in memory usage over RsR, while achieving comparable reconstruction results.",
+      "authors": [
+        "Ruiqi Cui",
+        "Cem Akarsubaşı",
+        "Emil Toftegaard Gæde",
+        "Eva Rotenberg",
+        "Leif Kobbelt",
+        "J. Andreas Bærentzen"
+      ],
+      "primary_category": "cs.CG",
+      "categories": [
+        "cs.CG"
+      ],
+      "published": "2026-06-05T09:16:29+00:00",
+      "link": "https://arxiv.org/pdf/2606.07078v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "point cloud surface reconstruction method",
+      "llm_evidence_cn": "点云表面重建方法",
+      "llm_evidence": "点云表面重建方法",
+      "canonical_evidence": "点云表面重建方法",
+      "llm_tldr_en": "HRsR accelerates rotation system reconstruction for point clouds via hierarchical edge collapses and vertex splits, preserving topology while restoring detail.",
+      "llm_tldr_cn": "针对点云表面重建中几何保真和拓扑控制难以兼顾的问题，论文提出层次化旋转系统重建（HRsR）方法。该方法通过层次化的边折叠和顶点分裂管道，在简化结构上重建后再恢复几何细节，同时保持拓扑一致性。实验表明，HRsR显著提升了旋转系统重建的可扩展性，并保持了几何一致性。这项研究为点云重建提供了高效且拓扑可控的新方案。",
+      "llm_tldr": "针对点云表面重建中几何保真和拓扑控制难以兼顾的问题，论文提出层次化旋转系统重建（HRsR）方法。该方法通过层次化的边折叠和顶点分裂管道，在简化结构上重建后再恢复几何细节，同时保持拓扑一致性。实验表明，HRsR显著提升了旋转系统重建的可扩展性，并保持了几何一致性。这项研究为点云重建提供了高效且拓扑可控的新方案。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.07288v1",
+      "source": "arxiv",
+      "title": "ExMesh: EXplicit Mesh Reconstruction with Topology Adaptation",
+      "abstract": "Reconstructing surface meshes from multi-view images has remained a core challenge in recent years. Most existing methods, whether implicit or explicit, depend on intermediate representations and post-processing steps like Marching Cubes or TSDF fusion, often resulting in artifacts and fragmented geometry. Directly optimizing explicit meshes is a promising approach. However, it presents two critical challenges. The first is how to adaptively refine mesh topology to capture detail without introducing degenerate faces. The second is how to maintain consistent UV coordinates for high-fidelity texturing as the mesh structure evolves. To overcome these, we propose ExMesh, a novel framework that directly optimizes explicit meshes by integrating differentiable optimization with discrete topology updates. Specifically, we introduce an adaptive vertex splitting and merging strategy, along with real-time UV maintenance, to enable coarse-to-fine optimization while preserving geometric integrity. To our knowledge, ExMesh is the first framework to seamlessly integrate discrete topology operations into a continuous differentiable optimization pipeline. Extensive experiments demonstrate that ExMesh achieves a balance among accuracy, computational efficiency, and mesh conciseness.",
+      "authors": [
+        "Chuanjin Fan",
+        "Lifan Wu",
+        "Wenjie Chang",
+        "Hanzhi Chang",
+        "Wenfei Yang",
+        "Tianzhu Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR"
+      ],
+      "published": "2026-06-05T13:59:58+00:00",
+      "link": "https://arxiv.org/pdf/2606.07288v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Explicit mesh reconstruction from multi-view images",
+      "llm_evidence_cn": "从多视图图像进行显式网格重建",
+      "llm_evidence": "从多视图图像进行显式网格重建",
+      "canonical_evidence": "从多视图图像进行显式网格重建",
+      "llm_tldr_en": "ExMesh directly optimizes explicit meshes with topology adaptation from multi-view images, avoiding post-processing artifacts and achieving high-fidelity surfaces.",
+      "llm_tldr_cn": "现有网格重建依赖中间表示和后续处理，导致伪影和碎片。本文提出ExMesh，直接优化显式网格，通过引入可微优化和拓扑自适应调整面片捕捉细节，同时保持一致的UV坐标用于纹理映射。实验表明该方法能生成高质量网格，减少伪影。该工作为从图像直接生成可用网格提供了新思路。",
+      "llm_tldr": "现有网格重建依赖中间表示和后续处理，导致伪影和碎片。本文提出ExMesh，直接优化显式网格，通过引入可微优化和拓扑自适应调整面片捕捉细节，同时保持一致的UV坐标用于纹理映射。实验表明该方法能生成高质量网格，减少伪影。该工作为从图像直接生成可用网格提供了新思路。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.07419v2",
+      "source": "arxiv",
+      "title": "DisPOSE: Projected Polystochastic Diffusion for Self-Supervised Multi-View 3D Human Pose Estimation",
+      "abstract": "Recovering 3D human poses for multiple individuals from different camera views is a fundamental bottleneck for analyzing interacting behaviors. Existing self-supervised approaches leverage synthetic catalogues of 3D poses; however, this leads to poor generalization in real-world scenarios due to distribution shifts. We therefore introduce DisPOSE, a self-supervised framework that approximates the inherently discrete multi-view person-assignment problem as a generative diffusion process over the space of polystochastic tensors. By employing differentiable Sinkhorn projections during denoising, our model learns to guide solutions toward valid and feasible assignments based on 2D image priors. The complete 3D skeletons of localized individuals are then regressed using a Hypergraph-Convolutional Decoder that explicitly models relational structures and articulated joints across multiple views. The proposed approach outperforms current state-of-the-art self-supervised methods on standard datasets and demonstrates strong performance on a newly proposed benchmark featuring highly occluded scenes from surgical operating rooms. Our diffusion-based localization demonstrates high label efficiency, retaining 99% of its performance with only 10% of the pseudo-labels. Notably, disentangling the assignment and root regression components while maintaining differentiability makes DisPOSE nearly agnostic to different camera arrangements.",
+      "authors": [
+        "Tony Danjun Wang",
+        "Tolga Birdal",
+        "Nassir Navab",
+        "Lennart Bastian"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-05T16:14:39+00:00",
+      "link": "https://arxiv.org/pdf/2606.07419v2",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "self-supervised multi-view 3D human pose estimation",
+      "llm_evidence_cn": "自监督多视图3D人体姿态估计",
+      "llm_evidence": "自监督多视图3D人体姿态估计",
+      "canonical_evidence": "自监督多视图3D人体姿态估计",
+      "llm_tldr_en": "DisPOSE solves multi-view person assignment via differentiable Sinkhorn projected diffusion, enabling self-supervised 3D pose recovery.",
+      "llm_tldr_cn": "针对多视图多人3D姿态估计中难以处理的分配问题，论文提出DisPOSE框架，将离散分配近似为多随机张量上的生成扩散过程，并通过可微Sinkhorn投影引导有效解。该方法无需真实3D标注，仅依赖2D图像先验，在真实场景中表现良好。这项工作推进了自监督多视图人体姿态估计的实用性。",
+      "llm_tldr": "针对多视图多人3D姿态估计中难以处理的分配问题，论文提出DisPOSE框架，将离散分配近似为多随机张量上的生成扩散过程，并通过可微Sinkhorn投影引导有效解。该方法无需真实3D标注，仅依赖2D图像先验，在真实场景中表现良好。这项工作推进了自监督多视图人体姿态估计的实用性。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

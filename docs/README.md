@@ -6,56 +6,59 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-10
-- 运行时间：2026-06-10 22:40:32 UTC
+- 最新运行日期：2026-06-11
+- 运行时间：2026-06-11 22:25:46 UTC
 - 运行状态：成功
-- 本次总论文数：12
-- 精读区：1
+- 本次总论文数：13
+- 精读区：2
 - 速读区：11
 
 ### 今日简报（AI）
-今日共读12篇，精读重点为无位姿在线3D高斯泼溅方法。最值得关注的方向是FreeStreamGS高效前馈框架与SimuScene单图场景重建。建议后续追踪实时三维重建中的位姿估计与场景补全交叉研究。
-- 详情：[/202606/10/README](/202606/10/README)
+今日13篇论文聚焦单目深度估计统一框架与三维重建标定突破。最值得关注的是《DepthMaster》统一透视/全景深度估计（9.0分）和《Spatially Coupled Phase-to-Depth Calibration》提升条纹投影精度（8.0分）。建议优先尝试DepthMaster在VR/AR场景的应用，并关注狨猴数字孪生数据集在生物运动分析中的潜力。
+- 详情：[/202606/11/README](/202606/11/README)
 
 ### 精读区论文标签
-1. [FreeStreamGS: Online Feed-forward 3D Gaussian Splatting from Unposed Streaming Inputs](/202606/10/2606.03254v1-freestreamgs-online-feed-forward-3d-gaussian-splatting-from-unposed-streaming-inputs)  
-   标签：评分：8.0/10、query:dr
-   evidence：在线前馈3D高斯飞溅新型视图合成
+1. [DepthMaster: Unified Monocular Depth Estimation for Perspective and Panoramic Images](/202606/11/2606.12368v1-depthmaster-unified-monocular-depth-estimation-for-perspective-and-panoramic-images)  
+   标签：评分：9.0/10、query:mdr
+   evidence：度量深度估计用于物理尺寸测量
+2. [Spatially Coupled Phase-to-Depth Calibration for Fringe Projection Profilometry](/202606/11/2606.11601v1-spatially-coupled-phase-to-depth-calibration-for-fringe-projection-profilometry)  
+   标签：评分：8.0/10、query:mdr
+   evidence：相位-深度校准用于精确三维测量
 
 ### 速读区论文标签
-1. [BA-T: An Iterative Transformer for Two-View Bundle Adjustment](/202606/10/2606.03287v1-ba-t-an-iterative-transformer-for-two-view-bundle-adjustment)  
+1. [LEGS: Laplacian-Enhanced Gaussian Splatting with a Nonlinear Weighted Loss](/202606/11/2606.07932v1-legs-laplacian-enhanced-gaussian-splatting-with-a-nonlinear-weighted-loss)  
    标签：评分：7.0/10、query:dr
-   evidence：用于束调整的迭代Transformer改进三维重建几何精度
-2. [PatchScene: Patch-based Voxel Diffusion for Large-Scale Scene Completion](/202606/10/2606.03915v1-patchscene-patch-based-voxel-diffusion-for-large-scale-scene-completion)  
+   evidence：拉普拉斯增强的高斯溅射辐射场重建
+2. [A multimodal dataset for reconstructing common marmoset body-environment interactions in a 3D digital-twin framework](/202606/11/biorxiv-10-64898-2026-06-07-730757-v1-a-multimodal-dataset-for-reconstructing-common-marmoset-body-environment-interactions-in-a-3d-digital-twin-framework)  
    标签：评分：7.0/10、query:mdr
-   evidence：LiDAR场景补全生成度量3D几何
-3. [SimuScene: Simulation-Ready Compositional 3D Scene Reconstruction from a Single Image](/202606/10/2606.03994v1-simuscene-simulation-ready-compositional-3d-scene-reconstruction-from-a-single-image)  
-   标签：评分：7.0/10、query:dr
-   evidence：物理感知的三维场景重建，精化几何和布局
-4. [FUSE-Flow: A Decoupled Framework for Calibration and Stateless Real-Time Multi-View Point Cloud Fusion](/202606/10/2606.04376v1-fuse-flow-a-decoupled-framework-for-calibration-and-stateless-real-time-multi-view-point-cloud-fusion)  
-   标签：评分：7.0/10、query:mdr
-   evidence：具有度量标定的多视图3D重建和实时融合
-5. [ZipSplat: Fewer Gaussians, Better Splats](/202606/10/2606.05102v1-zipsplat-fewer-gaussians-better-splats)  
-   标签：评分：7.0/10、query:dr
-   evidence：基于令牌的前馈3D高斯飞溅，减少高斯数量
-6. [Unpaired RGB-Thermal Gaussian-Splatting Using Visual Geometric Transformers](/202606/10/2606.05491v1-unpaired-rgb-thermal-gaussian-splatting-using-visual-geometric-transformers)  
-   标签：评分：7.0/10、query:dr
-   evidence：未配对RGB-热成像3D高斯飞溅新型视图合成
-7. [GARDEN: Gravity-Aligned Reconstruction of Disentangled ENvironments from RGB images](/202606/10/2606.03921v1-garden-gravity-aligned-reconstruction-of-disentangled-environments-from-rgb-images)  
-   标签：评分：6.0/10、query:mdr
-   evidence：仅使用RGB图像进行重力对齐的物理基础因子分解重建，用于仿真就绪环境
-8. [Geometry Gaussians: Decoupling Appearance and Geometry in Gaussian Splatting](/202606/10/2606.05124v1-geometry-gaussians-decoupling-appearance-and-geometry-in-gaussian-splatting)  
+   evidence：包含CT全身表面网格的多模态数据集，支持物理3D重建
+3. [FUSE-Flow: A Decoupled Framework for Calibration and Stateless Real-Time Multi-View Point Cloud Fusion](/202606/11/2606.04376v1-fuse-flow-a-decoupled-framework-for-calibration-and-stateless-real-time-multi-view-point-cloud-fusion)  
    标签：评分：6.0/10、query:dr
-   evidence：在高斯泼溅中解耦外观与几何以改进几何表示
-9. [LiAuto-GeoX: Efficient Grounded Driving Transformer](/202606/10/2606.05774v1-liauto-geox-efficient-grounded-driving-transformer)  
-   标签：评分：6.0/10、query:mdr
-   evidence：使用LiDAR先验的接地驾驶Transformer实现度量3D重建
-10. [ExMesh: EXplicit Mesh Reconstruction with Topology Adaptation](/202606/10/2606.07288v1-exmesh-explicit-mesh-reconstruction-with-topology-adaptation)  
+   evidence：实时多视角点云融合三维重建
+4. [4D Reconstruction from Sparse Dynamic Cameras](/202606/11/2606.04593v1-4d-reconstruction-from-sparse-dynamic-cameras)  
+   标签：评分：6.0/10、query:dr
+   evidence：稀疏动态相机的4D重建
+5. [Hierarchical Space Partition for Surface Reconstruction](/202606/11/2606.04891v1-hierarchical-space-partition-for-surface-reconstruction)  
+   标签：评分：6.0/10、query:dr
+   evidence：从点云进行表面重建
+6. [Anchor3R: Streaming 3D Reconstruction with Transient Anchors for Long-Horizon Visual Mapping](/202606/11/2606.05035v1-anchor3r-streaming-3d-reconstruction-with-transient-anchors-for-long-horizon-visual-mapping)  
+   标签：评分：6.0/10、query:dr
+   evidence：流式三维重建用于视觉映射
+7. [Geometry Gaussians: Decoupling Appearance and Geometry in Gaussian Splatting](/202606/11/2606.05124v1-geometry-gaussians-decoupling-appearance-and-geometry-in-gaussian-splatting)  
+   标签：评分：6.0/10、query:dr
+   evidence：改进3D高斯泼溅中的几何表面提取
+8. [S23DR 2026 Winning Solution](/202606/11/2606.06695v1-s23dr-2026-winning-solution)  
+   标签：评分：6.0/10、query:dr
+   evidence：基于稀疏SfM和深度的结构化3D线框重建
+9. [HRsR: Hierarchical Rotation System Reconstruction](/202606/11/2606.07078v1-hrsr-hierarchical-rotation-system-reconstruction)  
+   标签：评分：6.0/10、query:dr
+   evidence：点云表面重建方法
+10. [ExMesh: EXplicit Mesh Reconstruction with Topology Adaptation](/202606/11/2606.07288v1-exmesh-explicit-mesh-reconstruction-with-topology-adaptation)  
    标签：评分：6.0/10、query:dr
    evidence：从多视图图像进行显式网格重建
-11. [P3D-Bench: Benchmarking MLLMs for Parametric 3D Generation and Structural Reasoning](/202606/10/2606.11152v1-p3d-bench-benchmarking-mllms-for-parametric-3d-generation-and-structural-reasoning)  
-   标签：评分：6.0/10、query:mdr
-   evidence：评估参数化3D程序的基准，包含用于测量一致性的显式尺寸
+11. [DisPOSE: Projected Polystochastic Diffusion for Self-Supervised Multi-View 3D Human Pose Estimation](/202606/11/2606.07419v2-dispose-projected-polystochastic-diffusion-for-self-supervised-multi-view-3d-human-pose-estimation)  
+   标签：评分：6.0/10、query:dr
+   evidence：自监督多视图3D人体姿态估计
 
 
 <div class="dpr-home-promo-card">
