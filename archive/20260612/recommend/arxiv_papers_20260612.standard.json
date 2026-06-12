@@ -1,0 +1,174 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-12T21:27:18.235805+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 0,
+    "deep_cap": 6,
+    "deep_selected": 0,
+    "quick_candidates": 4,
+    "quick_skim_target": 11,
+    "quick_selected": 4
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2606.07078v1",
+      "source": "arxiv",
+      "title": "HRsR: Hierarchical Rotation System Reconstruction",
+      "abstract": "Surface reconstruction from point clouds remains challenging when both geometric fidelity and topology control are required. Rotation System Reconstruction (RsR) reconstructs triangle meshes from point clouds while explicitly controlling topology through the Euler characteristic, but its sequential edge insertion limits scalability. We present Hierarchical Rotation System Reconstruction (HRsR), which accelerates RsR through a hierarchical pipeline of edge collapses and vertex splits. HRsR first simplifies the input using a $k$-nearest neighbor graph, performs reconstruction on the reduced structure, and then restores geometric detail while preserving topology. To maintain geometric consistency, we incorporate intersection handling and quality-driven vertex split selection. Experiments demonstrate up to a $6\\times$ speedup and more than $8\\times$ reduction in memory usage over RsR, while achieving comparable reconstruction results.",
+      "authors": [
+        "Ruiqi Cui",
+        "Cem Akarsubaşı",
+        "Emil Toftegaard Gæde",
+        "Eva Rotenberg",
+        "Leif Kobbelt",
+        "J. Andreas Bærentzen"
+      ],
+      "primary_category": "cs.CG",
+      "categories": [
+        "cs.CG"
+      ],
+      "published": "2026-06-05T09:16:29+00:00",
+      "link": "https://arxiv.org/pdf/2606.07078v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Surface reconstruction from point clouds",
+      "llm_evidence_cn": "点云表面重建",
+      "llm_evidence": "点云表面重建",
+      "canonical_evidence": "点云表面重建",
+      "llm_tldr_en": "HRsR accelerates rotation system reconstruction for point cloud surface reconstruction using hierarchical edge collapses and vertex splits, preserving topology and geometric fidelity.",
+      "llm_tldr_cn": "该论文针对点云表面重建中几何保真度与拓扑控制难以兼得的问题，提出分层旋转系统重建（HRsR）方法。通过层次化边折叠与顶点分裂流水线加速重建，在简化结构上重构后再恢复细节。实验表明该方法在保持拓扑一致性的同时提升了可扩展性。为三维重建领域提供了高效拓扑可控的表面重建方案。",
+      "llm_tldr": "该论文针对点云表面重建中几何保真度与拓扑控制难以兼得的问题，提出分层旋转系统重建（HRsR）方法。通过层次化边折叠与顶点分裂流水线加速重建，在简化结构上重构后再恢复细节。实验表明该方法在保持拓扑一致性的同时提升了可扩展性。为三维重建领域提供了高效拓扑可控的表面重建方案。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.06695v1",
+      "source": "arxiv",
+      "title": "S23DR 2026 Winning Solution",
+      "abstract": "This text presents the winning solution to the S23DR 2026 challenge for structured 3D wireframe reconstruction from sparse SfM, fitted depth, and semantic segmentations. The method treats vertices as a conditional set and denoises 64 vertex tokens with a flow-matching DiT conditioned on Perceiver-style scene tokens. A global pass predicts the coarse structure, a hull-cropped second pass refines it, and a small multi-sample consensus step keeps the stochastic sampler well behaved. The final system ranked first on the private leaderboard, achievingHSS = 0.654.",
+      "authors": [
+        "Jan Skvrna",
+        "Miroslav Purkrabek",
+        "Lukas Neumann"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-04T20:19:59+00:00",
+      "link": "https://arxiv.org/pdf/2606.06695v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "3D wireframe reconstruction from sparse SfM",
+      "llm_evidence_cn": "基于稀疏SfM的3D线框重建",
+      "llm_evidence": "基于稀疏SfM的3D线框重建",
+      "canonical_evidence": "基于稀疏SfM的3D线框重建",
+      "llm_tldr_en": "Winning solution for S23DR 2026 challenge on structured 3D wireframe reconstruction from sparse SfM, depth, and semantics, using flow-matching DiT conditioned on scene tokens.",
+      "llm_tldr_cn": "该论文提出了一种在S23DR 2026挑战赛中获胜的结构化3D线框重建方法。针对稀疏SfM和深度输入，采用流匹配DiT模型以条件集方式处理顶点，通过全局和局部细化两阶段生成精确线框。方法结合多采样一致性步骤稳定随机采样器，最终在私有排行榜上获得第一，HSS达0.654。该工作展示了基于学习的3D重建在结构化场景中的有效性。",
+      "llm_tldr": "该论文提出了一种在S23DR 2026挑战赛中获胜的结构化3D线框重建方法。针对稀疏SfM和深度输入，采用流匹配DiT模型以条件集方式处理顶点，通过全局和局部细化两阶段生成精确线框。方法结合多采样一致性步骤稳定随机采样器，最终在私有排行榜上获得第一，HSS达0.654。该工作展示了基于学习的3D重建在结构化场景中的有效性。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.11326v1",
+      "source": "arxiv",
+      "title": "DarkVGGT: Seeing Through Darkness Using Thermal Geometry without Daylight Tax",
+      "abstract": "Recent feed-forward 3D reconstruction methods have demonstrated strong performance and flexibility in efficient end-to-end scene geometry estimation from image streams. However, their reliance on visible-light appearance makes them vulnerable in dark and low-visibility environments, where RGB cues are severely degraded and geometric evidence becomes ambiguous. To address this challenge, we propose DarkVGGT, an RGB-T feed-forward geometry framework that uses physics-aware thermal modeling for robust 3D estimation in low-light scenes. DarkVGGT introduces two complementary modules. First, physics-inspired thermal factorization extracts emissive-dominant, geometry-consistent thermal cues while isolating sparse reflective residuals that may introduce geometric ambiguity. Second, geometry-shared thermal routing isolates modality-invariant geometric structures from thermal-specific patterns, selectively injecting reliability-aware structural guidance into the RGB stream. Together, these components enable accurate thermal-informed geometry estimation under degraded RGB conditions while largely preserving performance in well-lit environments. Experiments on low-visibility RGB-T benchmarks demonstrate consistent improvements in both depth and camera pose estimation over existing feed-forward geometry baselines.",
+      "authors": [
+        "Minseong Kweon",
+        "Wenyuan Zhao",
+        "Nuo Chen",
+        "Lulin Liu",
+        "Huiwen Han",
+        "Zihao Zhu",
+        "Srinivas Shakkottai",
+        "Chao Tian",
+        "Zhiwen Fan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-09T18:08:51+00:00",
+      "link": "https://arxiv.org/pdf/2606.11326v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "feed-forward 3D reconstruction using RGB-T thermal imaging",
+      "llm_evidence_cn": "前馈三维重建，使用RGB-T热成像",
+      "llm_evidence": "前馈三维重建，使用RGB-T热成像",
+      "canonical_evidence": "前馈三维重建，使用RGB-T热成像",
+      "llm_tldr_en": "DarkVGGT extends feed-forward 3D reconstruction to dark environments by incorporating thermal imaging with physics-aware modeling for robust geometry estimation.",
+      "llm_tldr_cn": "现有前馈三维重建在黑暗环境下失效。本文提出DarkVGGT，结合RGB与热成像，利用物理启发的热分解提取几何一致的线索，鲁棒地估计低光照场景的三维几何。该方法实现了端到端的三维重建，为后续物理尺寸测量提供基础。",
+      "llm_tldr": "现有前馈三维重建在黑暗环境下失效。本文提出DarkVGGT，结合RGB与热成像，利用物理启发的热分解提取几何一致的线索，鲁棒地估计低光照场景的三维几何。该方法实现了端到端的三维重建，为后续物理尺寸测量提供基础。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.11841v1",
+      "source": "arxiv",
+      "title": "Scene-Adaptive Nonlinear Tone Curves for Pseudo Ground-Truth Generation in Low-Light 3D Gaussian Splatting",
+      "abstract": "Low-light novel view synthesis is challenging because dark multi-view images contain noise, weak structural detail, and compressed dynamic range. Recent 3D Gaussian Splatting (3DGS) methods address these challenges by generating pseudo ground-truth (pseudo-GT) images as supervision targets when paired normal-light references are unavailable. Existing pseudo-GT methods apply a uniform linear gain to all pixels, which clips bright regions while providing insufficient enhancement in dark regions, limiting reconstruction quality. We observe that nonlinear tone mappings, long established in 2D low-light enhancement, have not been explored for pseudo-GT generation in 3D reconstruction. Accordingly, we propose a scene-adaptive nonlinear tone-curve framework that replaces linear pseudo-GT with nonlinear alternatives. The framework introduces percentile-based normalisation for scene-agnostic curve application, a scene-adaptive offset for automatic black-level adjustment, and two complementary curves: Adaptive SoftExp (ASE), a bounded exponential curve, and Adaptive Poly3 (AP3), a data-driven cubic polynomial. The module changes only the pseudo-GT computation and leaves the 3DGS backbone unchanged. Experiments on three benchmarks covering 21 scenes show that both curves consistently outperform the linear baseline with PSNR improvements up to +4.34 dB on LOM and +3.25 dB on RealX3D. Both curves achieve similar performance despite their different mathematical forms, suggesting the improvement is curve-agnostic. Code is available at https://github.com/lvmingzhe/adaptiveToneCurve",
+      "authors": [
+        "Mingzhe Lyu",
+        "Jinqiang Cui",
+        "Hong Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-10T09:20:23+00:00",
+      "link": "https://arxiv.org/pdf/2606.11841v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "3D Gaussian Splatting reconstruction with enhanced pseudo-GT for low-light",
+      "llm_evidence_cn": "低光条件下的三维高斯溅射重建",
+      "llm_evidence": "低光条件下的三维高斯溅射重建",
+      "canonical_evidence": "低光条件下的三维高斯溅射重建",
+      "llm_tldr_en": "This paper proposes scene-adaptive nonlinear tone curves to generate better pseudo ground-truth images for 3D Gaussian Splatting in low-light conditions, improving reconstruction quality.",
+      "llm_tldr_cn": "该论文针对低光环境下三维高斯溅射（3DGS）重建中伪地面真值生成质量差的问题，提出场景自适应非线性色调曲线方法。该方法利用传统2D低光增强中的非线性映射，自适应调整每个场景的增强曲线，生成更优的伪GT图像用于监督。在低光多视图数据集上实验表明，该方法有效提升了重建的细节与亮度，优于统一线性增益方法。为低光3D重建提供了有效的数据增强策略。",
+      "llm_tldr": "该论文针对低光环境下三维高斯溅射（3DGS）重建中伪地面真值生成质量差的问题，提出场景自适应非线性色调曲线方法。该方法利用传统2D低光增强中的非线性映射，自适应调整每个场景的增强曲线，生成更优的伪GT图像用于监督。在低光多视图数据集上实验表明，该方法有效提升了重建的细节与亮度，优于统一线性增益方法。为低光3D重建提供了有效的数据增强策略。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

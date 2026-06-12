@@ -1,0 +1,69 @@
+{
+  "label": "2026-06-12",
+  "date": "2026-06-12",
+  "generated_at": "2026-06-12T21:28:49",
+  "count": 4,
+  "papers": [
+    {
+      "paper_id": "202606/12/2606.07078v1-hrsr-hierarchical-rotation-system-reconstruction",
+      "section": "quick",
+      "title_en": "HRsR: Hierarchical Rotation System Reconstruction",
+      "authors": "Ruiqi Cui, Cem Akarsubaşı, Emil Toftegaard Gæde, Eva Rotenberg, Leif Kobbelt, J. Andreas Bærentzen",
+      "date": "2026-06-05",
+      "pdf": "https://arxiv.org/pdf/2606.07078v1",
+      "score": "7.0",
+      "evidence": "点云表面重建",
+      "tldr": "点云表面重建需要兼顾几何保真度和拓扑控制。现有RsR方法通过欧拉示性数显式控制拓扑，但顺序边插入导致扩展性差。本文提出HRsR，通过边折叠和顶点分割的分层流水线：先简化k近邻图，在简化结构上重建，再恢复细节并保持拓扑。引入相交处理和基于质量的顶点分割选择。实验表明，相比RsR，HRsR实现最高6倍加速和8倍以上内存节省，且重建质量相当。",
+      "tags": "query:dr",
+      "abstract_en": "Surface reconstruction from point clouds remains challenging when both geometric fidelity and topology control are required. Rotation System Reconstruction (RsR) reconstructs triangle meshes from point clouds while explicitly controlling topology through the Euler characteristic, but its sequential edge insertion limits scalability. We present Hierarchical Rotation System Reconstruction (HRsR), which accelerates RsR through a hierarchical pipeline of edge collapses and vertex splits. HRsR first simplifies the input using a $k$-nearest neighbor graph, performs reconstruction on the reduced structure, and then restores geometric detail while preserving topology. To maintain geometric consistency, we incorporate intersection handling and quality-driven vertex split selection. Experiments demonstrate up to a $6\\times$ speedup and more than $8\\times$ reduction in memory usage over RsR, while achieving comparable reconstruction results.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/12/2606.06695v1-s23dr-2026-winning-solution",
+      "section": "quick",
+      "title_en": "S23DR 2026 Winning Solution",
+      "authors": "Jan Skvrna, Miroslav Purkrabek, Lukas Neumann",
+      "date": "2026-06-04",
+      "pdf": "https://arxiv.org/pdf/2606.06695v1",
+      "score": "6.0",
+      "evidence": "基于稀疏SfM的3D线框重建",
+      "tldr": "针对稀疏SfM、拟合深度和语义分割输入的结构化3D线框重建难题，本方案提出将顶点视为条件集，利用流匹配DiT去噪64个顶点token，并通过Perceiver风格场景token进行条件控制。方法包含全局粗结构预测、基于hull裁剪的细化模块及多样本共识稳定采样。在S23DR 2026挑战中，该方案以0.654 HSS获得私榜第一名，为稀疏输入下的高质量线框重建提供了有效方案。",
+      "tags": "query:dr",
+      "abstract_en": "This text presents the winning solution to the S23DR 2026 challenge for structured 3D wireframe reconstruction from sparse SfM, fitted depth, and semantic segmentations. The method treats vertices as a conditional set and denoises 64 vertex tokens with a flow-matching DiT conditioned on Perceiver-style scene tokens. A global pass predicts the coarse structure, a hull-cropped second pass refines it, and a small multi-sample consensus step keeps the stochastic sampler well behaved. The final system ranked first on the private leaderboard, achievingHSS = 0.654.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/12/2606.11326v1-darkvggt-seeing-through-darkness-using-thermal-geometry-without-daylight-tax",
+      "section": "quick",
+      "title_en": "DarkVGGT: Seeing Through Darkness Using Thermal Geometry without Daylight Tax",
+      "authors": "Minseong Kweon, Wenyuan Zhao, Nuo Chen, Lulin Liu, Huiwen Han, Zihao Zhu, Srinivas Shakkottai, Chao Tian, Zhiwen Fan",
+      "date": "2026-06-09",
+      "pdf": "https://arxiv.org/pdf/2606.11326v1",
+      "score": "6.0",
+      "evidence": "前馈三维重建，使用RGB-T热成像",
+      "tldr": "针对现有前馈3D重建方法在黑暗环境中因RGB退化而失效的问题，提出DarkVGGT框架，利用物理感知热建模结合RGB-T双模态。通过热分解提取几何一致的热特征并隔离模糊反射，再经热路由将可靠结构引导至RGB流。在低可见度基准上显著提升深度和姿态估计精度，且在正常光照下性能几乎无损。",
+      "tags": "query:dr",
+      "abstract_en": "Recent feed-forward 3D reconstruction methods have demonstrated strong performance and flexibility in efficient end-to-end scene geometry estimation from image streams. However, their reliance on visible-light appearance makes them vulnerable in dark and low-visibility environments, where RGB cues are severely degraded and geometric evidence becomes ambiguous. To address this challenge, we propose DarkVGGT, an RGB-T feed-forward geometry framework that uses physics-aware thermal modeling for robust 3D estimation in low-light scenes. DarkVGGT introduces two complementary modules. First, physics-inspired thermal factorization extracts emissive-dominant, geometry-consistent thermal cues while isolating sparse reflective residuals that may introduce geometric ambiguity. Second, geometry-shared thermal routing isolates modality-invariant geometric structures from thermal-specific patterns, selectively injecting reliability-aware structural guidance into the RGB stream. Together, these components enable accurate thermal-informed geometry estimation under degraded RGB conditions while largely preserving performance in well-lit environments. Experiments on low-visibility RGB-T benchmarks demonstrate consistent improvements in both depth and camera pose estimation over existing feed-forward geometry baselines.",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202606/12/2606.11841v1-scene-adaptive-nonlinear-tone-curves-for-pseudo-ground-truth-generation-in-low-light-3d-gaussian-splatting",
+      "section": "quick",
+      "title_en": "Scene-Adaptive Nonlinear Tone Curves for Pseudo Ground-Truth Generation in Low-Light 3D Gaussian Splatting",
+      "authors": "Mingzhe Lyu, Jinqiang Cui, Hong Zhang",
+      "date": "2026-06-10",
+      "pdf": "https://arxiv.org/pdf/2606.11841v1",
+      "score": "6.0",
+      "evidence": "低光条件下的三维高斯溅射重建",
+      "tldr": "低光新视角合成中，现有3DGS方法使用线性增益生成伪GT，导致亮区截断、暗区增强不足。本文提出场景自适应非线性色调曲线框架，包括百分位归一化、自适应偏移及两种互补曲线（ASE和AP3），仅替换伪GT计算。在三个基准21个场景上，PSNR提升最高+4.34dB。贡献在于为3D重建伪GT生成引入非线性映射，代码已开源。",
+      "tags": "query:dr",
+      "abstract_en": "Low-light novel view synthesis is challenging because dark multi-view images contain noise, weak structural detail, and compressed dynamic range. Recent 3D Gaussian Splatting (3DGS) methods address these challenges by generating pseudo ground-truth (pseudo-GT) images as supervision targets when paired normal-light references are unavailable. Existing pseudo-GT methods apply a uniform linear gain to all pixels, which clips bright regions while providing insufficient enhancement in dark regions, limiting reconstruction quality. We observe that nonlinear tone mappings, long established in 2D low-light enhancement, have not been explored for pseudo-GT generation in 3D reconstruction. Accordingly, we propose a scene-adaptive nonlinear tone-curve framework that replaces linear pseudo-GT with nonlinear alternatives. The framework introduces percentile-based normalisation for scene-agnostic curve application, a scene-adaptive offset for automatic black-level adjustment, and two complementary curves: Adaptive SoftExp (ASE), a bounded exponential curve, and Adaptive Poly3 (AP3), a data-driven cubic polynomial. The module changes only the pseudo-GT computation and leaves the 3DGS backbone unchanged. Experiments on three benchmarks covering 21 scenes show that both curves consistently outperform the linear baseline with PSNR improvements up to +4.34 dB on LOM and +3.25 dB on RealX3D. Both curves achieve similar performance despite their different mathematical forms, suggesting the improvement is curve-agnostic. Code is available at https://github.com/lvmingzhe/adaptiveToneCurve",
+      "source": "arxiv",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
