@@ -1,0 +1,220 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-13T20:47:52.568560+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 1,
+    "deep_cap": 6,
+    "deep_selected": 1,
+    "quick_candidates": 4,
+    "quick_skim_target": 11,
+    "quick_selected": 4
+  },
+  "deep_dive": [
+    {
+      "id": "2606.11578v1",
+      "source": "arxiv",
+      "title": "Contactless 3D Human Body Measurement Using Depth Cameras for Smart Health Monitoring",
+      "abstract": "Contactless body measurement technologies are becoming increasingly significant for smart health monitoring, digital health applications, and remote patient assessment. Traditional anthropometric measurements typically necessitate physical contact and trained personnel, which may constrain scalability in remote healthcare settings. In this study, we introduce a depth camera-based framework for estimating human body measurements utilizing 3D point cloud data. An Orbbec Astra 2 depth camera was employed to capture RGB images, depth maps, and 3D point clouds of participants. The captured point cloud was processed using Python-based tools, including Open3D, NumPy, and OpenCV, to segment the human body from the background. Key anthropometric measurements, such as height and arm span, were computed. The measurements were obtained through a combination of spatial filtering and landmark selection on the 3D point cloud, followed by the projection of the computed measurements onto the corresponding RGB image using camera intrinsic parameters. In addition to linear measurements, the approximate body volume and visible surface area were estimated using voxel-based occupancy analysis and mesh-based surface reconstruction methods. The experimental results from a single depth capture demonstrated that accurate body measurements and geometric estimates could be obtained from depth camera data without physical contact. This study provides a foundation for future real-time systems that integrate depth sensing with intelligent health monitoring and generative AI models for smart healthcare applications.",
+      "authors": [
+        "Martha Asare",
+        "Xuan Wang",
+        "Juan Lopez Alvarenga",
+        "Lois Akosua Serwaa",
+        "Jinghao Yang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-10T02:12:34+00:00",
+      "link": "https://arxiv.org/pdf/2606.11578v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "contactless human body measurement using depth cameras and 3D point clouds",
+      "llm_evidence_cn": "使用深度相机和3D点云的非接触人体测量",
+      "llm_evidence": "使用深度相机和3D点云的非接触人体测量",
+      "canonical_evidence": "使用深度相机和3D点云的非接触人体测量",
+      "llm_tldr_en": "Presents a depth-camera framework for estimating human body measurements from 3D point clouds, enabling contactless health monitoring.",
+      "llm_tldr_cn": "针对传统接触式人体测量在远程医疗中的局限性，本文提出基于深度相机的非接触测量框架。使用Orbbec Astra 2采集RGB-D和点云，通过Open3D等工具分割人体并提取关键尺寸。实验表明该方法能有效估算身高臂长等指标，为智能健康监测提供可扩展方案。",
+      "llm_tldr": "针对传统接触式人体测量在远程医疗中的局限性，本文提出基于深度相机的非接触测量框架。使用Orbbec Astra 2采集RGB-D和点云，通过Open3D等工具分割人体并提取关键尺寸。实验表明该方法能有效估算身高臂长等指标，为智能健康监测提供可扩展方案。",
+      "llm_tags": [
+        "query:mdr"
+      ],
+      "matched_query_tag": "query:mdr",
+      "matched_query_text": "real-world dimension measurement using 3D reconstruction",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.07891v1",
+      "source": "arxiv",
+      "title": "C3VD-DEFCOL: A Deformable Colonoscopy Dataset with Time-Resolved 3D Ground Truth and Realistic Appearance",
+      "abstract": "3D reconstruction could improve colonoscopy by estimating mucosal coverage and alerting clinicians to missed regions during screening. However, algorithm development is limited as no current datasets provide both a realistic in vivo appearance and dense, time-resolved 3D ground truth, especially under non-rigid deformation. We present C3VD-DEFCOL, a framework and dataset for evaluating deformable colonoscopy reconstruction with paired geometry and realistic texture. Starting from C3VD/C3VDv2 colon meshes and camera trajectories, we generate controlled deformations of the colon surface, including peristaltic waves and centerline motion, and render per-frame depth, surface normals, optical flow, camera poses, and time-stamped 3D meshes. We then use the rendered geometry, primarily depth, to condition an LTX-2.3-based sim-to-real translation model that produces RGB clips with in vivo-like mucosal color, texture, vasculature, and specular appearance while preserving the underlying 3D scene structure. The resulting dataset contains 110 videos from 11 unique colon mesh geometries, with varying camera trajectories, appearances, and parameterized deformation regimes, including three peristaltic severity levels that serve as controlled evaluation axes. We evaluate the generated videos using appearance realism, geometric consistency, and temporal consistency metrics, and use the paired ground truth to benchmark the downstream task of pose estimation in deformable 3D reconstruction. Our experiments show how pose estimation error increases with increasing deformation severity, providing a controlled stress test that is not possible with existing in vivo datasets. Overall, C3VD-DEFCOL is designed as a reproducible, quantitative evaluation platform for testing deformable 3D reconstruction algorithms, with the goal of reducing the domain gap between synthetic datasets and in vivo colonoscopy.",
+      "authors": [
+        "Ethan Luk",
+        "Mayank V. Golhar",
+        "Anthony Song",
+        "Raúl Iranzo",
+        "Víctor M. Batlle",
+        "Lalithkumar Seenivasan",
+        "José M. M. Montiel",
+        "Nicholas J. Durr"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-05T22:59:32+00:00",
+      "link": "https://arxiv.org/pdf/2606.07891v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "dataset providing time-resolved 3D ground truth for evaluating deformable colonoscopy reconstruction, enabling metric accuracy assessment",
+      "llm_evidence_cn": "提供时间分辨三维真值的可变形结肠镜数据集，可用于评估度量重建精度",
+      "llm_evidence": "提供时间分辨三维真值的可变形结肠镜数据集，可用于评估度量重建精度",
+      "canonical_evidence": "提供时间分辨三维真值的可变形结肠镜数据集，可用于评估度量重建精度",
+      "llm_tldr_en": "C3VD-DEFCOL provides a dataset with dense, time-resolved 3D ground truth and realistic textures for evaluating deformable colonoscopy reconstruction, enabling assessment of metric accuracy in physical units.",
+      "llm_tldr_cn": "针对结肠镜三维重建缺乏同时具有真实外观和密集时间分辨三维真值数据的问题，提出C3VD-DEFCOL框架和数据集，通过可控变形生成带度量真值的内窥镜视频，为评估物理尺度下的重建精度提供了基准。",
+      "llm_tldr": "针对结肠镜三维重建缺乏同时具有真实外观和密集时间分辨三维真值数据的问题，提出C3VD-DEFCOL框架和数据集，通过可控变形生成带度量真值的内窥镜视频，为评估物理尺度下的重建精度提供了基准。",
+      "llm_tags": [
+        "query:mdr:composite"
+      ],
+      "matched_query_tag": "query:mdr:composite",
+      "matched_query_text": "Papers central to 帮我查找三维重建方面的论文，需要的是能评估实际物理尺寸的，需要用于实际物理尺寸评估而不是为了重建更好看的论文, especially work that connects or combines: metric 3D reconstruction estimating physical size; absolute scale recovery in 3D reconstruction for physical measurement; physical size estimation from 3D reconstruction; real-world dimension measurement using 3D reconstruction; structure from motion with metric scale for size measurement; accuracy of 3D reconstruction in physical units; 3D reconstruction that recovers absolute physical dimensions for measurement purposes; metric 3D reconstruction methods focused on evaluating real world sizes rather than visual quality; physical scale estimation from images or video using 3D reconstruction techniques.",
+      "matched_requirement_id": "req-composite-mdr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.07288v1",
+      "source": "arxiv",
+      "title": "ExMesh: EXplicit Mesh Reconstruction with Topology Adaptation",
+      "abstract": "Reconstructing surface meshes from multi-view images has remained a core challenge in recent years. Most existing methods, whether implicit or explicit, depend on intermediate representations and post-processing steps like Marching Cubes or TSDF fusion, often resulting in artifacts and fragmented geometry. Directly optimizing explicit meshes is a promising approach. However, it presents two critical challenges. The first is how to adaptively refine mesh topology to capture detail without introducing degenerate faces. The second is how to maintain consistent UV coordinates for high-fidelity texturing as the mesh structure evolves. To overcome these, we propose ExMesh, a novel framework that directly optimizes explicit meshes by integrating differentiable optimization with discrete topology updates. Specifically, we introduce an adaptive vertex splitting and merging strategy, along with real-time UV maintenance, to enable coarse-to-fine optimization while preserving geometric integrity. To our knowledge, ExMesh is the first framework to seamlessly integrate discrete topology operations into a continuous differentiable optimization pipeline. Extensive experiments demonstrate that ExMesh achieves a balance among accuracy, computational efficiency, and mesh conciseness.",
+      "authors": [
+        "Chuanjin Fan",
+        "Lifan Wu",
+        "Wenjie Chang",
+        "Hanzhi Chang",
+        "Wenfei Yang",
+        "Tianzhu Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.GR"
+      ],
+      "published": "2026-06-05T13:59:58+00:00",
+      "link": "https://arxiv.org/pdf/2606.07288v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "explicit mesh reconstruction from multi-view images",
+      "llm_evidence_cn": "从多视图图像重建显式网格",
+      "llm_evidence": "从多视图图像重建显式网格",
+      "canonical_evidence": "从多视图图像重建显式网格",
+      "llm_tldr_en": "ExMesh directly optimizes explicit meshes with topology adaptation to produce high-quality surface reconstructions from multi-view images, avoiding post-processing artifacts.",
+      "llm_tldr_cn": "针对现有隐式和显式重建方法依赖Marching Cubes等后处理导致伪影的问题，提出ExMesh框架直接优化显式网格并自适应调整拓扑结构，在保持纹理坐标一致性的同时捕捉细节，从而生成高质量的表面重建结果。",
+      "llm_tldr": "针对现有隐式和显式重建方法依赖Marching Cubes等后处理导致伪影的问题，提出ExMesh框架直接优化显式网格并自适应调整拓扑结构，在保持纹理坐标一致性的同时捕捉细节，从而生成高质量的表面重建结果。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "biorxiv-10-64898-2026-06-07-730757-v1",
+      "source": "biorxiv",
+      "title": "A multimodal dataset for reconstructing common marmoset body-environment interactions in a 3D digital-twin framework",
+      "abstract": "The common marmoset (Callithrix jacchus) is an important non-human primate model in neuroscience and biomedical research. However, existing 3D resources for this species have mainly focused on brain atlases or keypoint-based pose estimation, and reusable data resources that jointly describe the body surface, fur, articulated structure, and experimental environment remain limited. Here, we present a multimodal dataset designed to reconstruct body-environment interactions of common marmosets in three dimensions. The dataset includes a whole-body surface mesh derived from computed tomography (CT) images, fur representations based on photographic references, a rigged 3D model for pose-driven animation, synchronized behavioral videos from three individuals recorded for approximately 90 hours from eight view-points, 2D and 3D keypoint estimation data, 3D models of the experimental environment constructed from blueprint information, and rendered pseudo-egocentric views generated by integrating pose estimation results with the 3D body and environment models. Technical validation assessed the geometric agreement between the CT-derived mesh and the surface model, the accuracy of 2D and 3D keypoint estimation, the dimensional accuracy of the environment model, and the structural similarity between real and rendered images. This dataset provides a foundation for treating marmoset natural behavior not only as point trajectories but also as a three-dimensional phenomenon involving body shape and its spatial relationship with the environment, thereby enabling applications in behavioral analysis, visualization, synthetic-data generation, and future digital-twin studies.",
+      "authors": [
+        "Iwata, K.",
+        "Kaneko, T.",
+        "Caeiro, C. C.",
+        "Thomas, D.",
+        "Koketsu, D.",
+        "Nambu, A.",
+        "Miyabe-Nishiwaki, T.",
+        "Hata, J.",
+        "Nakae, K."
+      ],
+      "primary_category": "animal behavior and cognition",
+      "categories": [
+        "animal behavior and cognition"
+      ],
+      "published": "2026-06-11T00:00:00+00:00",
+      "link": "https://www.biorxiv.org/content/10.64898/2026.06.07.730757v1.full.pdf",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "multimodal dataset with metric 3D mesh from CT for reconstructing animal body in 3D, enabling physical size estimation",
+      "llm_evidence_cn": "包含CT导出度量三维网格的多模态数据集，用于动物体与环境交互的三维重建，可支持物理尺寸估计",
+      "llm_evidence": "包含CT导出度量三维网格的多模态数据集，用于动物体与环境交互的三维重建，可支持物理尺寸估计",
+      "canonical_evidence": "包含CT导出度量三维网格的多模态数据集，用于动物体与环境交互的三维重建，可支持物理尺寸估计",
+      "llm_tldr_en": "This dataset provides a whole-body surface mesh from CT, fur representations, and a rigged 3D model for reconstructing marmoset body-environment interactions, offering metric ground truth for physical size estimation.",
+      "llm_tldr_cn": "针对现有狨猴三维资源主要集中于脑图谱和关键点姿态估计的问题，提出一个包含从CT获取的全身表面网格、毛发表征和绑定三维模型的多模态数据集，能够支持环境交互的三维重建，并为物理尺寸评估提供度量真值。",
+      "llm_tldr": "针对现有狨猴三维资源主要集中于脑图谱和关键点姿态估计的问题，提出一个包含从CT获取的全身表面网格、毛发表征和绑定三维模型的多模态数据集，能够支持环境交互的三维重建，并为物理尺寸评估提供度量真值。",
+      "llm_tags": [
+        "query:mdr:composite"
+      ],
+      "matched_query_tag": "query:mdr:composite",
+      "matched_query_text": "Papers central to 帮我查找三维重建方面的论文，需要的是能评估实际物理尺寸的，需要用于实际物理尺寸评估而不是为了重建更好看的论文, especially work that connects or combines: metric 3D reconstruction estimating physical size; absolute scale recovery in 3D reconstruction for physical measurement; physical size estimation from 3D reconstruction; real-world dimension measurement using 3D reconstruction; structure from motion with metric scale for size measurement; accuracy of 3D reconstruction in physical units; 3D reconstruction that recovers absolute physical dimensions for measurement purposes; metric 3D reconstruction methods focused on evaluating real world sizes rather than visual quality; physical scale estimation from images or video using 3D reconstruction techniques.",
+      "matched_requirement_id": "req-composite-mdr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.11894v1",
+      "source": "arxiv",
+      "title": "Wild3R: Feed-Forward 3D Gaussian Splatting from Unconstrained Sparse Photo Collection",
+      "abstract": "Feed-forward 3D Gaussian Splatting (3DGS) removes the need for time-consuming per-scene optimization required by traditional 3DGS. However, existing feed-forward approaches struggle with real-world photo collections that include diverse lighting conditions and transient objects. In this paper, we present Wild3R, a feed-forward approach for unconstrained sparse photo collections. The main bottleneck is the lack of training data that provides multiple viewpoints, a variety of illuminations, and transient variations necessary for learning robust scene representations. To address this, we introduce the WildCity dataset, which comprises 200 scenes, 170 lighting conditions, and transient objects, resulting in 337,500 images in total. By leveraging the dataset, our model learns appearance consistency across viewpoints conditioned on reference views, while removing transient content. Extensive experiments demonstrate that our method outperforms existing feed-forward approaches and achieves results competitive with prior per-scene optimization-based methods.",
+      "authors": [
+        "Yuto Furutani",
+        "Takashi Otonari",
+        "Kaede Shiohara",
+        "Toshihiko Yamasaki"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-10T10:23:06+00:00",
+      "link": "https://arxiv.org/pdf/2606.11894v1",
+      "tags": [
+        "keyword:mdr",
+        "query:mdr"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "feed-forward 3D Gaussian splatting from unconstrained sparse photos",
+      "llm_evidence_cn": "从无约束稀疏照片前馈式三维高斯溅射",
+      "llm_evidence": "从无约束稀疏照片前馈式三维高斯溅射",
+      "canonical_evidence": "从无约束稀疏照片前馈式三维高斯溅射",
+      "llm_tldr_en": "Wild3R enables feed-forward 3D Gaussian splatting from unconstrained photo collections by training on a large dataset with diverse illuminations and transients.",
+      "llm_tldr_cn": "针对前馈三维高斯溅射在真实照片集合中因光照和瞬态物体变化而表现不佳的问题，构建WildCity数据集并训练Wild3R模型，实现了从无约束稀疏照片集合中快速重建场景。",
+      "llm_tldr": "针对前馈三维高斯溅射在真实照片集合中因光照和瞬态物体变化而表现不佳的问题，构建WildCity数据集并训练Wild3R模型，实现了从无约束稀疏照片集合中快速重建场景。",
+      "llm_tags": [
+        "query:dr:composite"
+      ],
+      "matched_query_tag": "query:dr:composite",
+      "matched_query_text": "Papers central to 查找三维重建相关的论文, especially work that connects or combines: 3D reconstruction; depth estimation from images; multi-view stereo reconstruction; NeRF neural radiance field; surface reconstruction from point clouds; volumetric 3D representation; state of the art 3D reconstruction methods; learning based 3D reconstruction; 3D reconstruction from single image; real time 3D reconstruction.",
+      "matched_requirement_id": "req-composite-dr",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

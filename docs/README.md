@@ -6,35 +6,37 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-12
-- 运行时间：2026-06-12 21:28:41 UTC
+- 最新运行日期：2026-06-13
+- 运行时间：2026-06-13 20:49:58 UTC
 - 运行状态：成功
-- 本次总论文数：4
-- 精读区：0
+- 本次总论文数：5
+- 精读区：1
 - 速读区：4
 
 ### 今日简报（AI）
-1) 今日速读4篇论文，聚焦3D重建与热成像几何。  
-2) 最值得关注的是《HRsR》（7分）的层次旋转系统重建方法，以及《DarkVGGT》的热成像无日光依赖方案。  
-3) 建议优先精读《HRsR》以理解其核心重构逻辑。
-- 详情：[/202606/12/README](/202606/12/README)
+今日精读一篇深度相机无接触人体测量研究（9.0分），并速读结肠镜3D数据集、狨猴全息交互数据集及拓扑自适应网格重建三篇论文。  
+最值得精读的方向是深度相机在智能健康监测中的应用，可实现无接触3D人体测量与健康状态评估。  
+普通读者可关注此类非侵入式健康监测技术的后续落地，或了解数字孪生框架下动物行为建模的前沿进展。
+- 详情：[/202606/13/README](/202606/13/README)
 
 ### 精读区论文标签
-- 本次无精读推荐。
+1. [Contactless 3D Human Body Measurement Using Depth Cameras for Smart Health Monitoring](/202606/13/2606.11578v1-contactless-3d-human-body-measurement-using-depth-cameras-for-smart-health-monitoring)  
+   标签：评分：9.0/10、query:mdr
+   evidence：使用深度相机和3D点云的非接触人体测量
 
 ### 速读区论文标签
-1. [HRsR: Hierarchical Rotation System Reconstruction](/202606/12/2606.07078v1-hrsr-hierarchical-rotation-system-reconstruction)  
-   标签：评分：7.0/10、query:dr
-   evidence：点云表面重建
-2. [S23DR 2026 Winning Solution](/202606/12/2606.06695v1-s23dr-2026-winning-solution)  
+1. [C3VD-DEFCOL: A Deformable Colonoscopy Dataset with Time-Resolved 3D Ground Truth and Realistic Appearance](/202606/13/2606.07891v1-c3vd-defcol-a-deformable-colonoscopy-dataset-with-time-resolved-3d-ground-truth-and-realistic-appearance)  
+   标签：评分：7.0/10、query:mdr
+   evidence：提供时间分辨三维真值的可变形结肠镜数据集，可用于评估度量重建精度
+2. [A multimodal dataset for reconstructing common marmoset body-environment interactions in a 3D digital-twin framework](/202606/13/biorxiv-10-64898-2026-06-07-730757-v1-a-multimodal-dataset-for-reconstructing-common-marmoset-body-environment-interactions-in-a-3d-digital-twin-framework)  
+   标签：评分：7.0/10、query:mdr
+   evidence：包含CT导出度量三维网格的多模态数据集，用于动物体与环境交互的三维重建，可支持物理尺寸估计
+3. [ExMesh: EXplicit Mesh Reconstruction with Topology Adaptation](/202606/13/2606.07288v1-exmesh-explicit-mesh-reconstruction-with-topology-adaptation)  
    标签：评分：6.0/10、query:dr
-   evidence：基于稀疏SfM的3D线框重建
-3. [DarkVGGT: Seeing Through Darkness Using Thermal Geometry without Daylight Tax](/202606/12/2606.11326v1-darkvggt-seeing-through-darkness-using-thermal-geometry-without-daylight-tax)  
+   evidence：从多视图图像重建显式网格
+4. [Wild3R: Feed-Forward 3D Gaussian Splatting from Unconstrained Sparse Photo Collection](/202606/13/2606.11894v1-wild3r-feed-forward-3d-gaussian-splatting-from-unconstrained-sparse-photo-collection)  
    标签：评分：6.0/10、query:dr
-   evidence：前馈三维重建，使用RGB-T热成像
-4. [Scene-Adaptive Nonlinear Tone Curves for Pseudo Ground-Truth Generation in Low-Light 3D Gaussian Splatting](/202606/12/2606.11841v1-scene-adaptive-nonlinear-tone-curves-for-pseudo-ground-truth-generation-in-low-light-3d-gaussian-splatting)  
-   标签：评分：6.0/10、query:dr
-   evidence：低光条件下的三维高斯溅射重建
+   evidence：从无约束稀疏照片前馈式三维高斯溅射
 
 
 <div class="dpr-home-promo-card">
